@@ -29,7 +29,7 @@ Important content and style rules:
 - Keep README concise and useful for people browsing the GitHub repo.
 - Most explanatory UI text should be in Korean.
 - Do not translate data-like plot titles unless asked.
-- Test titles should be in Korean when appropriate, for example `정적 연소 시험`.
+- Test titles should be in Korean when appropriate, for example `연소 시험`.
 - Avoid overengineering the folder structure.
 - Prefer intuitive names and shallow structure.
 
@@ -73,4 +73,3 @@ When responding:
 - Then provide exact file-level edits or content.
 - If there are tradeoffs, keep them short and practical.
 ```
-
