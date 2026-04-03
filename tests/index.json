@@ -3,7 +3,7 @@
     {
       "id": "2026-04-03-combustion",
       "date": "2026-04-03",
-      "title": "2026/4/3 Static Fire Test",
+      "title": "2026/4/3 정적 연소 시험",
       "category": "combustion",
       "summary": "Auto-generated test result. Peak thrust 174.42 N, total impulse 368.74 N s.",
       "status": "published",
@@ -18,7 +18,7 @@
       "links": {
         "page": "./tests/2026-04-03/index.html",
         "markdown": "./tests/2026-04-03/index.md",
-        "assets": "./tests/2026-04-03/assets/2026-04-03/"
+        "assets": "./tests/2026-04-03/files/"
       }
     }
   ]

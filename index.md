@@ -7,5 +7,5 @@
 ## Repository Layout
 
 - Result pages: `tests/YYYY-MM-DD/`
-- Metadata catalog: `data/tests.json`
-- Generator script: `scripts/generate_test_site.ps1`
+- Test list: `tests/index.json`
+- Structure guide: `guide.md`

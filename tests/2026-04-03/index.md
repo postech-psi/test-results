@@ -1,18 +1,18 @@
-# 2026/4/3 Static Fire Test
+# 2026/4/3 정적 연소 시험
 
 ## Graphs
 
 ### Combined Plot
 
-![Combined Plot](./assets/2026-04-03/26.04.03 data_combined_plot.png)
+![Combined Plot](./files/26.04.03 data_combined_plot.png)
 
 ### Loadcell Plot
 
-![Loadcell Plot](./assets/2026-04-03/26.04.03 data_loadcell_plot.png)
+![Loadcell Plot](./files/26.04.03 data_loadcell_plot.png)
 
 ### Barometer Plot
 
-![Barometer Plot](./assets/2026-04-03/26.04.03 data_barometer_plot.png)
+![Barometer Plot](./files/26.04.03 data_barometer_plot.png)
 
 ## Metrics
 
@@ -51,6 +51,5 @@
 
 ## Result Files
 
-- [Executive Report](./assets/2026-04-03/26.04.03 data_executive_report.txt)
-- [Pipeline Data](./assets/2026-04-03/26.04.03 data_pipeline_data.txt)
-
+- [Executive Report](./files/26.04.03 data_executive_report.txt)
+- [Pipeline Data](./files/26.04.03 data_pipeline_data.txt)
