@@ -1,75 +1,113 @@
-# ChatGPT Prompt
+# Prompt
 
-Use the prompt below when asking ChatGPT to update or extend this repository.
+Use the prompt below when asking ChatGPT to work on this repository.
 
 ```md
-You are helping maintain the repository `postech-psi/test-results`.
+You are maintaining the repository `postech-psi/test-results`.
 
-Project purpose:
-- This repository publishes PSI test results.
+Your job is to make high-signal, low-friction edits with minimal back-and-forth.
+
+## Core Direction
+
+- This repository is for publishing PSI test results.
 - GitHub Markdown is the primary home of the archive.
-- The website is a secondary view.
-
-Current repository structure:
-- `README.md`: main GitHub-facing summary
-- `index.html`: simple website homepage
-- `index.md`: root markdown index
-- `guide.md`: repository structure guide
-- `test-entry-notes.md`: notes for adding test entries
-- `tests/index.json`: homepage test list data
-- `tests/YYYY-MM-DD/index.md`: markdown page for a test
-- `tests/YYYY-MM-DD/index.html`: html page for a test
-- `tests/YYYY-MM-DD/files/`: raw result files and plots for a test
-
-Important content and style rules:
-- Keep the repository simple and easy to edit by hand.
+- The website is secondary.
+- Keep everything simple, manual, and easy to understand at a glance.
 - Do not add automation scripts, generators, or GitHub Actions unless explicitly requested.
-- Do not reintroduce auto-generation workflow files or helper scripts.
-- GitHub Markdown is the main presentation layer; the website supports it.
-- Keep README concise and useful for people browsing the GitHub repo.
-- Most explanatory UI text should be in Korean.
-- Do not translate data-like plot titles unless asked.
-- Test titles should be in Korean when appropriate, for example `연소 시험`.
-- Avoid overengineering the folder structure.
-- Prefer intuitive names and shallow structure.
+- Do not reintroduce deleted automation.
 
-Homepage rules:
-- The homepage should stay minimal, modern, and clean, similar to a simple GitHub Pages-style site.
-- Keep light/dark mode toggle support.
-- Avoid decorative or overly flashy design.
-- Korean homepage text must not be garbled; preserve UTF-8.
-- Homepage data source is `tests/index.json`.
+## Current Structure
 
-Repository wording rules:
-- README should say that the repository is organized primarily around GitHub Markdown.
-- The website should be described as a secondary view.
-- Keep README links practical and public-facing.
-- Avoid clutter like internal maintenance links unless they are genuinely useful.
+- `README.md`: main GitHub-facing summary
+- `index.html`: minimal homepage
+- `index.md`: root markdown index
+- `guide.md`: short structure guide
+- `test-entry-notes.md`: notes for manual test entry work
+- `tests/index.json`: homepage list data
+- `tests/YYYY-MM-DD/index.md`: markdown test page
+- `tests/YYYY-MM-DD/index.html`: html test page
+- `tests/YYYY-MM-DD/files/`: raw files, plots, and downloadable outputs
 
-How to add a new test:
-- Add a new folder under `tests/YYYY-MM-DD/`.
-- Put raw result files into `tests/YYYY-MM-DD/files/`.
-- Update `tests/index.json`.
-- Create or update `tests/YYYY-MM-DD/index.md`.
-- Create or update `tests/YYYY-MM-DD/index.html`.
-- Update `README.md` and `index.md` only when needed.
+## How The User Thinks
 
-When editing:
-- Preserve existing working content unless there is a clear reason to improve it.
-- Make focused changes only.
-- If restructuring, explain why the new structure is more intuitive.
-- Keep paths and links consistent after any move.
-- Be careful not to break existing published test pages.
+Optimize for these preferences:
 
-What I may ask you to do next:
-- Add another test result page
-- Rewrite Korean or English wording
-- Clean up homepage layout
-- Improve manual maintenance flow
-- Reorganize files more intuitively, but only if truly simpler
+- Prefer concise edits over long explanations.
+- Remove unnecessary wording aggressively.
+- Remove maintenance-oriented text unless it is clearly useful to visitors.
+- Keep the homepage narrow, tidy, modern, and visually calm.
+- Avoid layouts that feel too wide, too busy, or too decorative.
+- Prefer intuitive folder names and shallow structure.
+- If something looks like internal process text, the user will likely want it removed.
+- If something sounds like product/marketing copy, simplify it.
+- If wording can be shorter, shorter is usually better.
 
-When responding:
-- First summarize what you think should change.
-- Then provide exact file-level edits or content.
-- If there are tradeoffs, keep them short and practical.
+## Language Rules
+
+- Most repository-facing explanatory text should be in Korean.
+- Keep data-like labels in English when they are chart/report terms unless asked otherwise.
+- Plot titles such as `Combined Plot`, `Loadcell Plot`, `Barometer Plot` can stay English.
+- Test titles should use Korean naturally, for example `연소 시험`.
+- Avoid awkward mixed-language phrasing.
+- Preserve UTF-8 correctly. Do not introduce mojibake or broken Korean text.
+
+## README Rules
+
+- README should stay short and practical.
+- README should state that GitHub Markdown is the main presentation.
+- README can mention the website, but only as a secondary view.
+- Avoid clutter like internal file links unless explicitly requested.
+- Avoid process-heavy sections unless the user asked for them.
+- If the user says to remove a section, remove it cleanly instead of rewriting it longer.
+
+## Homepage Rules
+
+- Keep the homepage modern, minimal, and clean.
+- Similar spirit to a polished GitHub Pages landing page.
+- No flashy gradients, no noisy marketing layout, no oversized spacing.
+- Narrower width is preferred over very wide layouts.
+- Keep light/dark mode toggle support unless asked to remove it.
+- Keep only the most useful summary information.
+- Remove internal-maintenance text when it does not help visitors.
+
+## Test Page Rules
+
+- Existing test pages should not break.
+- If file names contain spaces, use URL-safe links in Markdown where needed.
+- Keep raw report terminology accurate.
+- Do not casually rename files or paths unless there is a clear simplification benefit and links are updated consistently.
+
+## Editing Behavior
+
+- Before making big structural changes, prefer the smallest change that solves the problem.
+- If restructuring is necessary, keep it obviously simpler than before.
+- Preserve working pages and links.
+- When the user asks to “publish”, assume they want commit + push.
+- When the user points out broken rendering, prioritize fixing the actual broken output before polishing anything else.
+
+## Preferred Response Style
+
+- Be direct.
+- Summarize briefly.
+- Do the work instead of proposing lots of options.
+- Avoid repeating obvious context back to the user.
+- Avoid long rationales unless there is a real tradeoff.
+
+## Typical Tasks You May Be Asked To Do
+
+- Clean up README wording
+- Simplify homepage layout
+- Fix Korean text encoding issues
+- Add a new test result page manually
+- Rename titles or sections
+- Reorganize files into a more intuitive structure
+- Publish changes
+
+## When You Make Changes
+
+- Keep README, homepage, JSON data, and test pages consistent with each other.
+- If you change a title, update all places where that title appears.
+- If you change a path, update all references.
+- If a sentence is not necessary, delete it instead of softening it.
 ```
+

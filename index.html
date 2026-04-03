@@ -377,10 +377,10 @@
 
     function renderCard(test) {
       const metrics = [
-        ["Ignition delay", test.metrics.ignitionDelayMs],
-        ["Burn duration", test.metrics.burnTimeMs],
-        ["Peak thrust", test.metrics.maxThrustN],
-        ["Total impulse", test.metrics.totalImpulseNs]
+        ["점화 지연", test.metrics.ignitionDelayMs],
+        ["연소 시간", test.metrics.burnTimeMs],
+        ["최대 추력", test.metrics.maxThrustN],
+        ["총 임펄스", test.metrics.totalImpulseNs]
       ].map(([label, value]) => renderMetric(label, value)).join("");
 
       return `
