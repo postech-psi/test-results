@@ -1,0 +1,104 @@
+﻿<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026/4/3 ì—°ì†Œ ì‹œí—˜</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1a1f26;
+      --muted: #5d6776;
+      --line: #d8dee8;
+      --accent: #0f5cc0;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+    .wrap { max-width: 980px; margin: 0 auto; padding: 32px 20px 56px; }
+    h1, h2, h3 { margin: 0 0 12px; }
+    h1 { font-size: 34px; }
+    h2 { margin-top: 36px; padding-bottom: 8px; border-bottom: 1px solid var(--line); font-size: 24px; }
+    h3 { margin-top: 22px; font-size: 18px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px; margin-top: 14px; }
+    img { width: 100%; display: block; border-radius: 12px; border: 1px solid var(--line); background: #fff; }
+    table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #eef3fb; }
+    tr:last-child td { border-bottom: 0; }
+    ul { margin: 0; padding-left: 20px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>2026/4/3 ì—°ì†Œ ì‹œí—˜</h1>
+
+    <h2>Graphs</h2>
+
+    <h3>Loadcell+Barometer Plot</h3>
+    <div class="card">
+      <img src="./assets/2026-04-03/26.04.03%20data_combined_plot.png" alt="Loadcell+Barometer Plot">
+    </div>
+
+    <h3>Loadcell Plot</h3>
+    <div class="card">
+      <img src="./assets/2026-04-03/26.04.03%20data_loadcell_plot.png" alt="Loadcell Plot">
+    </div>
+
+    <h3>Barometer Plot</h3>
+    <div class="card">
+      <img src="./assets/2026-04-03/26.04.03%20data_barometer_plot.png" alt="Barometer Plot">
+    </div>
+
+    <h2>Metrics</h2>
+    <table>
+      <tr><th>í•­ëª©</th><th>ê°’</th></tr>
+      <tr><td>ìž…ë ¥ íŒŒì¼</td><td><code>26.04.03 data.TXT</code></td></tr>
+      <tr><td>ìƒ˜í”Œë§ ì†ë„</td><td>320 sps</td></tr>
+      <tr><td>ì í™” ì§€ì—°</td><td>6993.8 ms</td></tr>
+      <tr><td>ì—°ì†Œ ì‹œê°„</td><td>3287.5 ms</td></tr>
+      <tr><td>ìµœëŒ€ ì¶”ë ¥</td><td>174.42 N</td></tr>
+      <tr><td>í‰ê·  ì¶”ë ¥</td><td>112.16 N</td></tr>
+      <tr><td>ì´ ìž„íŽ„ìŠ¤</td><td>368.74 N s</td></tr>
+      <tr><td>ìµœëŒ€ ì••ë ¥</td><td>39.241 bar gauge pressure</td></tr>
+      <tr><td>ìµœëŒ€ ì••ë ¥ ì‹œì </td><td>8.088 s</td></tr>
+    </table>
+
+    <h2>Test And Plot Conditions</h2>
+    <table>
+      <tr><th>í•­ëª©</th><th>ê°’</th></tr>
+      <tr><td>ë°ì´í„° ì·¨ë“ ì‹œìŠ¤í…œ</td><td>TMS (Arduino Nano ê¸°ë°˜)</td></tr>
+      <tr><td>ì„¼ì„œ</td><td>Loadcell, Barometer</td></tr>
+      <tr><td>ì¶”ë ¥ í•„í„°</td><td>Butterworth low-pass 20.0 Hz, order 2</td></tr>
+      <tr><td>ì••ë ¥ í•„í„°</td><td>Butterworth low-pass 5.0 Hz, order 4</td></tr>
+      <tr><td>ë“œë¦¬í”„íŠ¸ ë³´ì •</td><td>ê¸°ì¤€ì„  ì˜¤í”„ì…‹ ë³´ì • (Constant baseline offset)</td></tr>
+      <tr><td>ë¡œë“œì…€ ê¸°ì¤€ ì˜¤í”„ì…‹</td><td>0.890267 N</td></tr>
+      <tr><td>ë¡œë“œì…€ ê¸°ì¤€ êµ¬ê°„ ì¢…ë£Œ</td><td>3.496875 s (1119 samples)</td></tr>
+      <tr><td>ì••ë ¥ ë³´ì •</td><td>Gauge baseline ì œê±°</td></tr>
+      <tr><td>ì••ë ¥ ê¸°ì¤€ ì˜¤í”„ì…‹</td><td>-0.124905</td></tr>
+    </table>
+
+    <h2>Issues</h2>
+    <div class="card">
+      <ul>
+        <li>연소 중간에 시험 기기 밀림 발생. 반드시 해결 필요.,연소가 어느 정도 마무리된 이후 불이 발생함. 연소실이나 노즐 점검 필요.,녹물 나옴. 장치 또는 배관 부식 여부 점검 필요.</li>
+      </ul>
+    </div>
+
+    <h2>Test Video</h2>
+    <div class="card">
+      <a href="https://www.instagram.com/postech_psi/reel/DWqwlBcE8Gz/">ì‹œí—˜ ì˜ìƒ ë³´ê¸°</a>
+    </div>
+
+    <h2>Result Files</h2>
+    <div class="card">
+      <ul>
+        <li><a href="./assets/2026-04-03/26.04.03%20data_executive_report.txt">Executive Report ë‹¤ìš´ë¡œë“œ</a></li>
+        <li><a href="./assets/2026-04-03/26.04.03%20data_pipeline_data.txt">Pipeline Data ë‹¤ìš´ë¡œë“œ</a></li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
