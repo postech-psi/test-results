@@ -6,34 +6,34 @@
   <title>POSTECH PSI 시험 결과</title>
   <style>
     :root {
-      --bg: #ffffff;
+      --bg: #fbfbfc;
       --surface: #ffffff;
-      --surface-strong: #f6f8fa;
-      --text: #1f2328;
-      --muted: #59636e;
-      --accent: #0969da;
-      --accent-soft: #ddf4ff;
-      --border: #d0d7de;
-      --shadow: none;
+      --surface-strong: #f3f5f7;
+      --text: #151b23;
+      --muted: #66707b;
+      --accent: #0b57d0;
+      --accent-soft: #eaf2ff;
+      --border: #d9dee3;
+      --border-strong: #c7cdd4;
     }
 
     body[data-theme="dark"] {
       --bg: #0d1117;
-      --surface: #0d1117;
+      --surface: #0f141b;
       --surface-strong: #161b22;
       --text: #e6edf3;
       --muted: #8b949e;
       --accent: #58a6ff;
       --accent-soft: rgba(56, 139, 253, 0.15);
       --border: #30363d;
-      --shadow: none;
+      --border-strong: #3d444d;
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
+      font-family: "Segoe UI", "Noto Sans KR", Arial, sans-serif;
       line-height: 1.6;
       color: var(--text);
       background: var(--bg);
@@ -42,16 +42,14 @@
     }
 
     .shell {
-      width: min(980px, calc(100% - 32px));
+      width: min(960px, calc(100% - 32px));
       margin: 0 auto;
-      padding: 32px 0 56px;
+      padding: 40px 0 64px;
     }
 
     .hero {
-      padding: 0 0 24px;
+      padding: 0 0 30px;
       border-bottom: 1px solid var(--border);
-      border-radius: 0;
-      background: var(--surface);
     }
 
     .hero-top {
@@ -59,13 +57,13 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      margin-bottom: 16px;
+      margin-bottom: 22px;
     }
 
     .eyebrow {
       display: inline-block;
-      padding: 2px 10px;
-      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border: 1px solid var(--border-strong);
       border-radius: 999px;
       background: transparent;
       color: var(--accent);
@@ -77,10 +75,10 @@
 
     .theme-toggle {
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 10px;
       background: var(--surface-strong);
       color: var(--text);
-      padding: 6px 12px;
+      padding: 8px 12px;
       font: inherit;
       font-size: 0.875rem;
       font-weight: 500;
@@ -93,30 +91,31 @@
     }
 
     h1 {
-      margin: 0 0 8px;
-      font-size: clamp(2rem, 4vw, 2.6rem);
-      line-height: 1.2;
-      letter-spacing: -0.02em;
+      margin: 0 0 10px;
+      max-width: 760px;
+      font-size: clamp(2.25rem, 5vw, 3.4rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
     }
 
     .hero p {
       margin: 0;
-      max-width: 760px;
+      max-width: 680px;
       color: var(--muted);
-      font-size: 1rem;
+      font-size: 1.03rem;
     }
 
     .meta {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 180px));
       gap: 12px;
-      margin-top: 24px;
+      margin-top: 28px;
     }
 
     .meta-card {
-      padding: 14px 16px;
+      padding: 16px 18px;
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 14px;
       background: var(--surface-strong);
     }
 
@@ -127,12 +126,12 @@
     }
 
     .meta-value {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       font-weight: 700;
     }
 
     .section {
-      margin-top: 24px;
+      margin-top: 34px;
       padding: 0;
       border: 0;
       border-radius: 0;
@@ -141,12 +140,12 @@
     }
 
     .section-header {
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .section-header h2 {
-      margin: 0 0 6px;
-      font-size: 1.25rem;
+      margin: 0 0 5px;
+      font-size: 1.3rem;
       letter-spacing: -0.01em;
     }
 
@@ -156,34 +155,44 @@
     }
 
     .panel {
-      padding: 16px;
+      padding: 18px;
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 16px;
       background: var(--surface);
     }
 
     .test-grid {
       display: grid;
-      gap: 12px;
+      gap: 14px;
     }
 
     .test-card {
-      padding: 16px;
+      padding: 18px;
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 14px;
       background: var(--surface);
     }
 
     .test-card h3 {
-      margin: 0 0 6px;
-      font-size: 1rem;
+      margin: 0;
+      font-size: 1.05rem;
+      letter-spacing: -0.01em;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
     }
 
     .test-card .date {
-      margin: 0 0 10px;
+      margin: 0;
       color: var(--accent);
       font-size: 0.875rem;
       font-weight: 600;
+      white-space: nowrap;
     }
 
     .test-card .summary {
@@ -193,21 +202,24 @@
 
     .metric-list {
       display: grid;
-      gap: 8px;
-      margin: 0 0 14px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin: 0 0 16px;
     }
 
     .metric-item {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
+      display: grid;
+      gap: 2px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface-strong);
       font-size: 0.875rem;
     }
 
     .metric-item span:first-child {
       color: var(--muted);
+      font-size: 0.8rem;
     }
 
     .actions {
@@ -220,9 +232,9 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 6px 12px;
+      padding: 8px 13px;
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 10px;
       background: var(--surface-strong);
       color: var(--text);
       font-size: 0.875rem;
@@ -235,15 +247,15 @@
     }
 
     .empty {
-      padding: 16px;
+      padding: 18px;
       border: 1px dashed var(--border);
-      border-radius: 8px;
+      border-radius: 14px;
       background: var(--surface-strong);
       color: var(--muted);
     }
 
     .footer-note {
-      margin-top: 12px;
+      margin-top: 14px;
       color: var(--muted);
       font-size: 0.92rem;
     }
@@ -261,12 +273,22 @@
     @media (max-width: 640px) {
       .shell {
         width: min(100% - 20px, 1080px);
-        padding-top: 24px;
+        padding-top: 28px;
       }
 
       .hero-top {
         flex-direction: column;
         align-items: flex-start;
+      }
+
+      .meta {
+        grid-template-columns: 1fr;
+      }
+
+      .card-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
       }
     }
   </style>
@@ -279,7 +301,7 @@
         <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme">다크 모드</button>
       </div>
       <h1>POSTECH PSI 시험 결과</h1>
-      <p>PSI 연소 시험 결과를 정리해 공개하는 페이지입니다. 새 시험이 추가되어도 같은 구조로 기록을 이어갈 수 있도록 구성했습니다.</p>
+      <p>PSI 연소 시험 결과를 정리해 공개하는 페이지입니다.</p>
 
       <div class="meta" id="meta-summary">
         <div class="meta-card">
@@ -289,10 +311,6 @@
         <div class="meta-card">
           <div class="meta-label">최신 시험</div>
           <div class="meta-value" id="latest-test">-</div>
-        </div>
-        <div class="meta-card">
-          <div class="meta-label">데이터 소스</div>
-          <div class="meta-value">tests/index.json</div>
         </div>
       </div>
     </section>
@@ -368,8 +386,10 @@
 
       return `
         <article class="test-card">
-          <h3>${test.title}</h3>
-          <p class="date">${test.date}</p>
+          <div class="card-head">
+            <h3>${test.title}</h3>
+            <p class="date">${test.date}</p>
+          </div>
           <p class="summary">${test.summary}</p>
           <div class="metric-list">${metrics}</div>
           <div class="actions">
