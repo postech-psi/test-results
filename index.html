@@ -1,25 +1,415 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PSI Test Results</title>
+  <title>POSTECH PSI Test Results</title>
   <style>
-    body { font-family: "Segoe UI", Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 32px 20px 56px; line-height: 1.6; color: #1a1f26; }
-    h1 { margin-bottom: 8px; }
-    .muted { color: #5d6776; }
-    ul { padding-left: 20px; }
-    a { color: #0f5cc0; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+    :root {
+      --bg: #ffffff;
+      --surface: #ffffff;
+      --surface-strong: #f6f8fa;
+      --text: #1f2328;
+      --muted: #59636e;
+      --accent: #0969da;
+      --accent-soft: #ddf4ff;
+      --border: #d0d7de;
+      --shadow: none;
+    }
+
+    body[data-theme="dark"] {
+      --bg: #0d1117;
+      --surface: #0d1117;
+      --surface-strong: #161b22;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-soft: rgba(56, 139, 253, 0.15);
+      --border: #30363d;
+      --shadow: none;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+      min-height: 100vh;
+      transition: background 180ms ease, color 180ms ease;
+    }
+
+    .shell {
+      width: min(980px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 56px;
+    }
+
+    .hero {
+      padding: 0 0 24px;
+      border-bottom: 1px solid var(--border);
+      border-radius: 0;
+      background: var(--surface);
+    }
+
+    .hero-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 2px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: transparent;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .theme-toggle {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface-strong);
+      color: var(--text);
+      padding: 6px 12px;
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--accent-soft);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 4vw, 2.6rem);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .meta-card {
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface-strong);
+    }
+
+    .meta-label {
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .meta-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .section {
+      margin-top: 24px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .section-header {
+      margin-bottom: 16px;
+    }
+
+    .section-header h2 {
+      margin: 0 0 6px;
+      font-size: 1.25rem;
+      letter-spacing: -0.01em;
+    }
+
+    .section-header p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .panel {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .test-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .test-card {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .test-card h3 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+    }
+
+    .test-card .date {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .test-card .summary {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    .metric-list {
+      display: grid;
+      gap: 8px;
+      margin: 0 0 14px;
+    }
+
+    .metric-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+    }
+
+    .metric-item span:first-child {
+      color: var(--muted);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--surface-strong);
+      color: var(--text);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .button.secondary {
+      background: transparent;
+    }
+
+    .empty {
+      padding: 16px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: var(--surface-strong);
+      color: var(--muted);
+    }
+
+    .footer-note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .link-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    a {
+      color: var(--accent);
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        width: min(100% - 20px, 1080px);
+        padding-top: 24px;
+      }
+
+      .hero-top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>PSI Test Results</h1>
-  <p class="muted">PSI ì‹œí—˜ ê²°ê³¼ ê³µê°œ ë° ì •ë¦¬ìš© ì €ìž¥ì†Œìž…ë‹ˆë‹¤.</p>
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-top">
+        <div class="eyebrow">POSTECH PSI</div>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme">다크 모드</button>
+      </div>
+      <h1>POSTECH PSI 시험 결과 아카이브</h1>
+      <p>연소 시험 결과를 정리하고 공개하는 메인 페이지입니다. 새로운 시험이 추가되더라도 같은 구조로 기록과 공개를 이어갈 수 있도록 저장소를 구성했습니다.</p>
 
-  <h2>Published Tests</h2>
-  <ul>
-        <li><a href="./tests/2026-04-03/index.html">2026/4/3 ì—°ì†Œ ì‹œí—˜</a></li>
-  </ul>
+      <div class="meta" id="meta-summary">
+        <div class="meta-card">
+          <div class="meta-label">공개된 시험</div>
+          <div class="meta-value" id="published-count">-</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">최신 시험</div>
+          <div class="meta-value" id="latest-test">-</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">데이터 소스</div>
+          <div class="meta-value">data/tests.json</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>시험 결과 목록</h2>
+        <p>새 시험을 추가할 때는 `tests/YYYY-MM-DD/` 아래에 결과 페이지를 만들고 `data/tests.json` 에 메타데이터를 추가하면 메인 페이지에 자동으로 반영됩니다.</p>
+      </div>
+      <div class="panel">
+        <div class="test-grid" id="test-grid">
+          <div class="empty">시험 목록을 불러오는 중입니다.</div>
+        </div>
+        <div class="footer-note">
+          작성 규칙은 <a href="./docs/repo-structure.md">저장소 구조 가이드</a> 와 <a href="./templates/test-entry.md">시험 결과 템플릿</a> 에 정리되어 있습니다.
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <h2>저장소 정보</h2>
+        <p>시험 결과 페이지와 메타데이터를 분리해 결과가 늘어나도 같은 방식으로 관리할 수 있도록 구성했습니다.</p>
+      </div>
+      <div class="panel">
+        <div class="link-list">
+          <a class="button" href="./README.md">README</a>
+          <a class="button secondary" href="./docs/repo-structure.md">구조 가이드</a>
+          <a class="button secondary" href="./templates/test-entry.md">작성 템플릿</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const THEME_STORAGE_KEY = "psi-test-results-theme";
+
+    function setTheme(theme) {
+      document.body.dataset.theme = theme;
+      const toggle = document.getElementById("theme-toggle");
+      if (toggle) {
+        toggle.textContent = theme === "dark" ? "라이트 모드" : "다크 모드";
+      }
+    }
+
+    function initializeTheme() {
+      const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+      const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      const theme = savedTheme || (systemPrefersDark ? "dark" : "light");
+      setTheme(theme);
+    }
+
+    async function loadTests() {
+      const response = await fetch("./data/tests.json", { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error("Failed to load test catalog");
+      }
+
+      return response.json();
+    }
+
+    function renderMetric(label, value) {
+      return `<div class="metric-item"><span>${label}</span><strong>${value}</strong></div>`;
+    }
+
+    function renderCard(test) {
+      const metrics = [
+        ["점화 지연", test.metrics.ignitionDelayMs],
+        ["연소 시간", test.metrics.burnTimeMs],
+        ["최대 추력", test.metrics.maxThrustN],
+        ["총 임펄스", test.metrics.totalImpulseNs]
+      ].map(([label, value]) => renderMetric(label, value)).join("");
+
+      return `
+        <article class="test-card">
+          <h3>${test.title}</h3>
+          <p class="date">${test.date}</p>
+          <p class="summary">${test.summary}</p>
+          <div class="metric-list">${metrics}</div>
+          <div class="actions">
+            <a class="button" href="${test.links.page}">보고서 열기</a>
+            <a class="button secondary" href="${test.links.markdown}">마크다운 보기</a>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderTests(catalog) {
+      const tests = Array.isArray(catalog.tests) ? catalog.tests : [];
+      const grid = document.getElementById("test-grid");
+      const latest = tests[0];
+
+      document.getElementById("published-count").textContent = String(tests.length);
+      document.getElementById("latest-test").textContent = latest ? latest.date : "-";
+
+      if (!tests.length) {
+        grid.innerHTML = '<div class="empty">아직 공개된 시험 결과가 없습니다.</div>';
+        return;
+      }
+
+      grid.innerHTML = tests.map(renderCard).join("");
+    }
+
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+      const nextTheme = document.body.dataset.theme === "dark" ? "light" : "dark";
+      localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+      setTheme(nextTheme);
+    });
+
+    initializeTheme();
+
+    loadTests()
+      .then(renderTests)
+      .catch(() => {
+        const grid = document.getElementById("test-grid");
+        grid.innerHTML = '<div class="empty">시험 목록을 불러오지 못했습니다. 저장소의 <a href="./README.md">README</a> 를 확인해 주세요.</div>';
+      });
+  </script>
 </body>
 </html>
