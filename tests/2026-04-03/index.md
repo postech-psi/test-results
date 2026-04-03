@@ -4,15 +4,15 @@
 
 ### Combined Plot
 
-![Combined Plot](./files/26.04.03 data_combined_plot.png)
+![Combined Plot](./files/26.04.03%20data_combined_plot.png)
 
 ### Loadcell Plot
 
-![Loadcell Plot](./files/26.04.03 data_loadcell_plot.png)
+![Loadcell Plot](./files/26.04.03%20data_loadcell_plot.png)
 
 ### Barometer Plot
 
-![Barometer Plot](./files/26.04.03 data_barometer_plot.png)
+![Barometer Plot](./files/26.04.03%20data_barometer_plot.png)
 
 ## Metrics
 
@@ -51,5 +51,5 @@
 
 ## Result Files
 
-- [Executive Report](./files/26.04.03 data_executive_report.txt)
-- [Pipeline Data](./files/26.04.03 data_pipeline_data.txt)
+- [Executive Report](./files/26.04.03%20data_executive_report.txt)
+- [Pipeline Data](./files/26.04.03%20data_pipeline_data.txt)
