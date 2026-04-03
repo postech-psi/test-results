@@ -1,31 +1,25 @@
 {
   "tests": [
     {
-      "id": "2026-04-03-combustion",
-      "date": "2026-04-03",
-      "title": "2026/4/3 연소 시험",
-      "category": "combustion",
-      "summary": "로드셀과 바로미터 데이터를 기반으로 생성한 첫 공개 시험 결과입니다.",
-      "status": "published",
-      "metrics": {
-        "ignitionDelayMs": "6993.8 ms",
-        "burnTimeMs": "3287.5 ms",
-        "maxThrustN": "174.42 N",
-        "averageThrustN": "112.16 N",
-        "totalImpulseNs": "368.74 N s",
-        "maxPressure": "39.241 bar gauge pressure",
-        "peakPressureTime": "8.088 s"
-      },
-      "issues": [
-        "연소 중간에 시험 기기 밀림 발생. 반드시 해결 필요.",
-        "연소가 어느 정도 마무리된 이후 불이 발생함. 연소실이나 노즐 점검 필요.",
-        "녹물 나옴. 장치 또는 배관 부식 여부 점검 필요."
-      ],
-      "links": {
-        "page": "./tests/2026-04-03/index.html",
-        "markdown": "./tests/2026-04-03/index.md",
-        "assets": "./tests/2026-04-03/assets/2026-04-03/"
-      }
+        "id":  "2026-04-03-combustion",
+        "date":  "2026-04-03",
+        "title":  "2026/4/3 Static Fire Test",
+        "category":  "combustion",
+        "summary":  "Auto-generated test result. Peak thrust 174.42 N, total impulse 368.74 N s.",
+        "status":  "published",
+        "metrics":  {
+                        "ignitionDelayMs":  "6993.8 ms",
+                        "burnTimeMs":  "3287.5 ms",
+                        "maxThrustN":  "174.42 N",
+                        "averageThrustN":  "112.16 N",
+                        "totalImpulseNs":  "368.74 N s",
+                        "maxPressure":  "39.241 at 8.088 s"
+                    },
+        "links":  {
+                      "page":  "./tests/2026-04-03/index.html",
+                      "markdown":  "./tests/2026-04-03/index.md",
+                      "assets":  "./tests/2026-04-03/assets/2026-04-03/"
+                  }
     }
   ]
 }

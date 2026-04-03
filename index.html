@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -276,22 +276,22 @@
     <section class="hero">
       <div class="hero-top">
         <div class="eyebrow">POSTECH PSI</div>
-        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme">다크 모드</button>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme">Dark mode</button>
       </div>
-      <h1>POSTECH PSI 시험 결과 아카이브</h1>
-      <p>연소 시험 결과를 정리하고 공개하는 메인 페이지입니다. 새로운 시험이 추가되더라도 같은 구조로 기록과 공개를 이어갈 수 있도록 저장소를 구성했습니다.</p>
+      <h1>POSTECH PSI Test Results</h1>
+      <p>Archive of PSI static fire test results. New tests can be added with the same file layout so the site can keep growing without manual page-by-page editing.</p>
 
       <div class="meta" id="meta-summary">
         <div class="meta-card">
-          <div class="meta-label">공개된 시험</div>
+          <div class="meta-label">Published tests</div>
           <div class="meta-value" id="published-count">-</div>
         </div>
         <div class="meta-card">
-          <div class="meta-label">최신 시험</div>
+          <div class="meta-label">Latest test</div>
           <div class="meta-value" id="latest-test">-</div>
         </div>
         <div class="meta-card">
-          <div class="meta-label">데이터 소스</div>
+          <div class="meta-label">Data source</div>
           <div class="meta-value">data/tests.json</div>
         </div>
       </div>
@@ -299,29 +299,29 @@
 
     <section class="section">
       <div class="section-header">
-        <h2>시험 결과 목록</h2>
-        <p>새 시험을 추가할 때는 `tests/YYYY-MM-DD/` 아래에 결과 페이지를 만들고 `data/tests.json` 에 메타데이터를 추가하면 메인 페이지에 자동으로 반영됩니다.</p>
+        <h2>Published Tests</h2>
+        <p>Add a new test under `tests/YYYY-MM-DD/` and update the generated catalog to have it appear here automatically.</p>
       </div>
       <div class="panel">
         <div class="test-grid" id="test-grid">
           <div class="empty">시험 목록을 불러오는 중입니다.</div>
         </div>
         <div class="footer-note">
-          작성 규칙은 <a href="./docs/repo-structure.md">저장소 구조 가이드</a> 와 <a href="./templates/test-entry.md">시험 결과 템플릿</a> 에 정리되어 있습니다.
+          The workflow is documented in <a href="./docs/repo-structure.md">Repo Structure Guide</a> and <a href="./templates/test-entry.md">Test Entry Raw Files</a>.
         </div>
       </div>
     </section>
 
     <section class="section">
       <div class="section-header">
-        <h2>저장소 정보</h2>
-        <p>시험 결과 페이지와 메타데이터를 분리해 결과가 늘어나도 같은 방식으로 관리할 수 있도록 구성했습니다.</p>
+        <h2>Repository Info</h2>
+        <p>Result pages and metadata are separated so the archive stays simple as more tests are added.</p>
       </div>
       <div class="panel">
         <div class="link-list">
           <a class="button" href="./README.md">README</a>
-          <a class="button secondary" href="./docs/repo-structure.md">구조 가이드</a>
-          <a class="button secondary" href="./templates/test-entry.md">작성 템플릿</a>
+          <a class="button secondary" href="./docs/repo-structure.md">Guide</a>
+          <a class="button secondary" href="./templates/test-entry.md">Template</a>
         </div>
       </div>
     </section>
@@ -334,7 +334,7 @@
       document.body.dataset.theme = theme;
       const toggle = document.getElementById("theme-toggle");
       if (toggle) {
-        toggle.textContent = theme === "dark" ? "라이트 모드" : "다크 모드";
+        toggle.textContent = theme === "dark" ? "Light mode" : "Dark mode";
       }
     }
 
@@ -360,10 +360,10 @@
 
     function renderCard(test) {
       const metrics = [
-        ["점화 지연", test.metrics.ignitionDelayMs],
-        ["연소 시간", test.metrics.burnTimeMs],
-        ["최대 추력", test.metrics.maxThrustN],
-        ["총 임펄스", test.metrics.totalImpulseNs]
+        ["Ignition delay", test.metrics.ignitionDelayMs],
+        ["Burn duration", test.metrics.burnTimeMs],
+        ["Peak thrust", test.metrics.maxThrustN],
+        ["Total impulse", test.metrics.totalImpulseNs]
       ].map(([label, value]) => renderMetric(label, value)).join("");
 
       return `
@@ -373,8 +373,8 @@
           <p class="summary">${test.summary}</p>
           <div class="metric-list">${metrics}</div>
           <div class="actions">
-            <a class="button" href="${test.links.page}">보고서 열기</a>
-            <a class="button secondary" href="${test.links.markdown}">마크다운 보기</a>
+            <a class="button" href="${test.links.page}">Open report</a>
+            <a class="button secondary" href="${test.links.markdown}">View markdown</a>
           </div>
         </article>
       `;
@@ -389,7 +389,7 @@
       document.getElementById("latest-test").textContent = latest ? latest.date : "-";
 
       if (!tests.length) {
-        grid.innerHTML = '<div class="empty">아직 공개된 시험 결과가 없습니다.</div>';
+        grid.innerHTML = '<div class="empty">No published test results yet.</div>';
         return;
       }
 
@@ -408,7 +408,7 @@
       .then(renderTests)
       .catch(() => {
         const grid = document.getElementById("test-grid");
-        grid.innerHTML = '<div class="empty">시험 목록을 불러오지 못했습니다. 저장소의 <a href="./README.md">README</a> 를 확인해 주세요.</div>';
+        grid.innerHTML = '<div class="empty">Could not load the test list. Check the <a href="./README.md">README</a> for the repository workflow.</div>';
       });
   </script>
 </body>
