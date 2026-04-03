@@ -2,4 +2,5 @@
 
 GitHub Pages content for published PSI test result pages.
 
-- Main page: [2026/4/4 Static Fire Test](./index.md)
+- Live page: [2026/4/4 연소 시험](https://postech-psi.github.io/test-results/)
+- Source page: [index.html](./index.html)
