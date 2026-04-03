@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026/4/4 Static Fire Test</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #1a1f26;
+      --muted: #5d6776;
+      --line: #d8dee8;
+      --accent: #0f5cc0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 32px 20px 56px;
+    }
+    h1, h2, h3 { margin: 0 0 12px; }
+    h1 { font-size: 34px; }
+    h2 {
+      margin-top: 36px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+      font-size: 24px;
+    }
+    h3 { margin-top: 22px; font-size: 18px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      margin-top: 14px;
+    }
+    img {
+      width: 100%;
+      display: block;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #eef3fb; }
+    tr:last-child td { border-bottom: 0; }
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+    .muted {
+      color: var(--muted);
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>2026/4/4 Static Fire Test</h1>
+    <p class="muted">Published test-results page for internal review.</p>
+
+    <h2>Graphs</h2>
+
+    <h3>Combined Plot</h3>
+    <div class="card">
+      <img src="./assets/2026-04-04/26.04.03%20data_combined_plot.png" alt="Combined Plot">
+    </div>
+
+    <h3>Loadcell Plot</h3>
+    <div class="card">
+      <img src="./assets/2026-04-04/26.04.03%20data_loadcell_plot.png" alt="Loadcell Plot">
+    </div>
+
+    <h3>Barometer Plot</h3>
+    <div class="card">
+      <img src="./assets/2026-04-04/26.04.03%20data_barometer_plot.png" alt="Barometer Plot">
+    </div>
+
+    <h2>Metrics</h2>
+    <table>
+      <tr><th>Item</th><th>Value</th></tr>
+      <tr><td>Input file</td><td><code>26.04.03 data.TXT</code></td></tr>
+      <tr><td>Sampling rate</td><td>320 sps</td></tr>
+      <tr><td>Ignition delay</td><td>6993.8 ms</td></tr>
+      <tr><td>Burn duration</td><td>3287.5 ms</td></tr>
+      <tr><td>Peak thrust</td><td>174.42 N</td></tr>
+      <tr><td>Average thrust</td><td>112.16 N</td></tr>
+      <tr><td>Total impulse</td><td>368.74 N s</td></tr>
+      <tr><td>Peak pressure</td><td>39.241</td></tr>
+      <tr><td>Peak pressure time</td><td>8.088 s</td></tr>
+    </table>
+
+    <h2>Test And Plot Conditions</h2>
+    <table>
+      <tr><th>Item</th><th>Value</th></tr>
+      <tr><td>Data acquisition system</td><td>TMS (Arduino Nano based)</td></tr>
+      <tr><td>Sensors</td><td>Loadcell, Barometer</td></tr>
+      <tr><td>Thrust filter</td><td>Butterworth low-pass 20.0 Hz, order 2</td></tr>
+      <tr><td>Pressure filter</td><td>Butterworth low-pass 5.0 Hz, order 4</td></tr>
+      <tr><td>Drift correction</td><td>Constant baseline offset</td></tr>
+      <tr><td>Loadcell baseline offset</td><td>0.890267 N</td></tr>
+      <tr><td>Loadcell baseline window end</td><td>3.496875 s (1119 samples)</td></tr>
+      <tr><td>Pressure correction</td><td>Gauge baseline removal</td></tr>
+      <tr><td>Pressure baseline offset</td><td>-0.124905</td></tr>
+    </table>
+
+    <h2>Notes</h2>
+    <div class="card">
+      <ul>
+        <li>Ignition start time <code>6.993750 s</code>.</li>
+        <li>Constant baseline offset applied. Loadcell baseline offset <code>0.890267 N</code>.</li>
+      </ul>
+    </div>
+
+    <h2>Action Items</h2>
+    <div class="card">
+      <ul>
+        <li>Test fixture slipped during burn. Must be fixed before the next test.</li>
+        <li>Fire occurred after the burn was mostly finished. Inspect chamber and nozzle.</li>
+        <li>Rust-colored water observed. Check equipment and piping for corrosion.</li>
+      </ul>
+    </div>
+
+    <h2>Test Video</h2>
+    <div class="card">
+      <a href="https://www.instagram.com/postech_psi/reel/DWqwlBcE8Gz/">Watch Video</a>
+    </div>
+
+    <h2>Result Files</h2>
+    <div class="card">
+      <ul>
+        <li><a href="./assets/2026-04-04/26.04.03%20data_executive_report.txt">Download Executive Report</a></li>
+        <li><a href="./assets/2026-04-04/26.04.03%20data_pipeline_data.txt">Download Pipeline Data</a></li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
