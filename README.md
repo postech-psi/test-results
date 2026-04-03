@@ -2,10 +2,9 @@
 
 Repository for publishing and organizing PSI test results.
 
-- Website: [https://postech-psi.github.io/test-results/](https://postech-psi.github.io/test-results/)
-- Test catalog: [data/tests.json](./data/tests.json)
-- Generator script: [scripts/generate_test_site.ps1](./scripts/generate_test_site.ps1)
-- Guide: [docs/repo-structure.md](./docs/repo-structure.md)
+GitHub Markdown is the primary home for this archive.
+The website is a secondary view:
+[https://postech-psi.github.io/test-results/](https://postech-psi.github.io/test-results/)
 
 ## Add A New Test
 
