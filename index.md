@@ -1,18 +1,18 @@
-# 2026/4/4 연소 시험
+# 2026/4/3 연소 시험
 
 ## Graphs
 
 ### Loadcell+Barometer Plot
 
-![Combined Plot](./assets/2026-04-04/26.04.03%20data_combined_plot.png)
+![Combined Plot](./assets/2026-04-03/26.04.03%20data_combined_plot.png)
 
 ### Loadcell Plot
 
-![Loadcell Plot](./assets/2026-04-04/26.04.03%20data_loadcell_plot.png)
+![Loadcell Plot](./assets/2026-04-03/26.04.03%20data_loadcell_plot.png)
 
 ### Barometer Plot
 
-![Barometer Plot](./assets/2026-04-04/26.04.03%20data_barometer_plot.png)
+![Barometer Plot](./assets/2026-04-03/26.04.03%20data_barometer_plot.png)
 
 ## Metrics
 
@@ -54,5 +54,5 @@
 
 ## Result Files
 
-- [Executive Report 다운로드](./assets/2026-04-04/26.04.03%20data_executive_report.txt)
-- [Pipeline Data 다운로드](./assets/2026-04-04/26.04.03%20data_pipeline_data.txt)
+- [Executive Report 다운로드](./assets/2026-04-03/26.04.03%20data_executive_report.txt)
+- [Pipeline Data 다운로드](./assets/2026-04-03/26.04.03%20data_pipeline_data.txt)
