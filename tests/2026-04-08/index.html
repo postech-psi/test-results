@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>4월 8일 연소 실험</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --surface: #ffffff;
+      --surface-strong: #f6f8fa;
+      --text: #1f2328;
+      --muted: #59636e;
+      --accent: #0969da;
+      --border: #d0d7de;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --surface: #0d1117;
+        --surface-strong: #161b22;
+        --text: #e6edf3;
+        --muted: #8b949e;
+        --accent: #58a6ff;
+        --border: #30363d;
+      }
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .wrap { width: min(960px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0 56px; }
+    header { padding-bottom: 24px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+    h1 { margin: 0 0 8px; font-size: clamp(2rem, 4vw, 2.5rem); }
+    p { margin: 0; color: var(--muted); }
+    h2 { margin: 24px 0 12px; font-size: 1.1rem; }
+    .card { border: 1px solid var(--border); border-radius: 8px; background: var(--surface); padding: 16px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+    th { background: var(--surface-strong); }
+    tr:last-child td { border-bottom: 0; }
+    img { width: 100%; display: block; border-radius: 6px; border: 1px solid var(--border); background: var(--surface-strong); }
+    ul { margin: 0; padding-left: 20px; }
+    a { color: var(--accent); }
+    .stack { display: grid; gap: 24px; }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <h1>4월 8일 연소 실험</h1>
+      <p>최대 추력 203.00 N, 총 임펄스 387.07 N s를 기록한 연소 실험입니다.</p>
+    </header>
+    <div class="stack">
+      <section>
+        <h2>Combined Plot</h2>
+        <div class="card">
+          <img src="./files/TMS_4_combined_plot.png" alt="Combined Plot">
+        </div>
+      </section>
+      <section>
+        <h2>Loadcell Plot</h2>
+        <div class="card">
+          <img src="./files/TMS_4_loadcell_plot.png" alt="Loadcell Plot">
+        </div>
+      </section>
+      <section>
+        <h2>Barometer Plot</h2>
+        <div class="card">
+          <img src="./files/TMS_4_barometer_plot.png" alt="Barometer Plot">
+        </div>
+      </section>
+      <section>
+        <h2>Metrics</h2>
+        <div class="card">
+          <table>
+            <tr><th>항목</th><th>값</th></tr>
+            <tr><td>입력 파일</td><td>TMS\Data\2026\4_8\TMS_4.TXT</td></tr>
+            <tr><td>샘플링 속도</td><td>320 sps</td></tr>
+            <tr><td>점화 지연</td><td>7775.0 ms</td></tr>
+            <tr><td>연소 시간</td><td>2687.5 ms</td></tr>
+            <tr><td>최대 추력</td><td>203.00 N</td></tr>
+            <tr><td>평균 추력</td><td>144.03 N</td></tr>
+            <tr><td>총 임펄스</td><td>387.07 N s</td></tr>
+            <tr><td>최대 압력</td><td>44.304 bar at 8.719 s</td></tr>
+          </table>
+        </div>
+      </section>
+      <section>
+        <h2>시험 조건 및 데이터 처리</h2>
+        <div class="card">
+          <table>
+            <tr><th>항목</th><th>값</th></tr>
+            <tr><td>드리프트 보정</td><td>Constant baseline offset</td></tr>
+            <tr><td>로드셀 임계값 (3%)</td><td>6.09 N</td></tr>
+            <tr><td>추력 필터</td><td>Butterworth low-pass 20.0 Hz, order 2</td></tr>
+            <tr><td>압력 필터</td><td>Butterworth low-pass 5.0 Hz, order 4</td></tr>
+            <tr><td>압력 기준 오프셋</td><td>-0.099480 bar</td></tr>
+            <tr><td>로드셀 기준 오프셋</td><td>-2.366372 N</td></tr>
+            <tr><td>로드셀 기준 구간</td><td>0.000000 to 3.887500 s (1244 samples, pre-ignition raw force)</td></tr>
+            <tr><td>압력 기준 구간</td><td>first 0.500 s (160 samples, filtered pressure)</td></tr>
+          </table>
+        </div>
+      </section>
+      <section>
+        <h2>Calibration</h2>
+        <div class="card">
+          <table>
+            <tr><th>항목</th><th>값</th></tr>
+            <tr><td>로드셀 보정 기울기</td><td>-0.039100 kg/ADC</td></tr>
+            <tr><td>로드셀 보정 절편</td><td>-193.0049 kg</td></tr>
+            <tr><td>로드셀 보정 R^2</td><td>0.999948</td></tr>
+            <tr><td>압력 변환식</td><td>y = 0.0027x -0.11</td></tr>
+          </table>
+        </div>
+      </section>
+      <section>
+        <h2>Issues</h2>
+        <div class="card">
+          <ul>
+            <li>특이사항 기록 없음.</li>
+          </ul>
+        </div>
+      </section>
+      <section>
+        <h2>Test Video</h2>
+        <div class="card">
+          <ul>
+            <li>공개된 영상 링크 없음.</li>
+          </ul>
+        </div>
+      </section>
+      <section>
+        <h2>Result Files</h2>
+        <div class="card">
+          <ul>
+            <li><a href="./files/TMS_4_executive_report.txt">Executive Report</a></li>
+            <li><a href="./files/TMS_4_pipeline_data.txt">Pipeline Data</a></li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

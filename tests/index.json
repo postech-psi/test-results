@@ -1,6 +1,27 @@
 {
   "tests": [
     {
+      "id": "2026-04-08-combustion",
+      "date": "2026-04-08",
+      "title": "4월 8일 연소 실험",
+      "category": "combustion",
+      "summary": "최대 추력 203.00 N, 총 임펄스 387.07 N s를 기록한 연소 실험입니다.",
+      "status": "published",
+      "metrics": {
+        "ignitionDelayMs": "7775.0 ms",
+        "burnTimeMs": "2687.5 ms",
+        "maxThrustN": "203.00 N",
+        "averageThrustN": "144.03 N",
+        "totalImpulseNs": "387.07 N s",
+        "maxPressure": "44.304 bar at 8.719 s"
+      },
+      "links": {
+        "page": "./tests/2026-04-08/index.html",
+        "markdown": "./tests/2026-04-08/index.md",
+        "assets": "./tests/2026-04-08/files/"
+      }
+    },
+    {
       "id": "2026-04-03-combustion",
       "date": "2026-04-03",
       "title": "2026/4/3 연소 시험",
