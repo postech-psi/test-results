@@ -3,14 +3,148 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>POSTECH PSI Static Fire Results</title>
-  <meta name="description" content="POSTECH PSI static fire results presented as a bilingual scientific publication site.">
+  <title>POSTECH PSI 연소 시험 결과</title>
+  <meta name="description" content="POSTECH PSI의 연소 시험 결과를 과학적 기준으로 정리한 공개 결과 포털입니다.">
   <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-  <main class="site-shell">
-    <section class="section">
-      <div class="empty-state">Loading scientific results portal.</div>
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="brand">
+        <div class="brand__eyebrow">POSTECH PSI</div>
+        <div class="brand__title">연소 시험 결과 공개 포털</div>
+      </div>
+      <div class="site-header__controls">
+        <div class="muted">KO / EN</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-shell static-shell">
+    <section class="hero" id="overview">
+      <div class="site-nav">
+        <a href="#overview">개요</a>
+        <a href="#comparison-shell">비교</a>
+        <a href="#archive-shell">아카이브</a>
+        <a href="#access-shell">데이터 접근</a>
+      </div>
+      <div class="hero__grid">
+        <div>
+          <h1 class="hero__title">과학적 기준으로 정리한 공개 시험 결과</h1>
+          <p class="hero__lead">POSTECH PSI 연소 시험 결과를 요약, 비교, 해석, 원자료 접근까지 한 흐름으로 정리한 정적 공개 사이트입니다. 페이지가 로드되면 파이프라인 데이터 기반 비교 차트와 이중 언어 인터페이스가 이 구조 위에 그대로 확장됩니다.</p>
+        </div>
+        <aside class="hero__panel">
+          <h2>Publication Snapshot</h2>
+          <p>최신 시험 2026-04-08, 공개 시험 2건, 비교 차트는 이미지가 아니라 TSV 파이프라인 데이터에서 직접 다시 렌더링됩니다.</p>
+          <div class="hero__summary">
+            <div class="hero-stat">
+              <div class="hero-stat__label">Latest Run</div>
+              <div class="hero-stat__value">2026-04-08</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat__label">Published Tests</div>
+              <div class="hero-stat__value">2</div>
+            </div>
+            <div class="hero-stat">
+              <div class="hero-stat__label">Comparison</div>
+              <div class="hero-stat__value">Absolute / Aligned</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="comparison-shell">
+      <div class="section-heading">
+        <h2>Comparison Workspace</h2>
+        <p>강화된 인터페이스에서는 추력, 압력, 핵심 지표를 절대 시간과 점화 정렬 기준으로 비교합니다. 현재 쉘은 공개 목적과 자료 접근 구조를 먼저 안정적으로 제공합니다.</p>
+      </div>
+      <div class="static-shell__grid">
+        <article class="static-shell__card">
+          <h3>Latest Result</h3>
+          <p class="static-shell__lead">2026-04-08 시험은 최대 추력 203.00 N, 총 임펄스 387.07 N s를 기록했습니다.</p>
+          <p><a href="tests/2026-04-08/index.html">4월 8일 상세 페이지</a></p>
+        </article>
+        <article class="static-shell__card">
+          <h3>Run-to-Run Context</h3>
+          <p class="static-shell__lead">2026-04-03 시험 대비 추력이 증가했고, 이전 시험에서 기록된 기구 밀림 및 후반 화염 재발생 이슈는 최신 시험 노트에 재등장하지 않았습니다.</p>
+          <p><a href="tests/2026-04-03/index.html">2026년 4월 3일 상세 페이지</a></p>
+        </article>
+        <article class="static-shell__card">
+          <h3>Data Source</h3>
+          <p class="static-shell__lead">비교 차트는 내보낸 PNG가 아니라 `filtered force`, `filtered gauge pressure`를 사용한 TSV 파이프라인 데이터에서 생성됩니다.</p>
+          <p><a href="tests/index.json">카탈로그 JSON</a></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="archive-shell">
+      <div class="section-heading">
+        <h2>Published Archive</h2>
+        <p>공개 시험 결과를 날짜, 상태, 이슈 신호, 주요 지표로 정리합니다.</p>
+      </div>
+      <div class="archive-table">
+        <table>
+          <thead>
+            <tr>
+              <th>날짜</th>
+              <th>시험</th>
+              <th>상태</th>
+              <th>이슈</th>
+              <th>최대 추력</th>
+              <th>총 임펄스</th>
+              <th>최대 압력</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2026-04-08</td>
+              <td><strong>4월 8일 연소 시험</strong><div class="muted">최신 시험</div></td>
+              <td><span class="status-badge published">공개 완료</span></td>
+              <td><span class="status-badge none">이슈 없음</span></td>
+              <td>203.00 N</td>
+              <td>387.07 N s</td>
+              <td>44.304 bar</td>
+            </tr>
+            <tr>
+              <td>2026-04-03</td>
+              <td><strong>2026년 4월 3일 연소 시험</strong><div class="muted">비교 기준 시험</div></td>
+              <td><span class="status-badge published">공개 완료</span></td>
+              <td><span class="status-badge attention">검토 필요</span></td>
+              <td>174.42 N</td>
+              <td>368.74 N s</td>
+              <td>39.241 bar</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="access-shell">
+      <div class="section-heading">
+        <h2>Data Access</h2>
+        <p>보고서, Markdown 기록, 파이프라인 데이터는 상세 페이지와 함께 직접 접근할 수 있습니다.</p>
+      </div>
+      <div class="static-shell__grid">
+        <article class="static-shell__card">
+          <h3>Latest Files</h3>
+          <p><a href="tests/2026-04-08/files/TMS_4_executive_report.txt">TMS_4 executive report</a></p>
+          <p><a href="tests/2026-04-08/files/TMS_4_pipeline_data.txt">TMS_4 pipeline data</a></p>
+          <p><a href="tests/2026-04-08/index.md">4월 8일 Markdown 기록</a></p>
+        </article>
+        <article class="static-shell__card">
+          <h3>Reference Run Files</h3>
+          <p><a href="tests/2026-04-03/files/26.04.03%20data_executive_report.txt">26.04.03 executive report</a></p>
+          <p><a href="tests/2026-04-03/files/26.04.03%20data_pipeline_data.txt">26.04.03 pipeline data</a></p>
+          <p><a href="tests/2026-04-03/index.md">4월 3일 Markdown 기록</a></p>
+        </article>
+      </div>
+      <noscript>
+        <div class="panel" style="padding:20px;margin-top:18px;">
+          <strong>JavaScript가 비활성화되어 있습니다.</strong>
+          <p>정적 공개 쉘과 직접 파일 링크는 계속 사용 가능합니다. 인터랙티브 비교 차트, KO/EN 전환, 정렬 기능은 JavaScript가 활성화되면 제공됩니다.</p>
+        </div>
+      </noscript>
     </section>
   </main>
 

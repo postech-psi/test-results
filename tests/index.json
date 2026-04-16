@@ -4,6 +4,18 @@
       "ko": "POSTECH PSI 연소 시험 결과",
       "en": "POSTECH PSI Static Fire Results"
     },
+    "pageMeta": {
+      "home": {
+        "title": {
+          "ko": "POSTECH PSI 연소 시험 결과",
+          "en": "POSTECH PSI Static Fire Results"
+        },
+        "description": {
+          "ko": "POSTECH PSI의 연소 시험 결과를 과학적 기준으로 정리한 공개 결과 포털입니다.",
+          "en": "A publication-grade public portal for POSTECH PSI static fire test results."
+        }
+      }
+    },
     "mission": {
       "ko": "POSTECH PSI의 연소 시험 데이터를 과학적 기준으로 정리하고 공개하는 결과 포털입니다.",
       "en": "A publication-grade portal for presenting POSTECH PSI static fire test data with scientific clarity."
@@ -19,9 +31,23 @@
       "date": "2026-04-08",
       "category": "combustion",
       "status": "published",
+      "statusLabel": {
+        "ko": "공개 완료",
+        "en": "Published"
+      },
       "title": {
         "ko": "4월 8일 연소 시험",
         "en": "April 8 Static Fire Test"
+      },
+      "meta": {
+        "title": {
+          "ko": "4월 8일 연소 시험 | POSTECH PSI",
+          "en": "April 8 Static Fire Test | POSTECH PSI"
+        },
+        "description": {
+          "ko": "4월 8일 연소 시험의 재구성 차트, 보정 값, 시험 조건, 결과 파일을 포함한 상세 페이지입니다.",
+          "en": "Detail page for the April 8 static fire test including replotted signals, calibration, methods, and result files."
+        }
       },
       "summary": {
         "ko": "최대 추력 203.00 N, 총 임펄스 387.07 N s를 기록한 연소 시험입니다.",
@@ -248,15 +274,24 @@
       "artifacts": {
         "figures": [
           {
-            "label": "Combined Plot",
+            "label": {
+              "ko": "종합 신호 플롯",
+              "en": "Combined Plot"
+            },
             "path": "tests/2026-04-08/files/TMS_4_combined_plot.png"
           },
           {
-            "label": "Loadcell Plot",
+            "label": {
+              "ko": "로드셀 플롯",
+              "en": "Loadcell Plot"
+            },
             "path": "tests/2026-04-08/files/TMS_4_loadcell_plot.png"
           },
           {
-            "label": "Barometer Plot",
+            "label": {
+              "ko": "압력 플롯",
+              "en": "Barometer Plot"
+            },
             "path": "tests/2026-04-08/files/TMS_4_barometer_plot.png"
           }
         ]
@@ -270,9 +305,23 @@
       "date": "2026-04-03",
       "category": "combustion",
       "status": "published",
+      "statusLabel": {
+        "ko": "공개 완료",
+        "en": "Published"
+      },
       "title": {
         "ko": "2026년 4월 3일 연소 시험",
         "en": "April 3, 2026 Static Fire Test"
+      },
+      "meta": {
+        "title": {
+          "ko": "2026년 4월 3일 연소 시험 | POSTECH PSI",
+          "en": "April 3, 2026 Static Fire Test | POSTECH PSI"
+        },
+        "description": {
+          "ko": "2026년 4월 3일 연소 시험의 재구성 차트, 시험 이슈, 보정 값, 결과 파일을 포함한 상세 페이지입니다.",
+          "en": "Detail page for the April 3, 2026 static fire test including replotted signals, test issues, calibration, and result files."
+        }
       },
       "summary": {
         "ko": "최대 추력 174.42 N, 총 임펄스 368.74 N s를 기록한 연소 시험입니다.",
@@ -509,15 +558,24 @@
       "artifacts": {
         "figures": [
           {
-            "label": "Combined Plot",
+            "label": {
+              "ko": "종합 신호 플롯",
+              "en": "Combined Plot"
+            },
             "path": "tests/2026-04-03/files/26.04.03 data_combined_plot.png"
           },
           {
-            "label": "Loadcell Plot",
+            "label": {
+              "ko": "로드셀 플롯",
+              "en": "Loadcell Plot"
+            },
             "path": "tests/2026-04-03/files/26.04.03 data_loadcell_plot.png"
           },
           {
-            "label": "Barometer Plot",
+            "label": {
+              "ko": "압력 플롯",
+              "en": "Barometer Plot"
+            },
             "path": "tests/2026-04-03/files/26.04.03 data_barometer_plot.png"
           }
         ]

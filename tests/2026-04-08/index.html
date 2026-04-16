@@ -3,14 +3,81 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>April 8 Static Fire Test</title>
-  <meta name="description" content="Detailed results page for the April 8 POSTECH PSI static fire test.">
+  <title>4월 8일 연소 시험 | POSTECH PSI</title>
+  <meta name="description" content="4월 8일 연소 시험의 재구성 차트, 보정 값, 시험 조건, 결과 파일을 포함한 상세 페이지입니다.">
   <link rel="stylesheet" href="../../assets/site.css">
 </head>
 <body>
-  <main class="site-shell">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="brand">
+        <div class="brand__eyebrow">POSTECH PSI</div>
+        <div class="brand__title">4월 8일 연소 시험</div>
+      </div>
+      <div class="site-header__controls">
+        <a href="../../index.html">전체 포털</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-shell static-shell">
+    <section class="detail-hero">
+      <a class="detail-hero__back" href="../../index.html">전체 결과 포털로 돌아가기</a>
+      <h1 class="detail-hero__title">4월 8일 연소 시험</h1>
+      <p class="detail-hero__lead">최대 추력 203.00 N, 총 임펄스 387.07 N s를 기록한 최신 연소 시험입니다. 강화된 인터페이스에서는 동일 데이터로 재구성한 추력, 압력, 핵심 지표 차트가 이 페이지에 직접 렌더링됩니다.</p>
+      <div class="detail-summary">
+        <article class="metric-card">
+          <div class="metric-card__label">날짜</div>
+          <div class="metric-card__value">2026-04-08</div>
+          <div class="metric-card__delta"><span class="status-badge published">공개 완료</span> <span class="status-badge none">이슈 없음</span></div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-card__label">최대 추력</div>
+          <div class="metric-card__value">203.00 N</div>
+          <div class="metric-card__delta">평균 추력 144.03 N</div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-card__label">총 임펄스</div>
+          <div class="metric-card__value">387.07 N s</div>
+          <div class="metric-card__delta">연소 시간 2687.5 ms</div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-card__label">최대 압력</div>
+          <div class="metric-card__value">44.304 bar</div>
+          <div class="metric-card__delta">피크 시점 8.719 s</div>
+        </article>
+      </div>
+    </section>
+
     <section class="section">
-      <div class="empty-state">Loading test detail.</div>
+      <div class="section-heading">
+        <h2>Detail Access</h2>
+        <p>이 페이지는 JS 비활성 상태에서도 결과 해석과 자료 접근이 가능하도록 구성되어 있습니다. 인터랙티브 차트와 KO/EN 전환은 로드 후 자동으로 확장됩니다.</p>
+      </div>
+      <div class="static-shell__grid">
+        <article class="static-shell__card">
+          <h3>Result Files</h3>
+          <p><a href="files/TMS_4_executive_report.txt">Executive report</a></p>
+          <p><a href="files/TMS_4_pipeline_data.txt">Pipeline data</a></p>
+          <p><a href="index.md">Markdown record</a></p>
+        </article>
+        <article class="static-shell__card">
+          <h3>Reference Figures</h3>
+          <p><a href="files/TMS_4_combined_plot.png">종합 신호 플롯</a></p>
+          <p><a href="files/TMS_4_loadcell_plot.png">로드셀 플롯</a></p>
+          <p><a href="files/TMS_4_barometer_plot.png">압력 플롯</a></p>
+        </article>
+        <article class="static-shell__card">
+          <h3>Scientific Note</h3>
+          <p class="static-shell__lead">사이트 비교 차트는 PNG를 재사용하지 않고 `filtered force`와 `filtered gauge pressure`를 기반으로 다시 렌더링됩니다.</p>
+        </article>
+      </div>
+      <noscript>
+        <div class="panel" style="padding:20px;margin-top:18px;">
+          <strong>JavaScript가 비활성화되어 있습니다.</strong>
+          <p>직접 파일 접근은 계속 가능합니다. 인터랙티브 차트와 언어 전환은 JavaScript가 활성화되면 제공됩니다.</p>
+        </div>
+      </noscript>
     </section>
   </main>
 

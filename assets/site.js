@@ -258,6 +258,28 @@
     return field[state.lang || "ko"] || field.ko || field.en || "";
   }
 
+  function themeToggleLabel() {
+    if (state.lang === "ko") {
+      return state.theme === "dark" ? "라이트 모드" : "다크 모드";
+    }
+    return state.theme === "dark" ? "Light Mode" : "Dark Mode";
+  }
+
+  function setDocumentMeta(meta) {
+    document.documentElement.lang = state.lang || "ko";
+    if (meta && meta.title) {
+      document.title = localize(meta.title);
+    }
+    const description = meta && meta.description ? localize(meta.description) : "";
+    let node = document.querySelector('meta[name="description"]');
+    if (!node) {
+      node = document.createElement("meta");
+      node.name = "description";
+      document.head.appendChild(node);
+    }
+    node.content = description;
+  }
+
   function formatNumber(value, digits) {
     return new Intl.NumberFormat(state.lang === "ko" ? "ko-KR" : "en-US", {
       minimumFractionDigits: digits,
@@ -502,16 +524,16 @@
     }).join("");
   }
 
-  function buildComparisonChart(tests) {
+  function buildComparisonChart(tests, activeTab, activeMode) {
     const palette = getThemePalette();
-    if (state.comparisonTab === "metrics") {
+    if (activeTab === "metrics") {
       return renderMetricBars(tests);
     }
 
-    const field = state.comparisonTab === "pressure" ? "filtered_gauge_pressure" : "filtered_force_N";
-    const yLabel = state.comparisonTab === "pressure" ? copy("labels.pressureUnit") : copy("labels.thrustUnit");
-    const xLabel = state.comparisonMode === "aligned" ? copy("labels.alignedTimeSeconds") : copy("labels.timeSeconds");
-    const isPressure = state.comparisonTab === "pressure";
+    const field = activeTab === "pressure" ? "filtered_gauge_pressure" : "filtered_force_N";
+    const yLabel = activeTab === "pressure" ? copy("labels.pressureUnit") : copy("labels.thrustUnit");
+    const xLabel = activeMode === "aligned" ? copy("labels.alignedTimeSeconds") : copy("labels.timeSeconds");
+    const isPressure = activeTab === "pressure";
 
     const series = tests.map((test, index) => {
       const derived = dataCache.get(test.id);
@@ -519,7 +541,7 @@
         name: `${test.date} - ${localize(test.title)}`,
         color: palette[index % palette.length],
         points: downsample(derived.rows, 420).map((row) => ({
-          x: state.comparisonMode === "aligned" ? row.time_s - test.events.ignitionTimeS : row.time_s,
+          x: activeMode === "aligned" ? row.time_s - test.events.ignitionTimeS : row.time_s,
           y: row[field]
         }))
       };
@@ -529,12 +551,12 @@
       const color = palette[index % palette.length];
       return [
         {
-          x: state.comparisonMode === "aligned" ? 0 : test.events.ignitionTimeS,
+          x: activeMode === "aligned" ? 0 : test.events.ignitionTimeS,
           color,
           label: `${test.date} ${copy("labels.ignition")}`
         },
         {
-          x: state.comparisonMode === "aligned" ? test.events.burnDurationS : test.events.burnEndTimeS,
+          x: activeMode === "aligned" ? test.events.burnDurationS : test.events.burnEndTimeS,
           color,
           label: `${test.date} ${copy("labels.burnEnd")}`
         }
@@ -545,7 +567,7 @@
       const derived = dataCache.get(test.id);
       const row = isPressure ? derived.peakPressure : derived.peakThrust;
       return {
-        x: state.comparisonMode === "aligned" ? row.time_s - test.events.ignitionTimeS : row.time_s,
+        x: activeMode === "aligned" ? row.time_s - test.events.ignitionTimeS : row.time_s,
         y: isPressure ? row.filtered_gauge_pressure : row.filtered_force_N,
         color: palette[index % palette.length],
         label: `${test.date} ${copy("labels.peak")}`
@@ -555,7 +577,7 @@
     return `
       <div class="chart-shell">
         ${renderLineChart({
-          ariaLabel: `${copy(`common.${state.comparisonTab}`)} comparison chart`,
+          ariaLabel: `${copy(`common.${activeTab}`)} comparison chart`,
           xLabel,
           yLabel,
           series,
@@ -575,11 +597,6 @@
   }
 
   function buildComparisonPanel(tests) {
-    const title = state.comparisonTab === "pressure" ? copy("common.pressure") : (state.comparisonTab === "metrics" ? copy("common.metrics") : copy("common.thrust"));
-    const note = state.comparisonTab === "metrics"
-      ? copy("common.keyMetricsTabNote")
-      : `${copy("common.chartMethodNote")} ${state.comparisonMode === "aligned" ? copy("common.alignmentNote") : copy("common.absoluteNote")}`;
-
     return `
       <section class="section" id="comparison">
         <div class="section-heading">
@@ -588,23 +605,46 @@
         </div>
         <div class="panel">
           <div class="toolbar">
-            <div class="tablist" role="tablist" aria-label="comparison-tabs">
+            <div class="tablist" role="tablist" aria-label="${state.lang === "ko" ? "비교 차트 탭" : "Comparison chart tabs"}">
               ${["thrust", "pressure", "metrics"].map((tab) => `
-                <button type="button" role="tab" data-comparison-tab="${tab}" aria-selected="${state.comparisonTab === tab}">
+                <button
+                  type="button"
+                  id="comparison-tab-${tab}"
+                  role="tab"
+                  data-comparison-tab="${tab}"
+                  aria-selected="${state.comparisonTab === tab}"
+                  aria-controls="comparison-panel-${tab}"
+                  tabindex="${state.comparisonTab === tab ? "0" : "-1"}"
+                >
                   ${copy(`common.${tab}`)}
                 </button>
               `).join("")}
             </div>
-            <div class="pill-toggle" role="group" aria-label="comparison-mode">
+            <div class="pill-toggle" role="group" aria-label="${state.lang === "ko" ? "비교 시간 기준" : "Comparison time mode"}">
               <button type="button" data-comparison-mode="absolute" aria-pressed="${state.comparisonMode === "absolute"}">${copy("common.directView")}</button>
               <button type="button" data-comparison-mode="aligned" aria-pressed="${state.comparisonMode === "aligned"}">${copy("common.alignedView")}</button>
             </div>
           </div>
-          <div class="chart-header">
-            <div class="chart-header__title">${title}</div>
-            <div class="chart-header__note">${note}</div>
-          </div>
-          ${buildComparisonChart(tests)}
+          <div class="panel-note">${state.comparisonMode === "aligned" ? copy("common.alignmentNote") : copy("common.absoluteNote")}</div>
+          ${["thrust", "pressure", "metrics"].map((tab) => {
+            const title = tab === "pressure" ? copy("common.pressure") : (tab === "metrics" ? copy("common.metrics") : copy("common.thrust"));
+            const note = tab === "metrics" ? copy("common.keyMetricsTabNote") : copy("common.chartMethodNote");
+            return `
+              <div
+                class="tabpanel"
+                id="comparison-panel-${tab}"
+                role="tabpanel"
+                aria-labelledby="comparison-tab-${tab}"
+                ${state.comparisonTab === tab ? "" : "hidden"}
+              >
+                <div class="chart-header">
+                  <div class="chart-header__title">${title}</div>
+                  <div class="chart-header__note">${note}</div>
+                </div>
+                ${buildComparisonChart(tests, tab, state.comparisonMode)}
+              </div>
+            `;
+          }).join("")}
         </div>
       </section>
     `;
@@ -663,6 +703,10 @@
     return `<span class="status-badge ${levelClass}">${localize(test.issueSummary.label)}</span>`;
   }
 
+  function renderPublicationBadge(test) {
+    return `<span class="status-badge published">${localize(test.statusLabel || { ko: test.status, en: test.status })}</span>`;
+  }
+
   function buildArchive(tests) {
     return `
       <section class="section" id="archive">
@@ -685,6 +729,7 @@
               <tr>
                 <th>${copy("common.date")}</th>
                 <th>${copy("common.test")}</th>
+                <th>${copy("common.status")}</th>
                 <th>${copy("common.issueFlag")}</th>
                 <th>${copy("common.peakThrust")}</th>
                 <th>${copy("common.totalImpulse")}</th>
@@ -697,6 +742,7 @@
                 <tr>
                   <td>${test.date}</td>
                   <td><strong>${localize(test.title)}</strong><div class="muted">${localize(test.summary)}</div></td>
+                  <td>${renderPublicationBadge(test)}</td>
                   <td>${renderStatusBadge(test)}</td>
                   <td>${test.metrics.maxThrustN.display}</td>
                   <td>${test.metrics.totalImpulseNs.display}</td>
@@ -778,11 +824,11 @@
             <div class="brand__title">${localize(catalog.site.name)}</div>
           </div>
           <div class="site-header__controls">
-            <div class="pill-toggle" aria-label="language-toggle">
+            <div class="pill-toggle" aria-label="${state.lang === "ko" ? "언어 선택" : "Language selection"}">
               <button type="button" data-language="ko" aria-pressed="${state.lang === "ko"}">KO</button>
               <button type="button" data-language="en" aria-pressed="${state.lang === "en"}">EN</button>
             </div>
-            <button type="button" class="icon-button" id="theme-toggle">${state.theme === "dark" ? "Light" : "Dark"}</button>
+            <button type="button" class="icon-button" id="theme-toggle" aria-label="${themeToggleLabel()}">${themeToggleLabel()}</button>
           </div>
         </div>
       </header>
@@ -792,7 +838,7 @@
   function renderHome() {
     const tests = catalog.tests;
     const latest = tests[0];
-    document.title = `${localize(catalog.site.name)} | ${copy("home.title")}`;
+    setDocumentMeta(catalog.site.pageMeta && catalog.site.pageMeta.home ? catalog.site.pageMeta.home : { title: catalog.site.name, description: catalog.site.mission });
 
     document.body.innerHTML = `
       ${renderHeader()}
@@ -857,11 +903,11 @@
     `;
   }
 
-  function buildDetailChart(test) {
+  function buildDetailChart(test, activeTab) {
     const derived = dataCache.get(test.id);
     const palette = getThemePalette();
     const labels = copy("labels");
-    if (state.comparisonTab === "metrics") {
+    if (activeTab === "metrics") {
       return renderMetricBars([test]);
     }
 
@@ -870,7 +916,7 @@
       { x: test.events.burnEndTimeS, color: palette[1], label: labels.burnEnd }
     ];
 
-    const config = state.comparisonTab === "pressure"
+    const config = activeTab === "pressure"
       ? {
           ariaLabel: `${localize(test.title)} pressure chart`,
           xLabel: labels.timeSeconds,
@@ -909,7 +955,7 @@
   }
 
   function renderDetail(test) {
-    document.title = `${localize(test.title)} | ${localize(catalog.site.name)}`;
+    setDocumentMeta(test.meta || { title: { ko: `${localize(test.title)} | ${localize(catalog.site.name)}`, en: `${localize(test.title)} | ${localize(catalog.site.name)}` }, description: test.summary });
     const issues = localize(test.issues);
     document.body.innerHTML = `
       ${renderHeader()}
@@ -919,7 +965,7 @@
           <h1 class="detail-hero__title">${localize(test.title)}</h1>
           <p class="detail-hero__lead">${localize(test.summary)}</p>
           <div class="detail-summary">
-            <article class="metric-card"><div class="metric-card__label">${copy("common.date")}</div><div class="metric-card__value">${test.date}</div><div class="metric-card__delta">${renderStatusBadge(test)}</div></article>
+            <article class="metric-card"><div class="metric-card__label">${copy("common.date")}</div><div class="metric-card__value">${test.date}</div><div class="metric-card__delta">${renderPublicationBadge(test)} ${renderStatusBadge(test)}</div></article>
             <article class="metric-card"><div class="metric-card__label">${copy("common.peakThrust")}</div><div class="metric-card__value">${test.metrics.maxThrustN.display}</div><div class="metric-card__delta">${test.metrics.averageThrustN.display}</div></article>
             <article class="metric-card"><div class="metric-card__label">${copy("common.totalImpulse")}</div><div class="metric-card__value">${test.metrics.totalImpulseNs.display}</div><div class="metric-card__delta">${test.metrics.burnTimeMs.display}</div></article>
             <article class="metric-card"><div class="metric-card__label">${copy("common.peakPressure")}</div><div class="metric-card__value">${test.metrics.maxPressureBar.display}</div><div class="metric-card__delta">${test.metrics.maxPressureTimeS.display}</div></article>
@@ -932,12 +978,37 @@
           </div>
           <div class="panel">
             <div class="toolbar">
-              <div class="tablist" role="tablist" aria-label="detail-chart-tabs">
-                ${["thrust", "pressure", "metrics"].map((tab) => `<button type="button" role="tab" data-comparison-tab="${tab}" aria-selected="${state.comparisonTab === tab}">${copy(`common.${tab}`)}</button>`).join("")}
+              <div class="tablist" role="tablist" aria-label="${state.lang === "ko" ? "시험 차트 탭" : "Test chart tabs"}">
+                ${["thrust", "pressure", "metrics"].map((tab) => `
+                  <button
+                    type="button"
+                    id="detail-tab-${tab}"
+                    role="tab"
+                    data-comparison-tab="${tab}"
+                    aria-selected="${state.comparisonTab === tab}"
+                    aria-controls="detail-panel-${tab}"
+                    tabindex="${state.comparisonTab === tab ? "0" : "-1"}"
+                  >
+                    ${copy(`common.${tab}`)}
+                  </button>
+                `).join("")}
               </div>
             </div>
-            <div class="chart-header"><div class="chart-header__title">${copy(`common.${state.comparisonTab}`)}</div><div class="chart-header__note">${copy("common.chartMethodNote")}</div></div>
-            ${buildDetailChart(test)}
+            ${["thrust", "pressure", "metrics"].map((tab) => `
+              <div
+                class="tabpanel"
+                id="detail-panel-${tab}"
+                role="tabpanel"
+                aria-labelledby="detail-tab-${tab}"
+                ${state.comparisonTab === tab ? "" : "hidden"}
+              >
+                <div class="chart-header">
+                  <div class="chart-header__title">${copy(`common.${tab}`)}</div>
+                  <div class="chart-header__note">${tab === "metrics" ? copy("common.keyMetricsTabNote") : copy("common.chartMethodNote")}</div>
+                </div>
+                ${buildDetailChart(test, tab)}
+              </div>
+            `).join("")}
           </div>
         </section>
         <section class="section">
@@ -974,9 +1045,9 @@
             ${test.artifacts.figures.map((figure) => `
               <article class="artifact-card">
                 <a href="${resolvePath(figure.path)}">
-                  <div class="artifact-card__media"><img src="${resolvePath(figure.path)}" alt="${figure.label}"></div>
+                  <div class="artifact-card__media"><img src="${resolvePath(figure.path)}" alt="${localize(figure.label)}"></div>
                 </a>
-                <div class="artifact-card__title">${figure.label}</div>
+                <div class="artifact-card__title">${localize(figure.label)}</div>
               </article>
             `).join("")}
           </div>
@@ -1004,6 +1075,29 @@
         rerender();
       });
     }
+    document.querySelectorAll('[role="tablist"]').forEach((tablist) => {
+      const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("keydown", (event) => {
+          let nextIndex = null;
+          if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+            nextIndex = (index + 1) % tabs.length;
+          } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+            nextIndex = (index - 1 + tabs.length) % tabs.length;
+          } else if (event.key === "Home") {
+            nextIndex = 0;
+          } else if (event.key === "End") {
+            nextIndex = tabs.length - 1;
+          }
+          if (nextIndex == null) {
+            return;
+          }
+          event.preventDefault();
+          tabs[nextIndex].focus();
+          tabs[nextIndex].click();
+        });
+      });
+    });
   }
 
   function bindHomeControls() {
@@ -1032,6 +1126,7 @@
   }
 
   function renderError() {
+    document.documentElement.lang = state.lang || "ko";
     document.body.innerHTML = `<main class="site-shell"><section class="section"><div class="empty-state">${copy("common.loadError")}</div></section></main>`;
   }
 
