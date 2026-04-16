@@ -19,6 +19,11 @@
         "page": "./tests/2026-04-08/index.html",
         "markdown": "./tests/2026-04-08/index.md",
         "assets": "./tests/2026-04-08/files/"
+      },
+      "plots": {
+        "combined": "./tests/2026-04-08/files/TMS_4_combined_plot.png",
+        "loadcell": "./tests/2026-04-08/files/TMS_4_loadcell_plot.png",
+        "barometer": "./tests/2026-04-08/files/TMS_4_barometer_plot.png"
       }
     },
     {
@@ -40,6 +45,11 @@
         "page": "./tests/2026-04-03/index.html",
         "markdown": "./tests/2026-04-03/index.md",
         "assets": "./tests/2026-04-03/files/"
+      },
+      "plots": {
+        "combined": "./tests/2026-04-03/files/26.04.03%20data_combined_plot.png",
+        "loadcell": "./tests/2026-04-03/files/26.04.03%20data_loadcell_plot.png",
+        "barometer": "./tests/2026-04-03/files/26.04.03%20data_barometer_plot.png"
       }
     }
   ]
