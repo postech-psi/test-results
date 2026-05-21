@@ -1,6 +1,6 @@
-# 4월 8일 연소 실험
+# 4월 8일 연소 시험
 
-## Graphs
+## Reference Figures
 
 ### Combined Plot
 

@@ -2,23 +2,23 @@
   "site": {
     "name": {
       "ko": "POSTECH PSI 연소 시험 결과",
-      "en": "POSTECH PSI Static Fire Results"
+      "en": "POSTECH PSI Static Fire Test Results"
     },
     "pageMeta": {
       "home": {
         "title": {
           "ko": "POSTECH PSI 연소 시험 결과",
-          "en": "POSTECH PSI Static Fire Results"
+          "en": "POSTECH PSI Static Fire Test Results"
         },
         "description": {
           "ko": "POSTECH PSI의 연소 시험 결과를 과학적 기준으로 정리한 공개 결과 포털입니다.",
-          "en": "A publication-grade public portal for POSTECH PSI static fire test results."
+          "en": "A concise static record of POSTECH PSI static fire tests, including metrics, comparison, methods, and evidence files."
         }
       }
     },
     "mission": {
       "ko": "POSTECH PSI의 연소 시험 데이터를 과학적 기준으로 정리하고 공개하는 결과 포털입니다.",
-      "en": "A publication-grade portal for presenting POSTECH PSI static fire test data with scientific clarity."
+      "en": "A concise record of POSTECH PSI static fire test data, methods, and evidence files."
     },
     "methodologySummary": {
       "ko": "모든 비교 차트는 파이프라인 데이터의 filtered force 및 filtered gauge pressure를 사용하며, 정렬 보기에서는 ignition delay를 기준으로 시간을 이동합니다.",

@@ -1,60 +1,62 @@
 (function () {
   const PAGE = window.PSI_PAGE_CONFIG || { page: "home", rootPath: "." };
   const STORAGE_KEYS = {
-    lang: "psi-site-language",
-    theme: "psi-site-theme"
+    lang: "psi-site-language-editorial",
+    theme: "psi-site-theme-editorial"
   };
 
-  const COPY = {
+  const UI = {
     ko: {
       nav: {
-        overview: "개요",
+        overview: "요약",
         comparison: "비교",
-        findings: "핵심 해석",
-        archive: "시험 아카이브",
-        methods: "방법론",
-        access: "데이터 접근"
+        findings: "해석",
+        archive: "아카이브",
+        methods: "방법",
+        access: "자료"
       },
       common: {
         latestRun: "최신 시험",
-        publishedRuns: "공개된 시험",
-        comparisonScope: "비교 기준",
+        publishedRuns: "공개 시험",
+        comparisonScope: "비교 범위",
+        allRuns: "전체 공개 시험",
+        verdict: "공개 검토용 결과",
         directView: "절대 시간",
-        alignedView: "정렬 보기",
+        alignedView: "점화 정렬",
         noIssues: "이슈 없음",
         reviewRequired: "검토 필요",
-        pipelineDerived: "파이프라인 데이터 기반",
+        published: "공개 완료",
+        pipelineDerived: "Pipeline data 기준",
         filteredSource: "filtered force / filtered gauge pressure",
-        noPublicVideo: "공개된 영상 없음",
-        backToSite: "전체 결과 포털로 돌아가기",
-        methodology: "방법론 요약",
-        calibration: "보정 값",
+        noPublicVideo: "공개 영상 없음",
+        backToSite: "전체 결과로 돌아가기",
+        methodology: "처리 방법",
+        calibration: "보정",
         issues: "시험 이슈",
         media: "시험 영상",
-        files: "결과 파일",
-        exportedFigures: "내보낸 그림 파일",
-        chartMethodNote: "비교 차트는 파이프라인 데이터에서 직접 다시 그렸습니다.",
-        alignmentNote: "정렬 보기는 ignition delay를 기준으로 시간을 이동해 ignition = 0 s가 되도록 맞춥니다.",
-        absoluteNote: "절대 시간 보기는 원래 시험 시간축을 그대로 유지합니다.",
-        sourceArtifactsNote: "PNG 그림은 참고용 아티팩트로만 유지하며, 비교는 사이트 내 차트에서 수행합니다.",
+        files: "자료 파일",
+        exportedFigures: "참고 그림",
+        chartMethodNote: "차트는 PNG를 재사용하지 않고 pipeline data에서 다시 그립니다.",
+        alignmentNote: "점화 정렬은 ignition 시점을 0 s로 맞춰 시험 간 응답을 비교합니다.",
+        absoluteNote: "절대 시간은 기록된 시험 시간축을 그대로 보여줍니다.",
+        sourceArtifactsNote: "PNG 그림은 참고용이며, 비교 판단은 재구성 차트와 원자료를 기준으로 합니다.",
         signalProcessing: "신호 처리",
         metrics: "핵심 지표",
         thrust: "추력",
         pressure: "압력",
-        performance: "성능 요약",
+        performance: "성능",
         latestReport: "최신 보고서",
         markdownRecord: "Markdown 기록",
-        pipelineData: "파이프라인 데이터",
-        executiveReport: "Executive Report",
+        pipelineData: "Pipeline data",
+        executiveReport: "Executive report",
         detailPage: "상세 보기",
-        sortingNewest: "최신 시험 순",
-        sortingThrust: "최대 추력 순",
-        sortingImpulse: "총 임펄스 순",
-        sortingPressure: "최대 압력 순",
-        findingsTitle: "핵심 해석",
-        loading: "데이터를 불러오는 중입니다.",
-        loadError: "데이터를 불러오지 못했습니다.",
-        noData: "표시할 데이터가 없습니다.",
+        sortingNewest: "최신순",
+        sortingThrust: "최대 추력순",
+        sortingImpulse: "총 임펄스순",
+        sortingPressure: "최대 압력순",
+        loading: "자료를 불러오는 중입니다.",
+        loadError: "자료를 불러오지 못했습니다. 파일 경로와 JSON 형식을 확인해 주세요.",
+        noData: "표시할 자료가 없습니다.",
         date: "날짜",
         test: "시험",
         status: "상태",
@@ -62,37 +64,36 @@
         totalImpulse: "총 임펄스",
         burnDuration: "연소 시간",
         peakPressure: "최대 압력",
+        averageThrust: "평균 추력",
         issueFlag: "이슈",
         actions: "링크",
-        compareLatestTwo: "최근 2개 시험",
-        compareAllRuns: "전체 공개 시험",
-        keyMetricsTabNote: "주요 성능 수치를 동일한 축 기준으로 비교합니다.",
-        archiveLead: "전체 시험 기록을 날짜, 성능, 이슈 기준으로 빠르게 스캔할 수 있도록 구성했습니다.",
-        methodsLead: "시각화는 이미지를 재사용하지 않고 파이프라인 데이터의 filtered series를 직접 재구성합니다.",
-        accessLead: "원본 리포트, Markdown 기록, 파이프라인 데이터를 같은 자리에서 연결합니다.",
-        reportPage: "상세 시험 페이지",
-        sourceInput: "입력 파일"
+        sourceInput: "입력 파일",
+        ignitionDelay: "점화 지연",
+        peakTime: "피크 시점"
       },
       home: {
         eyebrow: "POSTECH PSI",
-        title: "공개용 과학 결과 사이트",
-        lead: "POSTECH PSI 연소 시험 결과를 단순 보관이 아닌 검토 가능한 공개 자료로 재구성했습니다. 요약, 비교, 해석, 원자료 접근을 하나의 정제된 흐름으로 제공합니다.",
-        executiveTitle: "Executive Overview",
-        executiveLead: "최근 시험과 직전 시험의 변화량을 한 화면에서 읽을 수 있도록 정리했습니다.",
-        comparisonTitle: "Comparison Workspace",
-        comparisonLead: "이미지 비교가 아니라 파이프라인 데이터를 다시 그려서 추력, 압력, 지표를 직접 비교합니다.",
-        findingsLead: "수치 변화와 시험 노트를 결합해 공개용 해석 문장을 제공합니다.",
-        methodsTitle: "Methodology Summary",
-        accessTitle: "Data Access",
-        archiveTitle: "Test Archive",
-        archiveSubtitle: "공개된 모든 시험 결과를 일관된 형식으로 정리했습니다."
+        title: "연소 시험 결과 공개 기록",
+        lead: "POSTECH PSI 연소 시험 데이터를 공개 검토에 맞게 정리했습니다. 최신 결과, 이전 시험과의 변화, 원자료, 처리 방법을 한 흐름에서 확인할 수 있습니다.",
+        executiveTitle: "최신 결과",
+        executiveLead: "최신 시험과 직전 시험의 차이를 먼저 보여 주고, 필요한 경우 원자료와 처리 방법까지 내려가 확인할 수 있습니다.",
+        comparisonTitle: "시험 간 비교",
+        comparisonLead: "추력과 압력은 같은 기준으로 다시 그려 비교합니다. 시간축은 원 기록 그대로 보거나 점화 시점으로 정렬할 수 있습니다.",
+        findingsTitle: "공개 해석",
+        findingsLead: "수치 변화와 시험 노트를 함께 읽어야 하는 항목을 간결하게 정리했습니다.",
+        methodsTitle: "측정과 처리",
+        archiveTitle: "시험 아카이브",
+        archiveSubtitle: "공개된 시험을 날짜, 성능, 이슈 상태로 빠르게 확인합니다.",
+        accessTitle: "자료 접근"
       },
       detail: {
-        chartsTitle: "Replotted Test Signals",
-        chartsLead: "단일 시험 페이지에서도 이미지가 아니라 파이프라인 데이터를 직접 렌더링합니다.",
-        methodsTitle: "시험 조건 및 처리",
-        methodsLead: "필터링, 기준선 보정, 임계값, 보정식을 함께 제시합니다.",
-        artifactsLead: "내보낸 그림 파일은 참고용 아티팩트로만 남겨둡니다."
+        chartsTitle: "재구성 신호",
+        chartsLead: "상세 페이지의 그래프도 원 PNG가 아니라 pipeline data의 수치열에서 다시 렌더링합니다.",
+        methodsTitle: "시험 조건과 처리",
+        methodsLead: "필터, 기준선 보정, 임계값, 보정식을 결과와 함께 제시합니다.",
+        artifactsLead: "내보낸 그림 파일은 빠른 확인용 참고 자료입니다.",
+        evidenceTitle: "근거 자료",
+        evidenceLead: "보고서, Markdown 기록, pipeline data를 직접 열어 확인할 수 있습니다."
       },
       labels: {
         ignition: "점화",
@@ -104,59 +105,61 @@
         rawPressure: "원시 압력",
         filteredPressure: "필터 압력",
         timeSeconds: "시간 (s)",
-        alignedTimeSeconds: "정렬 시간 (s, ignition = 0)",
+        alignedTimeSeconds: "점화 정렬 시간 (s)",
         thrustUnit: "추력 (N)",
         pressureUnit: "압력 (bar)"
       }
     },
     en: {
       nav: {
-        overview: "Overview",
+        overview: "Summary",
         comparison: "Comparison",
         findings: "Findings",
         archive: "Archive",
         methods: "Methods",
-        access: "Access"
+        access: "Evidence"
       },
       common: {
-        latestRun: "Latest Run",
-        publishedRuns: "Published Runs",
-        comparisonScope: "Comparison Scope",
-        directView: "Absolute Time",
-        alignedView: "Aligned View",
+        latestRun: "Latest test",
+        publishedRuns: "Published tests",
+        comparisonScope: "Comparison",
+        allRuns: "All runs",
+        verdict: "Static fire test report",
+        directView: "Recorded time",
+        alignedView: "Ignition aligned",
         noIssues: "No issues",
         reviewRequired: "Review required",
-        pipelineDerived: "Derived from pipeline data",
+        published: "Published",
+        pipelineDerived: "Pipeline data",
         filteredSource: "filtered force / filtered gauge pressure",
-        noPublicVideo: "No public video available",
-        backToSite: "Back to results portal",
-        methodology: "Methodology Summary",
+        noPublicVideo: "No public video",
+        backToSite: "Back to results",
+        methodology: "Processing method",
         calibration: "Calibration",
-        issues: "Test Issues",
-        media: "Test Video",
-        files: "Result Files",
-        exportedFigures: "Exported Figures",
-        chartMethodNote: "Comparison charts are replotted directly from pipeline data.",
-        alignmentNote: "Aligned mode shifts time so ignition delay becomes ignition = 0 s.",
-        absoluteNote: "Absolute mode preserves the original experimental timeline.",
-        sourceArtifactsNote: "PNG figures remain as reference artifacts only; analytical comparison is done with native site charts.",
-        signalProcessing: "Signal Processing",
-        metrics: "Key Metrics",
+        issues: "Test issues",
+        media: "Test video",
+        files: "Evidence files",
+        exportedFigures: "Reference Figures",
+        chartMethodNote: "Source: pipeline data. Lines are replotted from numeric series, not exported PNGs.",
+        alignmentNote: "Ignition aligned mode shifts each run so ignition is 0 s.",
+        absoluteNote: "Absolute time preserves the original test timeline.",
+        sourceArtifactsNote: "PNG figures are secondary references; comparison uses replotted signals and source data.",
+        signalProcessing: "Signal processing",
+        metrics: "Key metrics",
         thrust: "Thrust",
         pressure: "Pressure",
         performance: "Performance",
-        latestReport: "Latest Report",
-        markdownRecord: "Markdown Record",
-        pipelineData: "Pipeline Data",
-        executiveReport: "Executive Report",
-        detailPage: "Detail Page",
+        latestReport: "Latest report",
+        markdownRecord: "Markdown record",
+        pipelineData: "Pipeline data",
+        executiveReport: "Executive report",
+        detailPage: "View test",
         sortingNewest: "Newest first",
         sortingThrust: "Peak thrust",
         sortingImpulse: "Total impulse",
         sortingPressure: "Peak pressure",
-        findingsTitle: "Findings",
         loading: "Loading data.",
-        loadError: "Unable to load data.",
+        loadError: "Unable to load data. Check file paths and JSON format.",
         noData: "No data available.",
         date: "Date",
         test: "Test",
@@ -165,37 +168,36 @@
         totalImpulse: "Total Impulse",
         burnDuration: "Burn Duration",
         peakPressure: "Peak Pressure",
-        issueFlag: "Issue Flag",
+        averageThrust: "Average Thrust",
+        issueFlag: "Issue",
         actions: "Links",
-        compareLatestTwo: "Latest two runs",
-        compareAllRuns: "All published runs",
-        keyMetricsTabNote: "Compare performance metrics on a shared visual baseline.",
-        archiveLead: "All published tests are organized for quick scanning by date, performance, and issue state.",
-        methodsLead: "Visualizations are rendered from filtered series in the pipeline data, not reused plot images.",
-        accessLead: "Executive reports, markdown records, and pipeline data stay connected in one place.",
-        reportPage: "Test detail page",
-        sourceInput: "Input File"
+        sourceInput: "Input File",
+        ignitionDelay: "Ignition Delay",
+        peakTime: "Peak Time"
       },
       home: {
         eyebrow: "POSTECH PSI",
-        title: "A Scientific Results Site Built for Public Review",
-        lead: "POSTECH PSI static fire results are presented as a publication-grade public record rather than a raw archive. Summary, comparison, interpretation, and source access are organized into one coherent experience.",
-        executiveTitle: "Executive Overview",
-        executiveLead: "Recent performance and run-to-run deltas are surfaced immediately for public review.",
-        comparisonTitle: "Comparison Workspace",
-        comparisonLead: "Instead of comparing exported images, the site replots thrust, pressure, and metrics directly from pipeline data.",
-        findingsLead: "Narrative findings combine measured deltas with observed test notes.",
-        methodsTitle: "Methodology Summary",
-        accessTitle: "Data Access",
-        archiveTitle: "Test Archive",
-        archiveSubtitle: "All published runs organized in a consistent review format."
+        title: "POSTECH PSI Static Fire Test Results",
+        lead: "A concise record of published static fire tests, with measured performance, run-to-run comparison, methods, and source files kept together.",
+        executiveTitle: "Latest test",
+        executiveLead: "The latest run produced higher peak thrust and total impulse than the previous test, with a shorter burn duration.",
+        comparisonTitle: "Run comparison",
+        comparisonLead: "Thrust and pressure are replotted on a shared basis. Time can be viewed as recorded or aligned to ignition.",
+        findingsTitle: "Findings",
+        findingsLead: "Measured changes and test notes are summarized for quick review.",
+        methodsTitle: "Methods",
+        archiveTitle: "Archive",
+        archiveSubtitle: "Published tests organized by date, performance, and issue state.",
+        accessTitle: "Evidence"
       },
       detail: {
-        chartsTitle: "Replotted Test Signals",
-        chartsLead: "Even on detail pages, charts are rendered directly from pipeline data rather than reused images.",
-        methodsTitle: "Test Conditions and Processing",
-        methodsLead: "Filtering, baseline correction, thresholds, and calibration values are shown alongside the results.",
-        artifactsLead: "Exported figure files are retained only as secondary reference artifacts."
+        chartsTitle: "Signals",
+        chartsLead: "Charts are rendered from numeric pipeline series, not reused PNGs.",
+        methodsTitle: "Methods",
+        methodsLead: "Filters, baselines, thresholds, and calibration formulas are shown beside the results.",
+        artifactsLead: "Exported figures are retained as secondary references.",
+        evidenceTitle: "Evidence",
+        evidenceLead: "Reports, Markdown records, and pipeline data can be opened directly."
       },
       labels: {
         ignition: "Ignition",
@@ -207,7 +209,7 @@
         rawPressure: "Raw Pressure",
         filteredPressure: "Filtered Pressure",
         timeSeconds: "Time (s)",
-        alignedTimeSeconds: "Aligned Time (s, ignition = 0)",
+        alignedTimeSeconds: "Ignition Aligned Time (s)",
         thrustUnit: "Thrust (N)",
         pressureUnit: "Pressure (bar)"
       }
@@ -215,8 +217,8 @@
   };
 
   const state = {
-    lang: null,
-    theme: null,
+    lang: "en",
+    theme: "light",
     comparisonTab: "thrust",
     comparisonMode: "absolute",
     archiveSort: "date"
@@ -230,12 +232,8 @@
   }
 
   function resolvePath(path) {
-    if (!path) {
-      return null;
-    }
-    if (/^https?:\/\//i.test(path)) {
-      return path;
-    }
+    if (!path) return null;
+    if (/^https?:\/\//i.test(path)) return path;
     const normalized = path
       .replace(/\\/g, "/")
       .split("/")
@@ -245,32 +243,28 @@
   }
 
   function copy(path) {
-    return path.split(".").reduce((value, key) => value && value[key], COPY[state.lang || "ko"]);
+    return path.split(".").reduce((value, key) => value && value[key], UI[state.lang]) || "";
   }
 
   function localize(field) {
-    if (field == null) {
-      return "";
-    }
-    if (typeof field === "string" || Array.isArray(field)) {
-      return field;
-    }
-    return field[state.lang || "ko"] || field.ko || field.en || "";
+    if (field == null) return "";
+    if (typeof field === "string" || typeof field === "number") return String(field);
+    if (Array.isArray(field)) return field;
+    return field[state.lang] || field.ko || field.en || "";
   }
 
-  function themeToggleLabel() {
-    if (state.lang === "ko") {
-      return state.theme === "dark" ? "라이트 모드" : "다크 모드";
-    }
-    return state.theme === "dark" ? "Light Mode" : "Dark Mode";
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   }
 
   function setDocumentMeta(meta) {
-    document.documentElement.lang = state.lang || "ko";
-    if (meta && meta.title) {
-      document.title = localize(meta.title);
-    }
-    const description = meta && meta.description ? localize(meta.description) : "";
+    document.documentElement.lang = state.lang;
+    if (meta && meta.title) document.title = localize(meta.title);
+    const description = meta && meta.description ? localize(meta.description) : localize(catalog.site.mission);
     let node = document.querySelector('meta[name="description"]');
     if (!node) {
       node = document.createElement("meta");
@@ -281,6 +275,7 @@
   }
 
   function formatNumber(value, digits) {
+    if (value == null || Number.isNaN(value)) return copy("common.noData");
     return new Intl.NumberFormat(state.lang === "ko" ? "ko-KR" : "en-US", {
       minimumFractionDigits: digits,
       maximumFractionDigits: digits
@@ -288,9 +283,7 @@
   }
 
   function formatDelta(value, unit, digits) {
-    if (value == null || Number.isNaN(value)) {
-      return copy("common.noData");
-    }
+    if (value == null || Number.isNaN(value)) return copy("common.noData");
     const prefix = value > 0 ? "+" : "";
     return `${prefix}${formatNumber(value, digits)} ${unit}`;
   }
@@ -298,33 +291,38 @@
   function setTheme(theme) {
     state.theme = theme;
     document.body.dataset.theme = theme;
-    localStorage.setItem(STORAGE_KEYS.theme, theme);
+    try {
+      localStorage.setItem(STORAGE_KEYS.theme, theme);
+    } catch (_) {
+      /* localStorage can be disabled in strict browser contexts. */
+    }
+  }
+
+  function themeToggleLabel() {
+    if (state.lang === "ko") return state.theme === "dark" ? "라이트 모드" : "다크 모드";
+    return state.theme === "dark" ? "Light Mode" : "Dark Mode";
   }
 
   function getThemePalette() {
     return state.theme === "dark"
-      ? ["#8ed8c8", "#ef9b76", "#dccc7a", "#8fb3ff"]
-      : ["#1f6b5d", "#b85f3d", "#9a7a18", "#496bb6"];
+      ? ["#f6f4ee", "#a8a8a8", "#747474", "#d0d0d0"]
+      : ["#111111", "#777777", "#b0b0b0", "#444444"];
   }
 
   async function fetchJson(url) {
     const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) {
-      throw new Error(`Failed to load ${url}`);
-    }
+    if (!response.ok) throw new Error(`Failed to load ${url}`);
     return response.json();
   }
 
   async function fetchText(url) {
     const response = await fetch(url, { cache: "no-store" });
-    if (!response.ok) {
-      throw new Error(`Failed to load ${url}`);
-    }
+    if (!response.ok) throw new Error(`Failed to load ${url}`);
     return response.text();
   }
 
   function parseTSV(text) {
-    const lines = text.trim().split(/\r?\n/);
+    const lines = text.trim().split(/\r?\n/).filter(Boolean);
     const headers = lines[0].split("\t");
     return lines.slice(1).map((line) => {
       const cells = line.split("\t");
@@ -336,17 +334,11 @@
   }
 
   function downsample(rows, maxPoints) {
-    if (rows.length <= maxPoints) {
-      return rows;
-    }
+    if (rows.length <= maxPoints) return rows;
     const stride = Math.ceil(rows.length / maxPoints);
     const sampled = [];
-    for (let index = 0; index < rows.length; index += stride) {
-      sampled.push(rows[index]);
-    }
-    if (sampled[sampled.length - 1] !== rows[rows.length - 1]) {
-      sampled.push(rows[rows.length - 1]);
-    }
+    for (let index = 0; index < rows.length; index += stride) sampled.push(rows[index]);
+    if (sampled[sampled.length - 1] !== rows[rows.length - 1]) sampled.push(rows[rows.length - 1]);
     return sampled;
   }
 
@@ -355,9 +347,7 @@
   }
 
   async function ensureSeries(test) {
-    if (dataCache.has(test.id)) {
-      return dataCache.get(test.id);
-    }
+    if (dataCache.has(test.id)) return dataCache.get(test.id);
     const rows = parseTSV(await fetchText(resolvePath(test.links.pipelineData)));
     const derived = {
       rows,
@@ -371,14 +361,11 @@
   function niceStep(range, targetTicks) {
     const rough = range / Math.max(targetTicks, 1);
     const base = Math.pow(10, Math.floor(Math.log10(Math.max(rough, 0.0001))));
-    const candidates = [1, 2, 2.5, 5, 10];
-    return candidates.map((value) => value * base).find((value) => value >= rough) || base;
+    return ([1, 2, 2.5, 5, 10].map((value) => value * base).find((value) => value >= rough) || base);
   }
 
   function buildTicks(min, max, targetTicks) {
-    if (min === max) {
-      return [min];
-    }
+    if (!Number.isFinite(min) || !Number.isFinite(max) || min === max) return [min || 0];
     const step = niceStep(max - min, targetTicks);
     const start = Math.floor(min / step) * step;
     const end = Math.ceil(max / step) * step;
@@ -398,10 +385,12 @@
   function renderLineChart(config) {
     const width = 920;
     const height = 420;
-    const margin = { top: 28, right: 30, bottom: 52, left: 72 };
+    const margin = { top: 30, right: 34, bottom: 58, left: 74 };
     const plotWidth = width - margin.left - margin.right;
     const plotHeight = height - margin.top - margin.bottom;
-    const allPoints = config.series.flatMap((series) => series.points);
+    const allPoints = config.series.flatMap((series) => series.points).filter((point) => Number.isFinite(point.x) && Number.isFinite(point.y));
+    if (!allPoints.length) return `<div class="chart-empty">${copy("common.noData")}</div>`;
+
     const xMin = Math.min(...allPoints.map((point) => point.x));
     const xMax = Math.max(...allPoints.map((point) => point.x));
     const rawYMin = Math.min(...allPoints.map((point) => point.y), 0);
@@ -416,235 +405,192 @@
 
     const grid = yTicks.map((tick) => `
       <g>
-        <line x1="${margin.left}" y1="${yScale(tick)}" x2="${width - margin.right}" y2="${yScale(tick)}" stroke="var(--line)" stroke-width="1" opacity="0.7"></line>
+        <line x1="${margin.left}" y1="${yScale(tick)}" x2="${width - margin.right}" y2="${yScale(tick)}" stroke="var(--line)" stroke-width="1"></line>
         <text x="${margin.left - 12}" y="${yScale(tick) + 5}" fill="var(--ink-soft)" font-size="12" text-anchor="end">${formatNumber(tick, Math.abs(tick) < 10 ? 1 : 0)}</text>
       </g>
     `).join("");
 
     const xAxis = xTicks.map((tick) => `
       <g>
-        <line x1="${xScale(tick)}" y1="${margin.top}" x2="${xScale(tick)}" y2="${height - margin.bottom}" stroke="var(--line)" stroke-width="1" opacity="0.35"></line>
-        <text x="${xScale(tick)}" y="${height - margin.bottom + 20}" fill="var(--ink-soft)" font-size="12" text-anchor="middle">${formatNumber(tick, Math.abs(tick) < 10 ? 1 : 0)}</text>
+        <line x1="${xScale(tick)}" y1="${height - margin.bottom}" x2="${xScale(tick)}" y2="${height - margin.bottom + 6}" stroke="var(--line-strong)" stroke-width="1"></line>
+        <text x="${xScale(tick)}" y="${height - margin.bottom + 24}" fill="var(--ink-soft)" font-size="12" text-anchor="middle">${formatNumber(tick, Math.abs(tick) < 10 ? 1 : 0)}</text>
       </g>
     `).join("");
 
-    const seriesPaths = config.series.map((series) => `
-      <path d="${linePath(series.points, xScale, yScale)}" fill="none" stroke="${series.color}" stroke-width="${series.strokeWidth || 2.4}" stroke-linecap="round" stroke-linejoin="round"></path>
+    const series = config.series.map((item) => `
+      <path d="${linePath(item.points, xScale, yScale)}" fill="none" stroke="${item.color}" stroke-width="${item.strokeWidth || 2.8}" ${item.dash ? `stroke-dasharray="${item.dash}"` : ""} stroke-linejoin="round" stroke-linecap="round"></path>
     `).join("");
 
-    const eventLines = (config.events || []).map((event) => `
+    const events = (config.events || []).map((event) => `
       <g>
-        <line x1="${xScale(event.x)}" y1="${margin.top}" x2="${xScale(event.x)}" y2="${height - margin.bottom}" stroke="${event.color}" stroke-width="1.2" stroke-dasharray="6 6" opacity="0.85"></line>
-        <text x="${xScale(event.x) + 4}" y="${margin.top + 14}" fill="${event.color}" font-size="11">${event.label}</text>
+        <line x1="${xScale(event.x)}" y1="${margin.top}" x2="${xScale(event.x)}" y2="${height - margin.bottom}" stroke="${event.color}" stroke-width="1.2" stroke-dasharray="4 5"></line>
+        <text x="${Math.min(width - margin.right - 6, xScale(event.x) + 7)}" y="${margin.top + 15}" fill="${event.color}" font-size="12" font-weight="800">${escapeHtml(event.label)}</text>
       </g>
     `).join("");
 
     const peaks = (config.peaks || []).map((peak) => `
       <g>
-        <circle cx="${xScale(peak.x)}" cy="${yScale(peak.y)}" r="4" fill="${peak.color}"></circle>
-        <text x="${xScale(peak.x) + 8}" y="${yScale(peak.y) - 8}" fill="${peak.color}" font-size="11">${peak.label}</text>
+        <circle cx="${xScale(peak.x)}" cy="${yScale(peak.y)}" r="4" fill="${peak.color}" stroke="var(--surface)" stroke-width="2"></circle>
+        <text x="${Math.min(width - margin.right - 40, xScale(peak.x) + 8)}" y="${Math.max(margin.top + 18, yScale(peak.y) - 8)}" fill="${peak.color}" font-size="12" font-weight="800">${escapeHtml(peak.label)}</text>
       </g>
     `).join("");
 
     return `
-      <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${config.ariaLabel}">
-        ${grid}
-        ${xAxis}
-        <line x1="${margin.left}" y1="${yScale(0)}" x2="${width - margin.right}" y2="${yScale(0)}" stroke="var(--ink-soft)" stroke-width="1.4" opacity="0.7"></line>
-        ${eventLines}
-        ${seriesPaths}
+      <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(config.ariaLabel)}">
+        <rect x="0" y="0" width="${width}" height="${height}" fill="transparent"></rect>
+        <g>${grid}${xAxis}</g>
+        <line x1="${margin.left}" y1="${height - margin.bottom}" x2="${width - margin.right}" y2="${height - margin.bottom}" stroke="var(--line-strong)" stroke-width="1.2"></line>
+        <line x1="${margin.left}" y1="${margin.top}" x2="${margin.left}" y2="${height - margin.bottom}" stroke="var(--line-strong)" stroke-width="1.2"></line>
+        <text x="${margin.left + plotWidth / 2}" y="${height - 16}" fill="var(--ink-soft)" font-size="13" text-anchor="middle">${escapeHtml(config.xLabel)}</text>
+        <text transform="translate(18 ${margin.top + plotHeight / 2}) rotate(-90)" fill="var(--ink-soft)" font-size="13" text-anchor="middle">${escapeHtml(config.yLabel)}</text>
+        ${events}
+        ${series}
         ${peaks}
-        <text x="${width / 2}" y="${height - 12}" text-anchor="middle" fill="var(--ink-soft)" font-size="13">${config.xLabel}</text>
-        <text x="18" y="${height / 2}" transform="rotate(-90 18 ${height / 2})" text-anchor="middle" fill="var(--ink-soft)" font-size="13">${config.yLabel}</text>
       </svg>
     `;
   }
 
   function renderMetricBars(tests) {
     const metrics = [
-      ["maxThrustN", copy("common.peakThrust")],
-      ["totalImpulseNs", copy("common.totalImpulse")],
-      ["burnTimeMs", copy("common.burnDuration")],
-      ["maxPressureBar", copy("common.peakPressure")]
+      { key: "maxThrustN", label: copy("common.peakThrust"), digits: 1 },
+      { key: "totalImpulseNs", label: copy("common.totalImpulse"), digits: 1 },
+      { key: "burnTimeMs", label: copy("common.burnDuration"), digits: 0 },
+      { key: "maxPressureBar", label: copy("common.peakPressure"), digits: 1 }
     ];
     const palette = getThemePalette();
-    return `
-      <div class="detail-stack">
-        ${metrics.map(([key, label]) => {
-          const max = Math.max(...tests.map((test) => test.metrics[key].value));
-          return `
-            <div class="mini-panel">
-              <h3>${label}</h3>
-              <div class="detail-stack">
-                ${tests.map((test, index) => `
-                  <div>
-                    <div style="display:flex;justify-content:space-between;gap:12px;">
-                      <strong>${localize(test.title)}</strong>
-                      <span class="muted">${test.metrics[key].display}</span>
-                    </div>
-                    <div style="margin-top:8px;height:10px;border-radius:999px;background:var(--surface-strong);overflow:hidden;">
-                      <div style="width:${((test.metrics[key].value / max) * 100).toFixed(2)}%;height:100%;background:${palette[index % palette.length]};"></div>
-                    </div>
-                  </div>
-                `).join("")}
-              </div>
-            </div>
-          `;
-        }).join("")}
-      </div>
-    `;
+    const maxValue = Math.max(...metrics.flatMap((metric) => tests.map((test) => test.metrics[metric.key].value)));
+    const groups = metrics.map((metric) => {
+      const bars = tests.map((test, index) => {
+        const value = test.metrics[metric.key].value;
+        const width = Math.max(4, (value / maxValue) * 100);
+        return `
+          <div class="metric-bar-row">
+            <div class="muted">${test.date}</div>
+            <div style="height:12px;border-radius:999px;background:${palette[index % palette.length]};width:${width}%;"></div>
+            <strong>${formatNumber(value, metric.digits)} ${test.metrics[metric.key].unit}</strong>
+          </div>
+        `;
+      }).join("");
+      return `<article class="mini-panel"><h3>${metric.label}</h3><div style="display:grid;gap:9px;margin-top:12px;">${bars}</div></article>`;
+    }).join("");
+    return `<div class="finding-grid">${groups}</div>`;
   }
 
-  function metricDelta(current, previous) {
-    return previous ? current.value - previous.value : null;
+  function metricDelta(current, previous, key) {
+    if (!previous) return null;
+    return current.metrics[key].value - previous.metrics[key].value;
   }
 
   function buildOverviewCards(tests) {
     const latest = tests[0];
     const previous = tests[1];
-    const metrics = [
-      ["maxThrustN", copy("common.peakThrust"), 2],
-      ["totalImpulseNs", copy("common.totalImpulse"), 2],
-      ["burnTimeMs", copy("common.burnDuration"), 1],
-      ["maxPressureBar", copy("common.peakPressure"), 3]
+    const cards = [
+      { label: copy("common.peakThrust"), key: "maxThrustN", digits: 2 },
+      { label: copy("common.totalImpulse"), key: "totalImpulseNs", digits: 2 },
+      { label: copy("common.burnDuration"), key: "burnTimeMs", digits: 1 },
+      { label: copy("common.peakPressure"), key: "maxPressureBar", digits: 3 }
     ];
-
-    return metrics.map(([key, label, digits]) => {
-      const delta = previous ? metricDelta(latest.metrics[key], previous.metrics[key]) : null;
-      const directionClass = delta == null ? "" : (delta >= 0 ? "positive" : "negative");
+    return cards.map((card) => {
+      const metric = latest.metrics[card.key];
+      const delta = metricDelta(latest, previous, card.key);
+      const trendClass = delta == null ? "" : delta >= 0 ? "positive" : "negative";
       return `
         <article class="metric-card">
-          <div class="metric-card__label">${label}</div>
-          <div class="metric-card__value">${latest.metrics[key].display}</div>
-          <div class="metric-card__delta ${directionClass}">
-            ${previous ? `${formatDelta(delta, latest.metrics[key].unit, digits)} vs ${previous.date}` : copy("common.noData")}
-          </div>
+          <div class="metric-card__label">${card.label}</div>
+          <div class="metric-card__value">${metric.display}</div>
+          <div class="metric-card__delta ${trendClass}">${previous ? `${formatDelta(delta, metric.unit, card.digits)} vs ${previous.date}` : copy("common.noData")}</div>
         </article>
       `;
     }).join("");
   }
 
   function buildComparisonChart(tests, activeTab, activeMode) {
+    if (activeTab === "metrics") return renderMetricBars(tests);
     const palette = getThemePalette();
-    if (activeTab === "metrics") {
-      return renderMetricBars(tests);
-    }
-
+    const labels = copy("labels");
     const field = activeTab === "pressure" ? "filtered_gauge_pressure" : "filtered_force_N";
-    const yLabel = activeTab === "pressure" ? copy("labels.pressureUnit") : copy("labels.thrustUnit");
-    const xLabel = activeMode === "aligned" ? copy("labels.alignedTimeSeconds") : copy("labels.timeSeconds");
-    const isPressure = activeTab === "pressure";
-
+    const yLabel = activeTab === "pressure" ? labels.pressureUnit : labels.thrustUnit;
+    const title = activeTab === "pressure" ? copy("common.pressure") : copy("common.thrust");
     const series = tests.map((test, index) => {
       const derived = dataCache.get(test.id);
+      const rows = downsample(derived.rows, 420);
       return {
         name: `${test.date} - ${localize(test.title)}`,
         color: palette[index % palette.length],
-        points: downsample(derived.rows, 420).map((row) => ({
+        strokeWidth: index === 0 ? 2.8 : 1.8,
+        dash: index === 0 ? "" : "5 5",
+        points: rows.map((row) => ({
           x: activeMode === "aligned" ? row.time_s - test.events.ignitionTimeS : row.time_s,
           y: row[field]
         }))
       };
     });
-
-    const events = tests.flatMap((test, index) => {
-      const color = palette[index % palette.length];
-      return [
-        {
-          x: activeMode === "aligned" ? 0 : test.events.ignitionTimeS,
-          color,
-          label: `${test.date} ${copy("labels.ignition")}`
-        },
-        {
-          x: activeMode === "aligned" ? test.events.burnDurationS : test.events.burnEndTimeS,
-          color,
-          label: `${test.date} ${copy("labels.burnEnd")}`
-        }
-      ];
-    });
-
+    const events = activeMode === "absolute"
+      ? tests.flatMap((test, index) => ([
+          { x: test.events.ignitionTimeS, color: palette[index % palette.length], label: `${test.date} ${labels.ignition}` },
+          { x: test.events.burnEndTimeS, color: palette[index % palette.length], label: `${test.date} ${labels.burnEnd}` }
+        ]))
+      : [{ x: 0, color: palette[0], label: labels.ignition }];
     const peaks = tests.map((test, index) => {
       const derived = dataCache.get(test.id);
-      const row = isPressure ? derived.peakPressure : derived.peakThrust;
+      const peak = activeTab === "pressure" ? derived.peakPressure : derived.peakThrust;
       return {
-        x: activeMode === "aligned" ? row.time_s - test.events.ignitionTimeS : row.time_s,
-        y: isPressure ? row.filtered_gauge_pressure : row.filtered_force_N,
+        x: activeMode === "aligned" ? peak.time_s - test.events.ignitionTimeS : peak.time_s,
+        y: peak[field],
         color: palette[index % palette.length],
-        label: `${test.date} ${copy("labels.peak")}`
+        label: `${test.date} ${labels.peak}`
       };
     });
-
     return `
-      <div class="chart-shell">
-        ${renderLineChart({
-          ariaLabel: `${copy(`common.${activeTab}`)} comparison chart`,
-          xLabel,
-          yLabel,
-          series,
-          events,
-          peaks
-        })}
-      </div>
+      <div class="chart-shell">${renderLineChart({
+        ariaLabel: `${title} comparison chart`,
+        xLabel: activeMode === "aligned" ? labels.alignedTimeSeconds : labels.timeSeconds,
+        yLabel,
+        series,
+        events,
+        peaks
+      })}</div>
       <div class="legend">
         ${series.map((item) => `
           <div class="legend__item">
-            <span class="legend__swatch" style="background:${item.color};"></span>
-            <span>${item.name}</span>
+            <span class="legend__swatch" style="background:${item.color};${item.dash ? "opacity:.7" : ""}"></span>
+            <span>${escapeHtml(item.name)}</span>
           </div>
         `).join("")}
       </div>
+      <div class="chart-source">${copy("common.chartMethodNote")}</div>
     `;
   }
 
   function buildComparisonPanel(tests) {
+    const tabs = ["thrust", "pressure", "metrics"];
     return `
       <section class="section" id="comparison">
         <div class="section-heading">
           <h2>${copy("home.comparisonTitle")}</h2>
           <p>${copy("home.comparisonLead")}</p>
         </div>
-        <div class="panel">
+        <div class="panel comparison-layout">
           <div class="toolbar">
-            <div class="tablist" role="tablist" aria-label="${state.lang === "ko" ? "비교 차트 탭" : "Comparison chart tabs"}">
-              ${["thrust", "pressure", "metrics"].map((tab) => `
-                <button
-                  type="button"
-                  id="comparison-tab-${tab}"
-                  role="tab"
-                  data-comparison-tab="${tab}"
-                  aria-selected="${state.comparisonTab === tab}"
-                  aria-controls="comparison-panel-${tab}"
-                  tabindex="${state.comparisonTab === tab ? "0" : "-1"}"
-                >
-                  ${copy(`common.${tab}`)}
-                </button>
+            <div class="tablist" role="tablist" aria-label="${state.lang === "ko" ? "비교 차트 선택" : "Comparison chart selection"}">
+              ${tabs.map((tab) => `
+                <button type="button" id="tab-${tab}" role="tab" data-comparison-tab="${tab}" aria-selected="${state.comparisonTab === tab}" aria-controls="panel-${tab}" tabindex="${state.comparisonTab === tab ? "0" : "-1"}">${copy(`common.${tab}`)}</button>
               `).join("")}
             </div>
-            <div class="pill-toggle" role="group" aria-label="${state.lang === "ko" ? "비교 시간 기준" : "Comparison time mode"}">
+            <div class="mode-toggle" aria-label="${state.lang === "ko" ? "시간축 선택" : "Time mode selection"}">
               <button type="button" data-comparison-mode="absolute" aria-pressed="${state.comparisonMode === "absolute"}">${copy("common.directView")}</button>
               <button type="button" data-comparison-mode="aligned" aria-pressed="${state.comparisonMode === "aligned"}">${copy("common.alignedView")}</button>
             </div>
           </div>
-          <div class="panel-note">${state.comparisonMode === "aligned" ? copy("common.alignmentNote") : copy("common.absoluteNote")}</div>
-          ${["thrust", "pressure", "metrics"].map((tab) => {
-            const title = tab === "pressure" ? copy("common.pressure") : (tab === "metrics" ? copy("common.metrics") : copy("common.thrust"));
-            const note = tab === "metrics" ? copy("common.keyMetricsTabNote") : copy("common.chartMethodNote");
-            return `
-              <div
-                class="tabpanel"
-                id="comparison-panel-${tab}"
-                role="tabpanel"
-                aria-labelledby="comparison-tab-${tab}"
-                ${state.comparisonTab === tab ? "" : "hidden"}
-              >
-                <div class="chart-header">
-                  <div class="chart-header__title">${title}</div>
-                  <div class="chart-header__note">${note}</div>
-                </div>
-                ${buildComparisonChart(tests, tab, state.comparisonMode)}
+          ${tabs.map((tab) => `
+            <div class="tabpanel" id="panel-${tab}" role="tabpanel" aria-labelledby="tab-${tab}" ${state.comparisonTab === tab ? "" : "hidden"}>
+              <div class="chart-header">
+                <div class="chart-header__title">${copy(`common.${tab}`)}</div>
+                <div class="chart-header__note">${tab === "metrics" ? copy("home.executiveLead") : (state.comparisonMode === "aligned" ? copy("common.alignmentNote") : copy("common.absoluteNote"))}</div>
               </div>
-            `;
-          }).join("")}
+              ${buildComparisonChart(tests, tab, state.comparisonMode)}
+            </div>
+          `).join("")}
         </div>
       </section>
     `;
@@ -653,30 +599,28 @@
   function buildFindings(tests) {
     const latest = tests[0];
     const previous = tests[1];
-    const deltaLines = previous ? [
-      `${copy("common.peakThrust")}: ${formatDelta(metricDelta(latest.metrics.maxThrustN, previous.metrics.maxThrustN), "N", 2)}`,
-      `${copy("common.totalImpulse")}: ${formatDelta(metricDelta(latest.metrics.totalImpulseNs, previous.metrics.totalImpulseNs), "N s", 2)}`,
-      `${copy("common.burnDuration")}: ${formatDelta(metricDelta(latest.metrics.burnTimeMs, previous.metrics.burnTimeMs), "ms", 1)}`
-    ] : [];
-
+    const issueItems = localize(latest.issues);
     return `
       <section class="section" id="findings">
         <div class="section-heading">
-          <h2>${copy("common.findingsTitle")}</h2>
+          <h2>${copy("home.findingsTitle")}</h2>
           <p>${copy("home.findingsLead")}</p>
         </div>
-        <div class="finding-grid">
+        <div class="publication-layout">
           <article class="mini-panel">
             <h3>${localize(latest.title)}</h3>
             <ul>
-              ${localize(latest.highlights).map((item) => `<li>${item}</li>`).join("")}
+              ${localize(latest.highlights).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
+              ${issueItems.length ? issueItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("") : `<li>${copy("common.noIssues")}</li>`}
             </ul>
           </article>
           <article class="mini-panel">
-            <h3>${previous ? localize(previous.title) : copy("common.comparisonScope")}</h3>
+            <h3>${previous ? `${state.lang === "ko" ? "직전 시험 대비" : "Compared with Previous Run"}` : copy("common.metrics")}</h3>
             <ul>
-              ${deltaLines.map((item) => `<li>${item}</li>`).join("")}
-              ${previous && localize(previous.issues).length ? `<li>${localize(previous.issues)[0]}</li>` : `<li>${copy("common.noIssues")}</li>`}
+              <li>${copy("common.peakThrust")}: ${previous ? formatDelta(metricDelta(latest, previous, "maxThrustN"), "N", 2) : copy("common.noData")}</li>
+              <li>${copy("common.totalImpulse")}: ${previous ? formatDelta(metricDelta(latest, previous, "totalImpulseNs"), "N s", 2) : copy("common.noData")}</li>
+              <li>${copy("common.burnDuration")}: ${previous ? formatDelta(metricDelta(latest, previous, "burnTimeMs"), "ms", 1) : copy("common.noData")}</li>
+              <li>${copy("common.sourceArtifactsNote")}</li>
             </ul>
           </article>
         </div>
@@ -685,26 +629,21 @@
   }
 
   function sortedTests(tests) {
-    const items = [...tests];
-    if (state.archiveSort === "thrust") {
-      return items.sort((a, b) => b.metrics.maxThrustN.value - a.metrics.maxThrustN.value);
-    }
-    if (state.archiveSort === "impulse") {
-      return items.sort((a, b) => b.metrics.totalImpulseNs.value - a.metrics.totalImpulseNs.value);
-    }
-    if (state.archiveSort === "pressure") {
-      return items.sort((a, b) => b.metrics.maxPressureBar.value - a.metrics.maxPressureBar.value);
-    }
-    return items.sort((a, b) => b.date.localeCompare(a.date));
+    return [...tests].sort((a, b) => {
+      if (state.archiveSort === "thrust") return b.metrics.maxThrustN.value - a.metrics.maxThrustN.value;
+      if (state.archiveSort === "impulse") return b.metrics.totalImpulseNs.value - a.metrics.totalImpulseNs.value;
+      if (state.archiveSort === "pressure") return b.metrics.maxPressureBar.value - a.metrics.maxPressureBar.value;
+      return b.date.localeCompare(a.date);
+    });
   }
 
   function renderStatusBadge(test) {
-    const levelClass = test.issueSummary.level === "none" ? "none" : "attention";
-    return `<span class="status-badge ${levelClass}">${localize(test.issueSummary.label)}</span>`;
+    const level = test.issueSummary && test.issueSummary.level ? test.issueSummary.level : "none";
+    return `<span class="status-badge ${level}">${localize(test.issueSummary.label)}</span>`;
   }
 
   function renderPublicationBadge(test) {
-    return `<span class="status-badge published">${localize(test.statusLabel || { ko: test.status, en: test.status })}</span>`;
+    return `<span class="status-badge published">${localize(test.statusLabel)}</span>`;
   }
 
   function buildArchive(tests) {
@@ -712,15 +651,16 @@
       <section class="section" id="archive">
         <div class="section-heading">
           <h2>${copy("home.archiveTitle")}</h2>
-          <p>${copy("common.archiveLead")}</p>
+          <p>${copy("home.archiveSubtitle")}</p>
         </div>
         <div class="archive-tools">
-          <div class="muted">${copy("home.archiveSubtitle")}</div>
+          <div class="muted">${tests.length} ${copy("common.publishedRuns")}</div>
+          <label class="visually-hidden" for="archive-sort">${state.lang === "ko" ? "정렬" : "Sort"}</label>
           <select class="select-input" id="archive-sort">
-            <option value="date"${state.archiveSort === "date" ? " selected" : ""}>${copy("common.sortingNewest")}</option>
-            <option value="thrust"${state.archiveSort === "thrust" ? " selected" : ""}>${copy("common.sortingThrust")}</option>
-            <option value="impulse"${state.archiveSort === "impulse" ? " selected" : ""}>${copy("common.sortingImpulse")}</option>
-            <option value="pressure"${state.archiveSort === "pressure" ? " selected" : ""}>${copy("common.sortingPressure")}</option>
+            <option value="date" ${state.archiveSort === "date" ? "selected" : ""}>${copy("common.sortingNewest")}</option>
+            <option value="thrust" ${state.archiveSort === "thrust" ? "selected" : ""}>${copy("common.sortingThrust")}</option>
+            <option value="impulse" ${state.archiveSort === "impulse" ? "selected" : ""}>${copy("common.sortingImpulse")}</option>
+            <option value="pressure" ${state.archiveSort === "pressure" ? "selected" : ""}>${copy("common.sortingPressure")}</option>
           </select>
         </div>
         <div class="archive-table">
@@ -763,21 +703,21 @@
       <section class="section" id="methods">
         <div class="section-heading">
           <h2>${copy("home.methodsTitle")}</h2>
-          <p>${copy("common.methodsLead")}</p>
+          <p>${localize(catalog.site.methodologySummary)}</p>
         </div>
         <div class="finding-grid">
           <article class="mini-panel">
             <h3>${copy("common.methodology")}</h3>
             <ul>
-              ${latest.processing.slice(0, 4).map((item) => `<li><strong>${localize(item.label)}:</strong> ${localize(item.value)}</li>`).join("")}
+              ${latest.processing.slice(0, 5).map((item) => `<li><strong>${localize(item.label)}:</strong> ${localize(item.value)}</li>`).join("")}
             </ul>
           </article>
           <article class="mini-panel">
             <h3>${copy("common.pipelineDerived")}</h3>
             <ul>
-              <li>${localize(catalog.site.methodologySummary)}</li>
               <li>${copy("common.filteredSource")}</li>
               <li>${copy("common.sourceArtifactsNote")}</li>
+              <li>${state.lang === "ko" ? "각 상세 페이지에서 보정 값과 입력 파일을 함께 확인할 수 있습니다." : "Each detail page includes calibration values and source input references."}</li>
             </ul>
           </article>
         </div>
@@ -791,25 +731,13 @@
       <section class="section" id="access">
         <div class="section-heading">
           <h2>${copy("home.accessTitle")}</h2>
-          <p>${copy("common.accessLead")}</p>
+          <p>${copy("detail.evidenceLead")}</p>
         </div>
         <div class="data-links">
-          <a class="data-link" href="${resolvePath(latest.links.page)}">
-            <div class="data-link__title">${copy("common.reportPage")}</div>
-            <div class="data-link__meta">${localize(latest.title)}</div>
-          </a>
-          <a class="data-link" href="${resolvePath(latest.links.executiveReport)}">
-            <div class="data-link__title">${copy("common.executiveReport")}</div>
-            <div class="data-link__meta">${latest.date}</div>
-          </a>
-          <a class="data-link" href="${resolvePath(latest.links.markdown)}">
-            <div class="data-link__title">${copy("common.markdownRecord")}</div>
-            <div class="data-link__meta">${latest.date}</div>
-          </a>
-          <a class="data-link" href="${resolvePath(latest.links.pipelineData)}">
-            <div class="data-link__title">${copy("common.pipelineData")}</div>
-            <div class="data-link__meta">${copy("common.filteredSource")}</div>
-          </a>
+          <a class="data-link" href="${resolvePath(latest.links.page)}"><div class="data-link__title">${copy("common.detailPage")}</div><div class="data-link__meta">${localize(latest.title)}</div></a>
+          <a class="data-link" href="${resolvePath(latest.links.executiveReport)}"><div class="data-link__title">${copy("common.executiveReport")}</div><div class="data-link__meta">${latest.date}</div></a>
+          <a class="data-link" href="${resolvePath(latest.links.markdown)}"><div class="data-link__title">${copy("common.markdownRecord")}</div><div class="data-link__meta">${latest.date}</div></a>
+          <a class="data-link" href="${resolvePath(latest.links.pipelineData)}"><div class="data-link__title">${copy("common.pipelineData")}</div><div class="data-link__meta">${copy("common.filteredSource")}</div></a>
         </div>
       </section>
     `;
@@ -838,32 +766,32 @@
   function renderHome() {
     const tests = catalog.tests;
     const latest = tests[0];
-    setDocumentMeta(catalog.site.pageMeta && catalog.site.pageMeta.home ? catalog.site.pageMeta.home : { title: catalog.site.name, description: catalog.site.mission });
-
+    setDocumentMeta(catalog.site.pageMeta.home);
     document.body.innerHTML = `
       ${renderHeader()}
       <main class="site-shell">
         <section class="hero" id="overview">
-          <div class="site-nav">
+          <nav class="site-nav" aria-label="${state.lang === "ko" ? "페이지 섹션" : "Page sections"}">
             <a href="#overview">${copy("nav.overview")}</a>
             <a href="#comparison">${copy("nav.comparison")}</a>
             <a href="#findings">${copy("nav.findings")}</a>
             <a href="#archive">${copy("nav.archive")}</a>
             <a href="#methods">${copy("nav.methods")}</a>
             <a href="#access">${copy("nav.access")}</a>
-          </div>
+          </nav>
           <div class="hero__grid">
             <div>
+              <div class="verdict">${copy("common.verdict")}</div>
               <h1 class="hero__title">${copy("home.title")}</h1>
               <p class="hero__lead">${copy("home.lead")}</p>
             </div>
-            <aside class="hero__panel">
+            <aside class="hero__panel" aria-label="${copy("home.executiveTitle")}">
               <h2>${copy("home.executiveTitle")}</h2>
               <p>${localize(latest.context)}</p>
               <div class="hero__summary">
                 <div class="hero-stat"><div class="hero-stat__label">${copy("common.latestRun")}</div><div class="hero-stat__value">${latest.date}</div></div>
                 <div class="hero-stat"><div class="hero-stat__label">${copy("common.publishedRuns")}</div><div class="hero-stat__value">${tests.length}</div></div>
-                <div class="hero-stat"><div class="hero-stat__label">${copy("common.comparisonScope")}</div><div class="hero-stat__value">${copy("common.compareAllRuns")}</div></div>
+                <div class="hero-stat"><div class="hero-stat__label">${copy("common.comparisonScope")}</div><div class="hero-stat__value">${copy("common.allRuns")}</div></div>
               </div>
             </aside>
           </div>
@@ -881,9 +809,8 @@
         ${buildMethods(tests)}
         ${buildAccess(tests)}
       </main>
-      <footer class="footer site-shell">${localize(catalog.site.mission)}</footer>
+      <footer class="footer">${localize(catalog.site.mission)}</footer>
     `;
-
     bindCommonControls();
     bindHomeControls();
   }
@@ -907,68 +834,65 @@
     const derived = dataCache.get(test.id);
     const palette = getThemePalette();
     const labels = copy("labels");
-    if (activeTab === "metrics") {
-      return renderMetricBars([test]);
-    }
-
+    if (activeTab === "metrics") return renderMetricBars([test]);
     const events = [
       { x: test.events.ignitionTimeS, color: palette[0], label: labels.ignition },
       { x: test.events.burnEndTimeS, color: palette[1], label: labels.burnEnd }
     ];
-
-    const config = activeTab === "pressure"
-      ? {
-          ariaLabel: `${localize(test.title)} pressure chart`,
-          xLabel: labels.timeSeconds,
-          yLabel: labels.pressureUnit,
-          series: [
-            { name: labels.rawPressure, color: palette[1], strokeWidth: 1.7, points: downsample(derived.rows, 420).map((row) => ({ x: row.time_s, y: row.raw_gauge_pressure })) },
-            { name: labels.filteredPressure, color: palette[0], points: downsample(derived.rows, 420).map((row) => ({ x: row.time_s, y: row.filtered_gauge_pressure })) }
-          ],
-          events,
-          peaks: [{ x: derived.peakPressure.time_s, y: derived.peakPressure.filtered_gauge_pressure, color: palette[0], label: labels.peak }]
-        }
-      : {
-          ariaLabel: `${localize(test.title)} thrust chart`,
-          xLabel: labels.timeSeconds,
-          yLabel: labels.thrustUnit,
-          series: [
-            { name: labels.rawForce, color: palette[1], strokeWidth: 1.5, points: downsample(derived.rows, 420).map((row) => ({ x: row.time_s, y: row.raw_force_N })) },
-            { name: labels.correctedForce, color: palette[2], strokeWidth: 1.9, points: downsample(derived.rows, 420).map((row) => ({ x: row.time_s, y: row.corrected_force_N })) },
-            { name: labels.filteredForce, color: palette[0], points: downsample(derived.rows, 420).map((row) => ({ x: row.time_s, y: row.filtered_force_N })) }
-          ],
-          events,
-          peaks: [{ x: derived.peakThrust.time_s, y: derived.peakThrust.filtered_force_N, color: palette[0], label: labels.peak }]
-        };
-
+    const pressureConfig = {
+      ariaLabel: `${localize(test.title)} pressure chart`,
+      xLabel: labels.timeSeconds,
+      yLabel: labels.pressureUnit,
+      series: [
+        { name: labels.rawPressure, color: palette[1], strokeWidth: 1.4, dash: "4 5", points: downsample(derived.rows, 420).map((row) => ({ x: row.time_s, y: row.raw_gauge_pressure })) },
+        { name: labels.filteredPressure, color: palette[0], strokeWidth: 2.8, points: downsample(derived.rows, 420).map((row) => ({ x: row.time_s, y: row.filtered_gauge_pressure })) }
+      ],
+      events,
+      peaks: [{ x: derived.peakPressure.time_s, y: derived.peakPressure.filtered_gauge_pressure, color: palette[0], label: labels.peak }]
+    };
+    const thrustConfig = {
+      ariaLabel: `${localize(test.title)} thrust chart`,
+      xLabel: labels.timeSeconds,
+      yLabel: labels.thrustUnit,
+      series: [
+        { name: labels.rawForce, color: palette[1], strokeWidth: 1.3, dash: "4 5", points: downsample(derived.rows, 420).map((row) => ({ x: row.time_s, y: row.raw_force_N })) },
+        { name: labels.correctedForce, color: palette[2], strokeWidth: 1.7, dash: "2 5", points: downsample(derived.rows, 420).map((row) => ({ x: row.time_s, y: row.corrected_force_N })) },
+        { name: labels.filteredForce, color: palette[0], strokeWidth: 2.8, points: downsample(derived.rows, 420).map((row) => ({ x: row.time_s, y: row.filtered_force_N })) }
+      ],
+      events,
+      peaks: [{ x: derived.peakThrust.time_s, y: derived.peakThrust.filtered_force_N, color: palette[0], label: labels.peak }]
+    };
+    const config = activeTab === "pressure" ? pressureConfig : thrustConfig;
     return `
       <div class="chart-shell">${renderLineChart(config)}</div>
       <div class="legend">
-        ${config.series.map((item) => `
-          <div class="legend__item">
-            <span class="legend__swatch" style="background:${item.color};"></span>
-            <span>${item.name}</span>
-          </div>
-        `).join("")}
+        ${config.series.map((item) => `<div class="legend__item"><span class="legend__swatch" style="background:${item.color};"></span><span>${item.name}</span></div>`).join("")}
       </div>
+      <div class="chart-source">${copy("common.chartMethodNote")}</div>
     `;
   }
 
   function renderDetail(test) {
-    setDocumentMeta(test.meta || { title: { ko: `${localize(test.title)} | ${localize(catalog.site.name)}`, en: `${localize(test.title)} | ${localize(catalog.site.name)}` }, description: test.summary });
+    if (!test) {
+      renderError();
+      return;
+    }
+    setDocumentMeta(test.meta);
+    const tabs = ["thrust", "pressure", "metrics"];
     const issues = localize(test.issues);
     document.body.innerHTML = `
       ${renderHeader()}
       <main class="site-shell">
         <section class="detail-hero">
           <a class="detail-hero__back" href="${resolvePath("index.html")}">${copy("common.backToSite")}</a>
+          <div class="verdict">${copy("common.verdict")}</div>
           <h1 class="detail-hero__title">${localize(test.title)}</h1>
           <p class="detail-hero__lead">${localize(test.summary)}</p>
           <div class="detail-summary">
             <article class="metric-card"><div class="metric-card__label">${copy("common.date")}</div><div class="metric-card__value">${test.date}</div><div class="metric-card__delta">${renderPublicationBadge(test)} ${renderStatusBadge(test)}</div></article>
-            <article class="metric-card"><div class="metric-card__label">${copy("common.peakThrust")}</div><div class="metric-card__value">${test.metrics.maxThrustN.display}</div><div class="metric-card__delta">${test.metrics.averageThrustN.display}</div></article>
-            <article class="metric-card"><div class="metric-card__label">${copy("common.totalImpulse")}</div><div class="metric-card__value">${test.metrics.totalImpulseNs.display}</div><div class="metric-card__delta">${test.metrics.burnTimeMs.display}</div></article>
-            <article class="metric-card"><div class="metric-card__label">${copy("common.peakPressure")}</div><div class="metric-card__value">${test.metrics.maxPressureBar.display}</div><div class="metric-card__delta">${test.metrics.maxPressureTimeS.display}</div></article>
+            <article class="metric-card"><div class="metric-card__label">${copy("common.peakThrust")}</div><div class="metric-card__value">${test.metrics.maxThrustN.display}</div><div class="metric-card__delta">${copy("common.averageThrust")}: ${test.metrics.averageThrustN.display}</div></article>
+            <article class="metric-card"><div class="metric-card__label">${copy("common.totalImpulse")}</div><div class="metric-card__value">${test.metrics.totalImpulseNs.display}</div><div class="metric-card__delta">${copy("common.burnDuration")}: ${test.metrics.burnTimeMs.display}</div></article>
+            <article class="metric-card"><div class="metric-card__label">${copy("common.peakPressure")}</div><div class="metric-card__value">${test.metrics.maxPressureBar.display}</div><div class="metric-card__delta">${copy("common.peakTime")}: ${test.metrics.maxPressureTimeS.display}</div></article>
           </div>
         </section>
         <section class="section">
@@ -978,33 +902,15 @@
           </div>
           <div class="panel">
             <div class="toolbar">
-              <div class="tablist" role="tablist" aria-label="${state.lang === "ko" ? "시험 차트 탭" : "Test chart tabs"}">
-                ${["thrust", "pressure", "metrics"].map((tab) => `
-                  <button
-                    type="button"
-                    id="detail-tab-${tab}"
-                    role="tab"
-                    data-comparison-tab="${tab}"
-                    aria-selected="${state.comparisonTab === tab}"
-                    aria-controls="detail-panel-${tab}"
-                    tabindex="${state.comparisonTab === tab ? "0" : "-1"}"
-                  >
-                    ${copy(`common.${tab}`)}
-                  </button>
-                `).join("")}
+              <div class="tablist" role="tablist" aria-label="${state.lang === "ko" ? "상세 차트 선택" : "Detail chart selection"}">
+                ${tabs.map((tab) => `<button type="button" id="detail-tab-${tab}" role="tab" data-comparison-tab="${tab}" aria-selected="${state.comparisonTab === tab}" aria-controls="detail-panel-${tab}" tabindex="${state.comparisonTab === tab ? "0" : "-1"}">${copy(`common.${tab}`)}</button>`).join("")}
               </div>
             </div>
-            ${["thrust", "pressure", "metrics"].map((tab) => `
-              <div
-                class="tabpanel"
-                id="detail-panel-${tab}"
-                role="tabpanel"
-                aria-labelledby="detail-tab-${tab}"
-                ${state.comparisonTab === tab ? "" : "hidden"}
-              >
+            ${tabs.map((tab) => `
+              <div class="tabpanel" id="detail-panel-${tab}" role="tabpanel" aria-labelledby="detail-tab-${tab}" ${state.comparisonTab === tab ? "" : "hidden"}>
                 <div class="chart-header">
                   <div class="chart-header__title">${copy(`common.${tab}`)}</div>
-                  <div class="chart-header__note">${tab === "metrics" ? copy("common.keyMetricsTabNote") : copy("common.chartMethodNote")}</div>
+                  <div class="chart-header__note">${tab === "metrics" ? copy("home.executiveLead") : copy("common.chartMethodNote")}</div>
                 </div>
                 ${buildDetailChart(test, tab)}
               </div>
@@ -1023,39 +929,37 @@
             </div>
             <div class="detail-stack">
               <article class="panel">
-                <div class="subsection-title">${copy("common.files")}</div>
-                <div class="data-links">
+                <div class="subsection-title">${copy("detail.evidenceTitle")}</div>
+                <p class="detail-meta-note">${copy("detail.evidenceLead")}</p>
+                <div class="data-links" style="grid-template-columns:1fr;margin-top:12px;">
                   <a class="data-link" href="${resolvePath(test.links.executiveReport)}"><div class="data-link__title">${copy("common.executiveReport")}</div><div class="data-link__meta">${test.date}</div></a>
                   <a class="data-link" href="${resolvePath(test.links.pipelineData)}"><div class="data-link__title">${copy("common.pipelineData")}</div><div class="data-link__meta">${copy("common.filteredSource")}</div></a>
-                  <a class="data-link" href="${resolvePath(test.links.markdown)}"><div class="data-link__title">${copy("common.markdownRecord")}</div><div class="data-link__meta">${copy("common.reportPage")}</div></a>
+                  <a class="data-link" href="${resolvePath(test.links.markdown)}"><div class="data-link__title">${copy("common.markdownRecord")}</div><div class="data-link__meta">${copy("common.detailPage")}</div></a>
                 </div>
               </article>
               <article class="panel"><div class="subsection-title">${copy("common.media")}</div><p class="detail-meta-note">${test.media.videoUrl ? `<a href="${test.media.videoUrl}">${localize(test.media.videoLabel)}</a>` : localize(test.media.videoLabel)}</p></article>
-              <article class="panel"><div class="subsection-title">${copy("common.sourceInput")}</div><p class="detail-meta-note">${test.source.inputFile}</p></article>
+              <article class="panel"><div class="subsection-title">${copy("common.sourceInput")}</div><p class="detail-meta-note">${escapeHtml(test.source.inputFile)}</p></article>
             </div>
           </div>
         </section>
         <section class="section">
           <div class="section-heading"><h2>${copy("common.issues")}</h2><p>${localize(test.context)}</p></div>
-          <div class="panel">${issues.length ? `<ul class="detail-list">${issues.map((item) => `<li>${item}</li>`).join("")}</ul>` : `<div class="empty-state">${copy("common.noIssues")}</div>`}</div>
+          <div class="panel">${issues.length ? `<ul class="detail-list">${issues.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` : `<div class="empty-state">${copy("common.noIssues")}</div>`}</div>
         </section>
         <section class="section">
           <div class="section-heading"><h2>${copy("common.exportedFigures")}</h2><p>${copy("detail.artifactsLead")}</p></div>
           <div class="artifact-grid">
             ${test.artifacts.figures.map((figure) => `
               <article class="artifact-card">
-                <a href="${resolvePath(figure.path)}">
-                  <div class="artifact-card__media"><img src="${resolvePath(figure.path)}" alt="${localize(figure.label)}"></div>
-                </a>
+                <a href="${resolvePath(figure.path)}"><div class="artifact-card__media"><img src="${resolvePath(figure.path)}" alt="${escapeHtml(localize(figure.label))}"></div></a>
                 <div class="artifact-card__title">${localize(figure.label)}</div>
               </article>
             `).join("")}
           </div>
         </section>
       </main>
-      <footer class="footer site-shell">${localize(catalog.site.mission)}</footer>
+      <footer class="footer">${localize(catalog.site.mission)}</footer>
     `;
-
     bindCommonControls();
     bindDetailControls();
   }
@@ -1064,7 +968,11 @@
     document.querySelectorAll("[data-language]").forEach((button) => {
       button.addEventListener("click", () => {
         state.lang = button.dataset.language;
-        localStorage.setItem(STORAGE_KEYS.lang, state.lang);
+        try {
+          localStorage.setItem(STORAGE_KEYS.lang, state.lang);
+        } catch (_) {
+          /* noop */
+        }
         rerender();
       });
     });
@@ -1080,18 +988,11 @@
       tabs.forEach((tab, index) => {
         tab.addEventListener("keydown", (event) => {
           let nextIndex = null;
-          if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-            nextIndex = (index + 1) % tabs.length;
-          } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-            nextIndex = (index - 1 + tabs.length) % tabs.length;
-          } else if (event.key === "Home") {
-            nextIndex = 0;
-          } else if (event.key === "End") {
-            nextIndex = tabs.length - 1;
-          }
-          if (nextIndex == null) {
-            return;
-          }
+          if (event.key === "ArrowRight" || event.key === "ArrowDown") nextIndex = (index + 1) % tabs.length;
+          if (event.key === "ArrowLeft" || event.key === "ArrowUp") nextIndex = (index - 1 + tabs.length) % tabs.length;
+          if (event.key === "Home") nextIndex = 0;
+          if (event.key === "End") nextIndex = tabs.length - 1;
+          if (nextIndex == null) return;
           event.preventDefault();
           tabs[nextIndex].focus();
           tabs[nextIndex].click();
@@ -1101,14 +1002,18 @@
   }
 
   function bindHomeControls() {
-    document.querySelectorAll("[data-comparison-tab]").forEach((button) => button.addEventListener("click", () => {
-      state.comparisonTab = button.dataset.comparisonTab;
-      rerender();
-    }));
-    document.querySelectorAll("[data-comparison-mode]").forEach((button) => button.addEventListener("click", () => {
-      state.comparisonMode = button.dataset.comparisonMode;
-      rerender();
-    }));
+    document.querySelectorAll("[data-comparison-tab]").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.comparisonTab = button.dataset.comparisonTab;
+        rerender();
+      });
+    });
+    document.querySelectorAll("[data-comparison-mode]").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.comparisonMode = button.dataset.comparisonMode;
+        rerender();
+      });
+    });
     const sortInput = document.getElementById("archive-sort");
     if (sortInput) {
       sortInput.addEventListener("change", (event) => {
@@ -1119,14 +1024,16 @@
   }
 
   function bindDetailControls() {
-    document.querySelectorAll("[data-comparison-tab]").forEach((button) => button.addEventListener("click", () => {
-      state.comparisonTab = button.dataset.comparisonTab;
-      rerender();
-    }));
+    document.querySelectorAll("[data-comparison-tab]").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.comparisonTab = button.dataset.comparisonTab;
+        rerender();
+      });
+    });
   }
 
   function renderError() {
-    document.documentElement.lang = state.lang || "ko";
+    document.documentElement.lang = state.lang;
     document.body.innerHTML = `<main class="site-shell"><section class="section"><div class="empty-state">${copy("common.loadError")}</div></section></main>`;
   }
 
@@ -1142,17 +1049,23 @@
   async function preloadData() {
     if (PAGE.page === "detail") {
       const test = catalog.tests.find((item) => item.id === PAGE.testId);
-      if (test) {
-        await ensureSeries(test);
-      }
+      if (test) await ensureSeries(test);
       return;
     }
     await Promise.all(catalog.tests.map((test) => ensureSeries(test)));
   }
 
   async function init() {
-    state.lang = localStorage.getItem(STORAGE_KEYS.lang) || "ko";
-    state.theme = localStorage.getItem(STORAGE_KEYS.theme) || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    try {
+      state.lang = localStorage.getItem(STORAGE_KEYS.lang) || "en";
+    } catch (_) {
+      state.lang = "en";
+    }
+    try {
+      state.theme = localStorage.getItem(STORAGE_KEYS.theme) || "light";
+    } catch (_) {
+      state.theme = "light";
+    }
     document.body.dataset.theme = state.theme;
     try {
       catalog = await fetchJson(resolvePath("tests/index.json"));
