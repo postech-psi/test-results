@@ -10,24 +10,24 @@
 
   var TOKENS = {
     dark: {
-      ink: "#f4f2ed", inkSoft: "#c9c5bc", inkMuted: "#918d84",
-      line: "#343434", lineStrong: "#6e6b64",
-      surface: "#181818", surfaceAlt: "#202020", accent: "#c8a3aa",
-      tooltipBg: "rgba(24, 24, 24, 0.96)", tooltipBorder: "#6e6b64",
-      zoomFill: "rgba(200, 163, 170, 0.12)", zoomHandle: "#c8a3aa"
+      ink: "#f7fbff", inkSoft: "#d3dfeb", inkMuted: "#9fb0c1",
+      line: "#2d4962", lineStrong: "#6f8aa3",
+      surface: "#0d1a28", surfaceAlt: "#132537", accent: "#e05a63",
+      tooltipBg: "rgba(13, 26, 40, 0.98)", tooltipBorder: "#6f8aa3",
+      zoomFill: "rgba(224, 90, 99, 0.14)", zoomHandle: "#e05a63"
     },
     light: {
-      ink: "#151515", inkSoft: "#4b4b4b", inkMuted: "#73706a",
-      line: "#d7d5cf", lineStrong: "#9c9990",
-      surface: "#ffffff", surfaceAlt: "#f2f2ef", accent: "#8f6f76",
-      tooltipBg: "rgba(255, 255, 255, 0.98)", tooltipBorder: "#9c9990",
-      zoomFill: "rgba(143, 111, 118, 0.10)", zoomHandle: "#8f6f76"
+      ink: "#071827", inkSoft: "#26394b", inkMuted: "#536273",
+      line: "#c6d2df", lineStrong: "#7b8fa4",
+      surface: "#ffffff", surfaceAlt: "#f3f6fa", accent: "#b51d2a",
+      tooltipBg: "rgba(255, 255, 255, 0.99)", tooltipBorder: "#7b8fa4",
+      zoomFill: "rgba(181, 29, 42, 0.10)", zoomHandle: "#b51d2a"
     }
   };
 
   var PALETTE = {
-    dark: ["#a8bdc8", "#c8a3aa", "#a9bea6", "#c8b77e", "#b7adbf"],
-    light: ["#6e8795", "#b58d91", "#8fa58e", "#b7a56f", "#9b90a6"]
+    dark: ["#78aee1", "#e05a63", "#75c795", "#d9b45d", "#a8b5c2"],
+    light: ["#124f85", "#b51d2a", "#2f7d52", "#9a6a16", "#566b7f"]
   };
 
   function tokens(theme) { return TOKENS[theme] || TOKENS.dark; }
@@ -52,7 +52,7 @@
 
   function areaGradient(color) {
     return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-      { offset: 0, color: hexToRgba(color, 0.18) },
+      { offset: 0, color: hexToRgba(color, 0.08) },
       { offset: 1, color: hexToRgba(color, 0.0) }
     ]);
   }
@@ -248,7 +248,7 @@
         lineStyle: {
           color: run.color,
           width: active ? 2.6 : 1.4,
-          opacity: active ? 1 : 0.28
+          opacity: active ? 1 : 0.42
         },
         itemStyle: { color: run.color },
         emphasis: { focus: "series", lineStyle: { width: 3 } },
@@ -293,7 +293,7 @@
           color: s.color,
           width: isPrimary ? 2.8 : 1.5,
           type: s.dashed ? "dashed" : "solid",
-          opacity: isPrimary ? 1 : 0.66
+          opacity: isPrimary ? 1 : 0.72
         },
         itemStyle: { color: s.color },
         emphasis: { focus: "series" },
