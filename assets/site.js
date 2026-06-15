@@ -433,14 +433,14 @@
     const events = (config.events || []).map((event) => `
       <g opacity="${event.opacity == null ? 1 : event.opacity}">
         <line x1="${xScale(event.x)}" y1="${margin.top}" x2="${xScale(event.x)}" y2="${height - margin.bottom}" stroke="${event.color}" stroke-width="${event.strokeWidth || 1.2}" stroke-dasharray="4 5"></line>
-        <text x="${Math.min(width - margin.right - 6, xScale(event.x) + 7)}" y="${margin.top + 15}" fill="${event.color}" font-size="12" font-weight="800">${escapeHtml(event.label)}</text>
+        <text x="${Math.min(width - margin.right - 6, xScale(event.x) + 7)}" y="${margin.top + 15 + (event.row || 0) * 13}" fill="${event.color}" font-size="12" font-weight="800">${escapeHtml(event.label)}</text>
       </g>
     `).join("");
 
     const peaks = (config.peaks || []).map((peak) => `
       <g opacity="${peak.opacity == null ? 1 : peak.opacity}">
         <circle cx="${xScale(peak.x)}" cy="${yScale(peak.y)}" r="4" fill="${peak.color}" stroke="var(--surface)" stroke-width="2"></circle>
-        <text x="${Math.min(width - margin.right - 40, xScale(peak.x) + 8)}" y="${Math.max(margin.top + 18, yScale(peak.y) - 8)}" fill="${peak.color}" font-size="12" font-weight="800">${escapeHtml(peak.label)}</text>
+        <text x="${Math.min(width - margin.right - 40, xScale(peak.x) + 8)}" y="${Math.min(height - margin.bottom - 6, Math.max(margin.top + 18, yScale(peak.y) - 8) + (peak.row || 0) * 13)}" fill="${peak.color}" font-size="12" font-weight="800">${escapeHtml(peak.label)}</text>
       </g>
     `).join("");
 
@@ -555,10 +555,10 @@
       ? tests.flatMap((test, index) => {
         const isActive = !hasHighlight || test.id === selectedTestId;
         return [
-          { x: test.events.ignitionTimeS, color: palette[index % palette.length], label: `${test.date} ${labels.ignition}`, opacity: isActive ? 1 : 0.2, strokeWidth: isActive ? 1.4 : 0.8 },
-          { x: test.events.burnEndTimeS, color: palette[index % palette.length], label: `${test.date} ${labels.burnEnd}`, opacity: isActive ? 1 : 0.2, strokeWidth: isActive ? 1.4 : 0.8 }
+          { x: test.events.ignitionTimeS, color: palette[index % palette.length], label: `${test.date} ${labels.ignition}`, opacity: isActive ? 1 : 0.2, strokeWidth: isActive ? 1.4 : 0.8, row: index * 2 },
+          { x: test.events.burnEndTimeS, color: palette[index % palette.length], label: `${test.date} ${labels.burnEnd}`, opacity: isActive ? 1 : 0.2, strokeWidth: isActive ? 1.4 : 0.8, row: index * 2 + 1 }
         ];
-      })
+      }).filter((event) => !hasHighlight || event.opacity === 1)
       : [{ x: 0, color: palette[0], label: labels.ignition }];
     const peaks = tests.map((test, index) => {
       const derived = dataCache.get(test.id);
@@ -569,7 +569,8 @@
         y: peak[field],
         color: palette[index % palette.length],
         label: `${test.date} ${labels.peak}`,
-        opacity: isActive ? 1 : 0.18
+        opacity: isActive ? 1 : 0.18,
+        row: index
       };
     }).filter((peak) => !hasHighlight || peak.opacity === 1);
     return `
