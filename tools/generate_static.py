@@ -1,0 +1,271 @@
+#!/usr/bin/env python3
+"""Generate the no-JS static fallback HTML (home + per-test detail) from
+tests/index.json so the static markup never drifts from the catalog.
+
+The interactive experience is rendered by assets/site.js at runtime; these
+files only need to be accurate, accessible fallbacks for no-JS clients and
+crawlers. Run from the repo root:  python tools/generate_static.py
+"""
+import html
+import json
+import os
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+VERSION = "2026-06-15-mc"
+
+CARD_DIGITS = {
+    "maxThrustN": (2, "N"),
+    "totalImpulseNs": (2, "N s"),
+    "burnTimeMs": (1, "ms"),
+    "maxPressureBar": (3, "bar"),
+}
+
+
+def esc(value):
+    return html.escape(str(value), quote=True)
+
+
+def en(field):
+    if isinstance(field, dict):
+        return field.get("en") or field.get("ko") or ""
+    return field if field is not None else ""
+
+
+def fmt_delta(value, unit, digits):
+    sign = "+" if value >= 0 else ""
+    return f"{sign}{value:.{digits}f} {unit}"
+
+
+def head(title, description, css_href, lang="en"):
+    return f"""<!doctype html>
+<html lang="{lang}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{esc(title)}</title>
+  <meta name="description" content="{esc(description)}">
+  <link rel="stylesheet" href="{css_href}?v={VERSION}">
+</head>
+<body data-theme="dark">"""
+
+
+def scripts(root_path, page_config):
+    cfg = json.dumps(page_config)
+    base = f"{root_path}/assets"
+    return f"""  <script>window.PSI_PAGE_CONFIG = {cfg};</script>
+  <script src="{base}/vendor/echarts.min.js?v={VERSION}" defer></script>
+  <script src="{base}/charts.js?v={VERSION}" defer></script>
+  <script src="{base}/site.js?v={VERSION}" defer></script>
+</body>
+</html>
+"""
+
+
+def metric_card(label, value, delta=""):
+    delta_html = f'<div class="metric-card__delta">{delta}</div>' if delta else ""
+    return f"""        <article class="metric-card">
+          <div class="metric-card__label">{esc(label)}</div>
+          <div class="metric-card__value">{esc(value)}</div>
+          {delta_html}
+        </article>"""
+
+
+def status_badges(test):
+    level = (test.get("issueSummary") or {}).get("level", "none")
+    issue_label = en((test.get("issueSummary") or {}).get("label", "No issues"))
+    pub = en(test.get("statusLabel", "Published"))
+    return (f'<span class="status-badge published">{esc(pub)}</span> '
+            f'<span class="status-badge {esc(level)}">{esc(issue_label)}</span>')
+
+
+def build_home(data):
+    site = data["site"]
+    tests = data["tests"]
+    latest = tests[0]
+    previous = tests[1] if len(tests) > 1 else None
+    name = en(site["name"])
+    mission = en(site["mission"])
+    meta = site["pageMeta"]["home"]
+
+    cards = []
+    for key, (digits, unit) in CARD_DIGITS.items():
+        metric = latest["metrics"][key]
+        delta = ""
+        if previous:
+            d = metric["value"] - previous["metrics"][key]["value"]
+            arrow = "&#9650;" if d >= 0 else "&#9660;"
+            delta = f'{arrow} {esc(fmt_delta(d, unit, digits))} vs {esc(previous["date"])}'
+        cards.append(metric_card(en_metric_label(key), metric["display"], delta))
+
+    rows = []
+    for t in tests:
+        rows.append(f"""            <tr>
+              <td>{esc(t['date'])}</td>
+              <td><strong>{esc(en(t['title']))}</strong><div class="muted">{esc(en(t['summary']))}</div></td>
+              <td><span class="status-badge published">{esc(en(t['statusLabel']))}</span></td>
+              <td><span class="status-badge {esc((t.get('issueSummary') or {}).get('level','none'))}">{esc(en((t.get('issueSummary') or {}).get('label','No issues')))}</span></td>
+              <td>{esc(t['metrics']['maxThrustN']['display'])}</td>
+              <td>{esc(t['metrics']['totalImpulseNs']['display'])}</td>
+              <td>{esc(t['metrics']['maxPressureBar']['display'])}</td>
+              <td><a href="{esc(t['links']['page'])}">View test</a></td>
+            </tr>""")
+
+    evidence = f"""        <a class="data-link" href="{esc(latest['links']['executiveReport'])}"><div class="data-link__title">Executive report</div><div class="data-link__meta">{esc(latest['date'])}</div></a>
+        <a class="data-link" href="{esc(latest['links']['pipelineData'])}"><div class="data-link__title">Pipeline data</div><div class="data-link__meta">filtered force / filtered gauge pressure</div></a>
+        <a class="data-link" href="{esc(latest['links']['markdown'])}"><div class="data-link__title">Markdown record</div><div class="data-link__meta">{esc(en(latest['title']))}</div></a>
+        <a class="data-link" href="tests/index.json"><div class="data-link__title">Catalog JSON</div><div class="data-link__meta">Site data</div></a>"""
+
+    body = f"""{head(en(meta['title']), en(meta['description']), 'assets/site.css')}
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="brand"><div><div class="brand__eyebrow">POSTECH PSI · MISSION DATA</div><div class="brand__title">{esc(name)}</div></div></div>
+      <div class="site-header__controls"><span class="muted">EN / KO</span></div>
+    </div>
+  </header>
+
+  <main class="site-shell static-shell">
+    <section class="hero" id="overview">
+      <div class="hero__grid">
+        <div>
+          <div class="verdict">Static fire test report</div>
+          <h1 class="hero__title">{esc(en(site['name']))}</h1>
+          <p class="hero__lead">{esc(mission)}</p>
+        </div>
+        <aside class="hero__panel">
+          <h2>Latest test &middot; {esc(latest['date'])}</h2>
+          <p class="detail-meta-note">{esc(en(latest['summary']))}</p>
+          <div class="hero__summary">
+            <div class="hero-stat"><div class="hero-stat__label">Peak thrust</div><div class="hero-stat__value">{esc(latest['metrics']['maxThrustN']['display'])}</div></div>
+            <div class="hero-stat"><div class="hero-stat__label">Total impulse</div><div class="hero-stat__value">{esc(latest['metrics']['totalImpulseNs']['display'])}</div></div>
+            <div class="hero-stat"><div class="hero-stat__label">Published tests</div><div class="hero-stat__value">{len(tests)}</div></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading"><h2>Latest test</h2><p>Measured performance for the most recent published run.</p></div>
+      <div class="overview-grid">
+{chr(10).join(cards)}
+      </div>
+    </section>
+
+    <section class="section" id="archive">
+      <div class="section-heading"><h2>Archive</h2><p>Published tests and direct evidence links.</p></div>
+      <div class="archive-table">
+        <table>
+          <thead><tr><th>Date</th><th>Test</th><th>Status</th><th>Issue</th><th>Peak thrust</th><th>Total impulse</th><th>Peak pressure</th><th>Link</th></tr></thead>
+          <tbody>
+{chr(10).join(rows)}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section" id="access">
+      <div class="section-heading"><h2>Evidence</h2><p>Reports, Markdown records, and pipeline data can be opened directly.</p></div>
+      <div class="data-links">
+{evidence}
+      </div>
+      <noscript><div class="empty-state" style="margin-top:18px;">JavaScript is disabled. The summary, test pages, and evidence links remain available.</div></noscript>
+    </section>
+  </main>
+
+{scripts('.', {'page': 'home', 'rootPath': '.'})}"""
+    return body
+
+
+def en_metric_label(key):
+    return {
+        "maxThrustN": "Peak thrust",
+        "totalImpulseNs": "Total impulse",
+        "burnTimeMs": "Burn duration",
+        "maxPressureBar": "Peak pressure",
+    }[key]
+
+
+def rel_from_detail(test, path):
+    """Convert a root-relative catalog path to one relative to tests/<date>/."""
+    prefix = f"tests/{test['date']}/"
+    if path.startswith(prefix):
+        return path[len(prefix):]
+    return "../../" + path
+
+
+def build_detail(data, test):
+    meta = test["meta"]
+    cards = "\n".join([
+        metric_card("Date", test["date"], status_badges(test)),
+        metric_card("Peak thrust", test["metrics"]["maxThrustN"]["display"], f"Average thrust: {esc(test['metrics']['averageThrustN']['display'])}"),
+        metric_card("Total impulse", test["metrics"]["totalImpulseNs"]["display"], f"Burn duration: {esc(test['metrics']['burnTimeMs']['display'])}"),
+        metric_card("Peak pressure", test["metrics"]["maxPressureBar"]["display"], f"Peak time: {esc(test['metrics']['maxPressureTimeS']['display'])}"),
+    ])
+
+    figures = "\n".join([
+        f'          <p><a href="{esc(rel_from_detail(test, fig["path"]))}">{esc(en(fig["label"]))}</a></p>'
+        for fig in test["artifacts"]["figures"]
+    ])
+
+    body = f"""{head(en(meta['title']), en(meta['description']), '../../assets/site.css')}
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="brand"><div><div class="brand__eyebrow">POSTECH PSI · MISSION DATA</div><div class="brand__title">Static Fire Test Results</div></div></div>
+      <div class="site-header__controls"><a href="../../index.html">All results</a></div>
+    </div>
+  </header>
+
+  <main class="site-shell static-shell">
+    <section class="detail-hero">
+      <a class="detail-hero__back" href="../../index.html">&larr; Back to results</a>
+      <div class="verdict">Static fire test report</div>
+      <h1 class="detail-hero__title">{esc(en(test['title']))}</h1>
+      <p class="detail-hero__lead">{esc(en(test['summary']))} With JavaScript enabled, charts are replotted directly from pipeline data.</p>
+      <div class="detail-summary">
+{cards}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading"><h2>Evidence</h2><p>Reports, Markdown records, and pipeline data can be opened directly.</p></div>
+      <div class="fallback-grid">
+        <article class="fallback-card">
+          <h3>Result files</h3>
+          <p><a href="{esc(rel_from_detail(test, test['links']['executiveReport']))}">Executive report</a></p>
+          <p><a href="{esc(rel_from_detail(test, test['links']['pipelineData']))}">Pipeline data</a></p>
+          <p><a href="index.md">Markdown record</a></p>
+        </article>
+        <article class="fallback-card">
+          <h3>Reference figures</h3>
+{figures}
+        </article>
+        <article class="fallback-card">
+          <h3>Processing note</h3>
+          <p>Charts use filtered force and filtered gauge pressure from pipeline data, not reused PNG exports.</p>
+        </article>
+      </div>
+      <noscript><div class="empty-state" style="margin-top:18px;">JavaScript is disabled. The summary and evidence links remain available.</div></noscript>
+    </section>
+  </main>
+
+{scripts('../..', {'page': 'detail', 'rootPath': '../..', 'testId': test['id']})}"""
+    return body
+
+
+def main():
+    with open(os.path.join(ROOT, "tests", "index.json"), encoding="utf-8") as fh:
+        data = json.load(fh)
+
+    home = build_home(data)
+    with open(os.path.join(ROOT, "index.html"), "w", encoding="utf-8", newline="\n") as fh:
+        fh.write(home)
+    print("wrote index.html")
+
+    for test in data["tests"]:
+        out = os.path.join(ROOT, "tests", test["date"], "index.html")
+        with open(out, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(build_detail(data, test))
+        print(f"wrote tests/{test['date']}/index.html")
+
+
+if __name__ == "__main__":
+    main()
