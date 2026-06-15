@@ -12,22 +12,22 @@
     dark: {
       ink: "#f8fbff", inkSoft: "#d8e2ed", inkMuted: "#a7b4c2",
       line: "#253241", lineStrong: "#56687b",
-      surface: "#0b111a", surfaceAlt: "#111a26", accent: "#d64b55",
+      surface: "#0b111a", surfaceAlt: "#111a26", accent: "#c23a72",
       tooltipBg: "rgba(11, 17, 26, 0.98)", tooltipBorder: "#56687b",
-      zoomFill: "rgba(214, 75, 85, 0.15)", zoomHandle: "#d64b55"
+      zoomFill: "rgba(194, 58, 114, 0.13)", zoomHandle: "#c23a72"
     },
     light: {
       ink: "#071827", inkSoft: "#26394b", inkMuted: "#536273",
       line: "#c6d2df", lineStrong: "#7b8fa4",
-      surface: "#ffffff", surfaceAlt: "#f3f6fa", accent: "#b51d2a",
+      surface: "#ffffff", surfaceAlt: "#f3f6fa", accent: "#a61955",
       tooltipBg: "rgba(255, 255, 255, 0.99)", tooltipBorder: "#7b8fa4",
-      zoomFill: "rgba(181, 29, 42, 0.10)", zoomHandle: "#b51d2a"
+      zoomFill: "rgba(166, 25, 85, 0.10)", zoomHandle: "#a61955"
     }
   };
 
   var PALETTE = {
-    dark: ["#5f9fd6", "#d64b55", "#64b887", "#cda14a", "#9aa8b7"],
-    light: ["#124f85", "#b51d2a", "#2f7d52", "#9a6a16", "#566b7f"]
+    dark: ["#5f9fd6", "#c23a72", "#64b887", "#cda14a", "#9aa8b7"],
+    light: ["#124f85", "#a61955", "#2f7d52", "#9a6a16", "#566b7f"]
   };
 
   function tokens(theme) { return TOKENS[theme] || TOKENS.dark; }
