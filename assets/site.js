@@ -555,8 +555,8 @@
       ? tests.flatMap((test, index) => {
         const isActive = !hasHighlight || test.id === selectedTestId;
         return [
-          { x: test.events.ignitionTimeS, color: palette[index % palette.length], label: `${test.date} ${labels.ignition}`, opacity: isActive ? 1 : 0.2, strokeWidth: isActive ? 1.4 : 0.8, row: index * 2 },
-          { x: test.events.burnEndTimeS, color: palette[index % palette.length], label: `${test.date} ${labels.burnEnd}`, opacity: isActive ? 1 : 0.2, strokeWidth: isActive ? 1.4 : 0.8, row: index * 2 + 1 }
+          { x: test.events.ignitionTimeS, color: palette[index % palette.length], label: hasHighlight ? `${test.date} ${labels.ignition}` : "", opacity: isActive ? 1 : 0.2, strokeWidth: isActive ? 1.4 : 0.8 },
+          { x: test.events.burnEndTimeS, color: palette[index % palette.length], label: hasHighlight ? `${test.date} ${labels.burnEnd}` : "", opacity: isActive ? 1 : 0.2, strokeWidth: isActive ? 1.4 : 0.8 }
         ];
       }).filter((event) => !hasHighlight || event.opacity === 1)
       : [{ x: 0, color: palette[0], label: labels.ignition }];
@@ -568,9 +568,8 @@
         x: activeMode === "aligned" ? peak.time_s - test.events.ignitionTimeS : peak.time_s,
         y: peak[field],
         color: palette[index % palette.length],
-        label: `${test.date} ${labels.peak}`,
-        opacity: isActive ? 1 : 0.18,
-        row: index
+        label: hasHighlight ? `${test.date} ${labels.peak}` : "",
+        opacity: isActive ? 1 : 0.18
       };
     }).filter((peak) => !hasHighlight || peak.opacity === 1);
     return `
