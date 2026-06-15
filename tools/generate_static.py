@@ -11,7 +11,7 @@ import json
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-VERSION = "2026-06-16-visibility"
+VERSION = "2026-06-16-dark-mode"
 
 CARD_DIGITS = {
     "maxThrustN": (2, "N"),

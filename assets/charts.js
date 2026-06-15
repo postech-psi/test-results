@@ -10,11 +10,11 @@
 
   var TOKENS = {
     dark: {
-      ink: "#f7fbff", inkSoft: "#d3dfeb", inkMuted: "#9fb0c1",
-      line: "#2d4962", lineStrong: "#6f8aa3",
-      surface: "#0d1a28", surfaceAlt: "#132537", accent: "#e05a63",
-      tooltipBg: "rgba(13, 26, 40, 0.98)", tooltipBorder: "#6f8aa3",
-      zoomFill: "rgba(224, 90, 99, 0.14)", zoomHandle: "#e05a63"
+      ink: "#f8fbff", inkSoft: "#d8e2ed", inkMuted: "#a7b4c2",
+      line: "#253241", lineStrong: "#56687b",
+      surface: "#0b111a", surfaceAlt: "#111a26", accent: "#d64b55",
+      tooltipBg: "rgba(11, 17, 26, 0.98)", tooltipBorder: "#56687b",
+      zoomFill: "rgba(214, 75, 85, 0.15)", zoomHandle: "#d64b55"
     },
     light: {
       ink: "#071827", inkSoft: "#26394b", inkMuted: "#536273",
@@ -26,7 +26,7 @@
   };
 
   var PALETTE = {
-    dark: ["#78aee1", "#e05a63", "#75c795", "#d9b45d", "#a8b5c2"],
+    dark: ["#5f9fd6", "#d64b55", "#64b887", "#cda14a", "#9aa8b7"],
     light: ["#124f85", "#b51d2a", "#2f7d52", "#9a6a16", "#566b7f"]
   };
 
