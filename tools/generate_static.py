@@ -11,7 +11,7 @@ import json
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-VERSION = "2026-06-16-pretendard"
+VERSION = "2026-06-16-logo-axis"
 
 CARD_DIGITS = {
     "maxThrustN": (2, "N"),
@@ -83,7 +83,7 @@ def brand_header(root_path, title="Static Fire Test Results", controls='<span cl
     return f"""  <header class="site-header">
     <div class="site-header__inner">
       <div class="brand">
-        <img class="brand__banner" src="{base}/logos/psi-logo-banner.jpeg" alt="PSI Postech Aerospace Initiative">
+        <span class="logo-surface brand__logo-surface"><img class="brand__banner" src="{base}/logos/psi-logo-banner.jpeg" alt="PSI Postech Aerospace Initiative"></span>
         <div class="brand__text"><div class="brand__eyebrow">Postech Aerospace Initiative</div><div class="brand__title">{esc(title)}</div></div>
       </div>
       <div class="site-header__controls">{controls}</div>
@@ -120,7 +120,7 @@ def build_home(data):
               <td>{esc(t['metrics']['maxThrustN']['display'])}</td>
               <td>{esc(t['metrics']['totalImpulseNs']['display'])}</td>
               <td>{esc(t['metrics']['maxPressureBar']['display'])}</td>
-              <td><a href="{esc(t['links']['page'])}">View test</a></td>
+              <td><a class="archive-action" href="{esc(t['links']['page'])}">View test</a></td>
             </tr>""")
 
     evidence = f"""        <a class="data-link" href="{esc(latest['links']['executiveReport'])}"><div class="data-link__title">Executive report</div><div class="data-link__meta">{esc(latest['date'])}</div></a>
@@ -142,7 +142,7 @@ def build_home(data):
         <aside class="hero__panel">
           <div class="hero__panel-header">
             <h2>Latest test &middot; {esc(latest['date'])}</h2>
-            <img class="hero__emblem" src="assets/logos/psi-logo-circle.jpg" alt="Postech Aerospace Initiative circular logo">
+            <span class="logo-surface hero__logo-surface"><img class="hero__emblem" src="assets/logos/psi-logo-circle.jpg" alt="Postech Aerospace Initiative circular logo"></span>
           </div>
           <p class="detail-meta-note">{esc(en(latest['summary']))}</p>
           <div class="hero__summary">

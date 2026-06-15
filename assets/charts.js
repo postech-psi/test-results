@@ -12,22 +12,22 @@
     dark: {
       ink: "#f4f2ed", inkSoft: "#c9c5bc", inkMuted: "#918d84",
       line: "#343434", lineStrong: "#6e6b64",
-      surface: "#181818", surfaceAlt: "#202020", accent: "#d7a0a8",
+      surface: "#181818", surfaceAlt: "#202020", accent: "#c8a3aa",
       tooltipBg: "rgba(24, 24, 24, 0.96)", tooltipBorder: "#6e6b64",
-      zoomFill: "rgba(215, 160, 168, 0.12)", zoomHandle: "#d7a0a8"
+      zoomFill: "rgba(200, 163, 170, 0.12)", zoomHandle: "#c8a3aa"
     },
     light: {
       ink: "#151515", inkSoft: "#4b4b4b", inkMuted: "#73706a",
       line: "#d7d5cf", lineStrong: "#9c9990",
-      surface: "#ffffff", surfaceAlt: "#f2f2ef", accent: "#8b1e2d",
+      surface: "#ffffff", surfaceAlt: "#f2f2ef", accent: "#8f6f76",
       tooltipBg: "rgba(255, 255, 255, 0.98)", tooltipBorder: "#9c9990",
-      zoomFill: "rgba(139, 30, 45, 0.10)", zoomHandle: "#8b1e2d"
+      zoomFill: "rgba(143, 111, 118, 0.10)", zoomHandle: "#8f6f76"
     }
   };
 
   var PALETTE = {
-    dark: ["#9fb8c9", "#d7a0a8", "#c0b974", "#93b69f", "#b4a0b2"],
-    light: ["#315f7c", "#8b1e2d", "#6f6a2f", "#3d7457", "#6d596a"]
+    dark: ["#a8bdc8", "#c8a3aa", "#a9bea6", "#c8b77e", "#b7adbf"],
+    light: ["#6e8795", "#b58d91", "#8fa58e", "#b7a56f", "#9b90a6"]
   };
 
   function tokens(theme) { return TOKENS[theme] || TOKENS.dark; }
@@ -52,9 +52,38 @@
 
   function areaGradient(color) {
     return new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-      { offset: 0, color: hexToRgba(color, 0.32) },
+      { offset: 0, color: hexToRgba(color, 0.18) },
       { offset: 1, color: hexToRgba(color, 0.0) }
     ]);
+  }
+
+  function niceExtent(points) {
+    var ys = [];
+    (points || []).forEach(function (point) {
+      var y = point && point.length ? point[1] : null;
+      if (typeof y === "number" && isFinite(y)) ys.push(y);
+    });
+    if (!ys.length) return null;
+    var min = Math.min.apply(null, ys);
+    var max = Math.max.apply(null, ys);
+    var span = max - min;
+    var pad = Math.max(span * 0.1, Math.abs(max || min) * 0.02, 1);
+    return {
+      min: Math.floor((min - pad) * 1000) / 1000,
+      max: Math.ceil((max + pad) * 1000) / 1000
+    };
+  }
+
+  function visibleRuns(params, hasHighlight) {
+    var selected = params.legendSelected || null;
+    var visible = params.runs.filter(function (run) {
+      return !selected || selected[run.name] !== false;
+    });
+    if (hasHighlight) {
+      var highlighted = visible.filter(function (run) { return run.id === params.highlightId; });
+      if (highlighted.length) return highlighted;
+    }
+    return visible.length ? visible : params.runs;
   }
 
   /* Shared base: grid, axes, tooltip, dataZoom */
@@ -88,7 +117,7 @@
         borderWidth: 1,
         padding: [10, 12],
         textStyle: { color: t.ink, fontFamily: FONT_MONO, fontSize: 12 },
-        extraCssText: "backdrop-filter: blur(8px); border-radius: 10px; box-shadow: 0 12px 32px -12px rgba(0,0,0,0.5);"
+        extraCssText: "border-radius: 6px;"
       },
       xAxis: Object.assign({
         type: "value",
@@ -102,7 +131,7 @@
         name: params.yLabel,
         nameLocation: "middle",
         nameGap: 52,
-        scale: false
+        scale: true
       }, axisCommon),
       dataZoom: [
         { type: "inside", xAxisIndex: 0, filterMode: "none" },
@@ -166,7 +195,7 @@
     return {
       symbol: "circle",
       symbolSize: 9,
-      itemStyle: { color: color, borderColor: t.surface, borderWidth: 2, shadowBlur: 8, shadowColor: color },
+      itemStyle: { color: color, borderColor: t.surface, borderWidth: 2 },
       label: {
         show: showLabel,
         formatter: labels.peak,
@@ -186,6 +215,12 @@
     var t = tokens(params.theme);
     var opt = baseOption(params);
     var hasHighlight = params.highlightId && params.highlightId !== "all";
+    var axisRuns = visibleRuns(params, hasHighlight);
+    var extent = niceExtent(axisRuns.reduce(function (acc, run) { return acc.concat(run.data || []); }, []));
+    if (extent) {
+      opt.yAxis.min = extent.min;
+      opt.yAxis.max = extent.max;
+    }
 
     opt.tooltip.formatter = tooltipFormatter(params.xUnit, params.yUnit, params.yDigits);
     opt.legend = {
@@ -213,9 +248,7 @@
         lineStyle: {
           color: run.color,
           width: active ? 2.6 : 1.4,
-          opacity: active ? 1 : 0.32,
-          shadowBlur: active ? 7 : 0,
-          shadowColor: hexToRgba(run.color, 0.5)
+          opacity: active ? 1 : 0.28
         },
         itemStyle: { color: run.color },
         emphasis: { focus: "series", lineStyle: { width: 3 } },
@@ -260,9 +293,7 @@
           color: s.color,
           width: isPrimary ? 2.8 : 1.5,
           type: s.dashed ? "dashed" : "solid",
-          opacity: isPrimary ? 1 : 0.7,
-          shadowBlur: isPrimary ? 8 : 0,
-          shadowColor: hexToRgba(s.color, 0.5)
+          opacity: isPrimary ? 1 : 0.66
         },
         itemStyle: { color: s.color },
         emphasis: { focus: "series" },
@@ -332,8 +363,19 @@
       },
       yAxis: {
         type: "value",
+        name: params.yLabel || "Best run per metric (%)",
+        nameLocation: "middle",
+        nameGap: 42,
+        min: 0,
+        max: 100,
         axisLine: { show: false },
-        axisLabel: { color: t.inkSoft, fontFamily: FONT_MONO, fontSize: 11 },
+        axisLabel: {
+          color: t.inkSoft,
+          fontFamily: FONT_MONO,
+          fontSize: 11,
+          formatter: function (value) { return value + "%"; }
+        },
+        nameTextStyle: { color: t.inkMuted, fontFamily: FONT_MONO, fontSize: 11 },
         splitLine: { lineStyle: { color: t.line, type: "dashed" } }
       },
       series: params.runs.map(function (r) {
@@ -365,7 +407,7 @@
         showSymbol: false,
         smooth: 0.18,
         sampling: "lttb",
-        lineStyle: { color: color, width: 2.2, shadowBlur: 10, shadowColor: hexToRgba(color, 0.6) },
+        lineStyle: { color: color, width: 2.2 },
         areaStyle: { color: areaGradient(color) },
         data: params.data
       }]

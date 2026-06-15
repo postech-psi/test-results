@@ -25,6 +25,7 @@
         absoluteNote: "절대 시간은 기록된 시험 시간축을 그대로 보여줍니다.",
         sourceArtifactsNote: "PNG 그림은 참고용이며, 비교 판단은 재구성 차트와 원자료를 기준으로 합니다.",
         chartHint: "드래그 줌 · 휠 확대 · 범례 클릭",
+        metricsScaleNote: "항목별 최고값을 100%로 둔 정규화 비교입니다.",
         metrics: "핵심 지표", thrust: "추력", pressure: "압력",
         latestReport: "최신 보고서", markdownRecord: "Markdown 기록", pipelineData: "Pipeline data",
         executiveReport: "Executive report", detailPage: "상세 보기",
@@ -73,6 +74,7 @@
         absoluteNote: "Absolute time preserves the original test timeline.",
         sourceArtifactsNote: "PNG figures are secondary references; comparison uses replotted signals and source data.",
         chartHint: "Drag to zoom · scroll · click legend",
+        metricsScaleNote: "Normalized comparison: best run per metric = 100%.",
         metrics: "Key metrics", thrust: "Thrust", pressure: "Pressure",
         latestReport: "Latest report", markdownRecord: "Markdown record", pipelineData: "Pipeline data",
         executiveReport: "Executive report", detailPage: "View test",
@@ -283,7 +285,8 @@
       yDigits: tab === "pressure" ? 2 : 1,
       labels: { ignition: labels.ignition, burnEnd: labels.burnEnd, peak: labels.peak },
       runs,
-      highlightId: state.selectedTestId || "all"
+      highlightId: state.selectedTestId || "all",
+      axisMode: (state.selectedTestId && state.selectedTestId !== "all") ? "highlight" : "visible"
     };
   }
 
@@ -331,7 +334,7 @@
       values: metrics.map((m, mi) => Number(((test.metrics[m.key].value / maxByMetric[mi]) * 100).toFixed(1))),
       display: metrics.map((m) => test.metrics[m.key].display)
     }));
-    return { theme: state.theme, categories: metrics.map((m) => m.label), runs };
+    return { theme: state.theme, categories: metrics.map((m) => m.label), runs, yLabel: "Best run per metric (%)" };
   }
 
   /* ======================================================================
@@ -342,20 +345,24 @@
     if (!el || typeof echarts === "undefined") return null;
     let entry = chartRegistry.get(id);
     if (!entry) {
-      entry = { instance: echarts.init(el, null, { renderer: "canvas" }), build: builder };
+      entry = { instance: echarts.init(el, null, { renderer: "canvas" }), build: builder, legendSelected: null };
+      entry.instance.on("legendselectchanged", (event) => {
+        entry.legendSelected = event.selected || null;
+        entry.instance.setOption(entry.build(entry.legendSelected), true);
+      });
       chartRegistry.set(id, entry);
     } else {
       entry.build = builder;
     }
     entry.instance.resize();
-    entry.instance.setOption(entry.build(), true);
+    entry.instance.setOption(entry.build(entry.legendSelected), true);
     return entry.instance;
   }
 
   function refreshAllCharts() {
     chartRegistry.forEach((entry) => {
       entry.instance.resize();
-      entry.instance.setOption(entry.build(), true);
+      entry.instance.setOption(entry.build(entry.legendSelected), true);
     });
   }
 
@@ -369,7 +376,11 @@
     if (tab === "metrics") {
       ensureChart("cmp-canvas-metrics", () => PSICharts.metricsOption(metricsParams(catalog.tests)));
     } else {
-      ensureChart(`cmp-canvas-${tab}`, () => PSICharts.comparisonOption(comparisonParams(catalog.tests, tab, state.comparisonMode)));
+      ensureChart(`cmp-canvas-${tab}`, (legendSelected) => {
+        const params = comparisonParams(catalog.tests, tab, state.comparisonMode);
+        params.legendSelected = legendSelected;
+        return PSICharts.comparisonOption(params);
+      });
     }
   }
 
@@ -385,8 +396,8 @@
   /* ======================================================================
      Components
      ====================================================================== */
-  function logoImage(path, className, alt) {
-    return `<img class="${className}" src="${resolvePath(path)}" alt="${escapeHtml(alt)}">`;
+  function logoImage(path, imageClassName, alt, surfaceClassName) {
+    return `<span class="logo-surface ${surfaceClassName}"><img class="${imageClassName}" src="${resolvePath(path)}" alt="${escapeHtml(alt)}"></span>`;
   }
 
   function buildOverviewCards(tests) {
@@ -453,14 +464,14 @@
             <div class="tabpanel" id="cmp-panel-${tab}" role="tabpanel" aria-labelledby="cmp-tab-${tab}" ${state.comparisonTab === tab ? "" : "hidden"}>
               <div class="chart-header">
                 <div class="chart-header__title">${copy(`common.${tab}`)}</div>
-                <div class="chart-header__note">${tab === "metrics" ? copy("home.executiveLead") : (state.comparisonMode === "aligned" ? copy("common.alignmentNote") : copy("common.absoluteNote"))}</div>
+                <div class="chart-header__note">${tab === "metrics" ? copy("common.metricsScaleNote") : (state.comparisonMode === "aligned" ? copy("common.alignmentNote") : copy("common.absoluteNote"))}</div>
               </div>
               <div class="chart-shell">
                 ${tab === "metrics" ? "" : `<div class="hint-chip">${copy("common.chartHint")}</div>`}
                 <div class="chart-canvas" id="cmp-canvas-${tab}"></div>
               </div>
               ${tab === "metrics" ? "" : srTable(tests, tab)}
-              <div class="chart-source">${copy("common.chartMethodNote")}</div>
+              <div class="chart-source">${tab === "metrics" ? copy("common.metricsScaleNote") : copy("common.chartMethodNote")}</div>
             </div>`).join("")}
         </div>
       </section>`;
@@ -551,7 +562,7 @@
                   <td>${test.metrics.maxThrustN.display}</td>
                   <td>${test.metrics.totalImpulseNs.display}</td>
                   <td>${test.metrics.maxPressureBar.display}</td>
-                  <td><a href="${resolvePath(test.links.page)}">${copy("common.detailPage")}</a></td>
+                  <td><a class="archive-action" href="${resolvePath(test.links.page)}">${copy("common.detailPage")}</a></td>
                 </tr>`).join("")}
             </tbody>
           </table>
@@ -606,7 +617,7 @@
       <header class="site-header">
         <div class="site-header__inner">
           <div class="brand">
-            ${logoImage("assets/logos/psi-logo-banner.jpeg", "brand__banner", "PSI Postech Aerospace Initiative")}
+            ${logoImage("assets/logos/psi-logo-banner.jpeg", "brand__banner", "PSI Postech Aerospace Initiative", "brand__logo-surface")}
             <div class="brand__text">
               <div class="brand__eyebrow">${copy("home.eyebrow")}</div>
               <div class="brand__title">${localize(catalog.site.name)}</div>
@@ -648,7 +659,7 @@
             <aside class="hero__panel" aria-label="${copy("home.sparkTitle")}">
               <div class="hero__panel-header">
                 <h2>${copy("home.sparkTitle")} · ${latest.date}</h2>
-                ${logoImage("assets/logos/psi-logo-circle.jpg", "hero__emblem", "Postech Aerospace Initiative circular logo")}
+                ${logoImage("assets/logos/psi-logo-circle.jpg", "hero__emblem", "Postech Aerospace Initiative circular logo", "hero__logo-surface")}
               </div>
               <div class="hero__spark" id="hero-spark"></div>
               <div class="hero__summary">
@@ -847,7 +858,7 @@
         document.querySelectorAll("[data-comparison-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.comparisonMode === state.comparisonMode)));
         document.querySelectorAll(".chart-header__note").forEach(() => {});
         const note = document.querySelector(`#cmp-panel-${state.comparisonTab} .chart-header__note`);
-        if (note && state.comparisonTab !== "metrics") note.textContent = state.comparisonMode === "aligned" ? copy("common.alignmentNote") : copy("common.absoluteNote");
+        if (note) note.textContent = state.comparisonTab === "metrics" ? copy("common.metricsScaleNote") : (state.comparisonMode === "aligned" ? copy("common.alignmentNote") : copy("common.absoluteNote"));
         updateComparison();
       });
     });
@@ -873,7 +884,7 @@
               <td>${test.metrics.maxThrustN.display}</td>
               <td>${test.metrics.totalImpulseNs.display}</td>
               <td>${test.metrics.maxPressureBar.display}</td>
-              <td><a href="${resolvePath(test.links.page)}">${copy("common.detailPage")}</a></td>
+              <td><a class="archive-action" href="${resolvePath(test.links.page)}">${copy("common.detailPage")}</a></td>
             </tr>`).join("");
         }
       });
