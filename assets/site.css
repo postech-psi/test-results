@@ -239,16 +239,6 @@ body[data-theme="dark"] .logo-surface img {
   max-height: 48px;
 }
 
-.postech-logo-surface {
-  width: 118px;
-  height: 20px;
-  opacity: 0.72;
-}
-
-.postech-wordmark {
-  max-height: 20px;
-}
-
 .brand__text {
   flex: 1 1 auto;
   min-width: 0;
@@ -1239,10 +1229,6 @@ tbody tr:last-child th {
   }
 
   .brand__text {
-    display: none;
-  }
-
-  .postech-logo-surface {
     display: none;
   }
 

@@ -611,7 +611,6 @@
             </div>
           </div>
           <div class="site-header__controls">
-            ${logoImage("assets/logos/postech-wordmark.jpg", "postech-wordmark", "POSTECH", "postech-logo-surface")}
             <div class="pill-toggle" aria-label="${state.lang === "ko" ? "언어 선택" : "Language"}">
               <button type="button" data-language="ko" aria-pressed="${state.lang === "ko"}">KO</button>
               <button type="button" data-language="en" aria-pressed="${state.lang === "en"}">EN</button>

@@ -11,7 +11,7 @@ import json
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-VERSION = "2026-06-16-postech-mark"
+VERSION = "2026-06-16-remove-postech"
 
 CARD_DIGITS = {
     "maxThrustN": (2, "N"),
@@ -86,10 +86,7 @@ def brand_header(root_path, title="Static Fire Test Results", controls='<span cl
         <span class="logo-surface brand__logo-surface"><img class="brand__banner" src="{base}/logos/psi-logo-banner.jpeg" alt="PSI Postech Aerospace Initiative"></span>
         <div class="brand__text"><div class="brand__eyebrow">Postech Aerospace Initiative</div><div class="brand__title">{esc(title)}</div></div>
       </div>
-      <div class="site-header__controls">
-        <span class="logo-surface postech-logo-surface"><img class="postech-wordmark" src="{base}/logos/postech-wordmark.jpg" alt="POSTECH"></span>
-        {controls}
-      </div>
+      <div class="site-header__controls">{controls}</div>
     </div>
   </header>"""
 
