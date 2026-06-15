@@ -4,7 +4,7 @@
   const PAGE = window.PSI_PAGE_CONFIG || { page: "home", rootPath: "." };
   const STORAGE_KEYS = {
     lang: "psi-site-language-mc",
-    theme: "psi-site-theme-mc"
+    theme: "psi-site-theme-scientific"
   };
 
   /* ======================================================================
@@ -36,7 +36,7 @@
         ignitionDelay: "점화 지연", peakTime: "피크 시점", highlightRun: "강조할 시험", allRunsBackground: "전체"
       },
       home: {
-        eyebrow: "POSTECH PSI · MISSION DATA", title: "연소 시험 결과 공개 기록",
+        eyebrow: "Postech Aerospace Initiative", title: "연소 시험 결과 공개 기록",
         titleAccent: "공개 기록",
         lead: "POSTECH PSI 연소 시험 데이터를 공개 검토에 맞게 정리했습니다. 최신 결과, 이전 시험과의 변화, 원자료, 처리 방법을 한 흐름에서 확인할 수 있습니다.",
         executiveTitle: "최신 결과", executiveLead: "최신 시험과 직전 시험의 차이를 먼저 보여 주고, 필요한 경우 원자료와 처리 방법까지 내려가 확인할 수 있습니다.",
@@ -84,7 +84,7 @@
         ignitionDelay: "Ignition Delay", peakTime: "Peak Time", highlightRun: "Highlight test", allRunsBackground: "All"
       },
       home: {
-        eyebrow: "POSTECH PSI · MISSION DATA", title: "Static Fire Test Results", titleAccent: "Results",
+        eyebrow: "Postech Aerospace Initiative", title: "Static Fire Test Results", titleAccent: "Results",
         lead: "A concise record of published static fire tests, with measured performance, run-to-run comparison, methods, and source files kept together.",
         executiveTitle: "Latest test", executiveLead: "The latest run produced higher peak thrust and total impulse than the previous test, with a shorter burn duration.",
         comparisonTitle: "Run comparison", comparisonLead: "Thrust and pressure are replotted on a shared basis. Time can be viewed as recorded or aligned to ignition.",
@@ -109,7 +109,7 @@
 
   const state = {
     lang: "en",
-    theme: "dark",
+    theme: "light",
     comparisonTab: "thrust",
     comparisonMode: "absolute",
     selectedTestId: "all",
@@ -385,12 +385,8 @@
   /* ======================================================================
      Components
      ====================================================================== */
-  function brandMarkSVG() {
-    return `<svg class="brand__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <circle cx="16" cy="16" r="13" stroke="var(--accent)" stroke-width="1.4" opacity="0.5"/>
-      <ellipse cx="16" cy="16" rx="13" ry="5" stroke="var(--accent)" stroke-width="1.2" opacity="0.7"/>
-      <circle cx="16" cy="16" r="3.4" fill="var(--accent)"/>
-    </svg>`;
+  function logoImage(path, className, alt) {
+    return `<img class="${className}" src="${resolvePath(path)}" alt="${escapeHtml(alt)}">`;
   }
 
   function buildOverviewCards(tests) {
@@ -610,8 +606,8 @@
       <header class="site-header">
         <div class="site-header__inner">
           <div class="brand">
-            ${brandMarkSVG()}
-            <div>
+            ${logoImage("assets/logos/psi-logo-banner.jpeg", "brand__banner", "PSI Postech Aerospace Initiative")}
+            <div class="brand__text">
               <div class="brand__eyebrow">${copy("home.eyebrow")}</div>
               <div class="brand__title">${localize(catalog.site.name)}</div>
             </div>
@@ -632,7 +628,6 @@
     const latest = tests[0];
     setDocumentMeta(catalog.site.pageMeta.home);
     document.body.innerHTML = `
-      <div class="bg-aurora" aria-hidden="true"></div>
       ${renderHeader()}
       <main class="site-shell">
         <section class="hero" id="overview">
@@ -651,7 +646,10 @@
               <p class="hero__lead">${copy("home.lead")}</p>
             </div>
             <aside class="hero__panel" aria-label="${copy("home.sparkTitle")}">
-              <h2>${copy("home.sparkTitle")} · ${latest.date}</h2>
+              <div class="hero__panel-header">
+                <h2>${copy("home.sparkTitle")} · ${latest.date}</h2>
+                ${logoImage("assets/logos/psi-logo-circle.jpg", "hero__emblem", "Postech Aerospace Initiative circular logo")}
+              </div>
               <div class="hero__spark" id="hero-spark"></div>
               <div class="hero__summary">
                 <div class="hero-stat"><div class="hero-stat__label">${copy("common.peakThrust")}</div><div class="hero-stat__value">${latest.metrics.maxThrustN.display}</div></div>
@@ -700,7 +698,6 @@
     const tabs = ["thrust", "pressure", "metrics"];
     const issues = localize(test.issues);
     document.body.innerHTML = `
-      <div class="bg-aurora" aria-hidden="true"></div>
       ${renderHeader()}
       <main class="site-shell">
         <section class="detail-hero">
@@ -914,7 +911,7 @@
 
   async function init() {
     try { state.lang = localStorage.getItem(STORAGE_KEYS.lang) || "en"; } catch (_) { state.lang = "en"; }
-    try { state.theme = localStorage.getItem(STORAGE_KEYS.theme) || "dark"; } catch (_) { state.theme = "dark"; }
+    try { state.theme = localStorage.getItem(STORAGE_KEYS.theme) || "light"; } catch (_) { state.theme = "light"; }
     document.body.dataset.theme = state.theme;
     window.addEventListener("resize", () => chartRegistry.forEach((entry) => entry.instance.resize()));
     try {

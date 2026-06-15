@@ -11,7 +11,7 @@ import json
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-VERSION = "2026-06-15-mc"
+VERSION = "2026-06-16-pretendard"
 
 CARD_DIGITS = {
     "maxThrustN": (2, "N"),
@@ -46,7 +46,7 @@ def head(title, description, css_href, lang="en"):
   <meta name="description" content="{esc(description)}">
   <link rel="stylesheet" href="{css_href}?v={VERSION}">
 </head>
-<body data-theme="dark">"""
+<body data-theme="light">"""
 
 
 def scripts(root_path, page_config):
@@ -76,6 +76,19 @@ def status_badges(test):
     pub = en(test.get("statusLabel", "Published"))
     return (f'<span class="status-badge published">{esc(pub)}</span> '
             f'<span class="status-badge {esc(level)}">{esc(issue_label)}</span>')
+
+
+def brand_header(root_path, title="Static Fire Test Results", controls='<span class="muted">EN / KO</span>'):
+    base = f"{root_path}/assets"
+    return f"""  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="brand">
+        <img class="brand__banner" src="{base}/logos/psi-logo-banner.jpeg" alt="PSI Postech Aerospace Initiative">
+        <div class="brand__text"><div class="brand__eyebrow">Postech Aerospace Initiative</div><div class="brand__title">{esc(title)}</div></div>
+      </div>
+      <div class="site-header__controls">{controls}</div>
+    </div>
+  </header>"""
 
 
 def build_home(data):
@@ -116,12 +129,7 @@ def build_home(data):
         <a class="data-link" href="tests/index.json"><div class="data-link__title">Catalog JSON</div><div class="data-link__meta">Site data</div></a>"""
 
     body = f"""{head(en(meta['title']), en(meta['description']), 'assets/site.css')}
-  <header class="site-header">
-    <div class="site-header__inner">
-      <div class="brand"><div><div class="brand__eyebrow">POSTECH PSI · MISSION DATA</div><div class="brand__title">{esc(name)}</div></div></div>
-      <div class="site-header__controls"><span class="muted">EN / KO</span></div>
-    </div>
-  </header>
+{brand_header('.', name)}
 
   <main class="site-shell static-shell">
     <section class="hero" id="overview">
@@ -132,7 +140,10 @@ def build_home(data):
           <p class="hero__lead">{esc(mission)}</p>
         </div>
         <aside class="hero__panel">
-          <h2>Latest test &middot; {esc(latest['date'])}</h2>
+          <div class="hero__panel-header">
+            <h2>Latest test &middot; {esc(latest['date'])}</h2>
+            <img class="hero__emblem" src="assets/logos/psi-logo-circle.jpg" alt="Postech Aerospace Initiative circular logo">
+          </div>
           <p class="detail-meta-note">{esc(en(latest['summary']))}</p>
           <div class="hero__summary">
             <div class="hero-stat"><div class="hero-stat__label">Peak thrust</div><div class="hero-stat__value">{esc(latest['metrics']['maxThrustN']['display'])}</div></div>
@@ -207,12 +218,7 @@ def build_detail(data, test):
     ])
 
     body = f"""{head(en(meta['title']), en(meta['description']), '../../assets/site.css')}
-  <header class="site-header">
-    <div class="site-header__inner">
-      <div class="brand"><div><div class="brand__eyebrow">POSTECH PSI · MISSION DATA</div><div class="brand__title">Static Fire Test Results</div></div></div>
-      <div class="site-header__controls"><a href="../../index.html">All results</a></div>
-    </div>
-  </header>
+{brand_header('../..', 'Static Fire Test Results', '<a href="../../index.html">All results</a>')}
 
   <main class="site-shell static-shell">
     <section class="detail-hero">

@@ -5,29 +5,29 @@
 (function () {
   "use strict";
 
-  var FONT_MONO = '"JetBrains Mono", "SFMono-Regular", Consolas, monospace';
-  var FONT_DISPLAY = '"Space Grotesk", "Pretendard", sans-serif';
+  var FONT_MONO = '"Pretendard", sans-serif';
+  var FONT_DISPLAY = '"Pretendard", sans-serif';
 
   var TOKENS = {
     dark: {
-      ink: "#e9eef9", inkSoft: "#9fabc6", inkMuted: "#69748f",
-      line: "#1f2942", lineStrong: "#324063",
-      surface: "#101728", surfaceAlt: "#161f34", accent: "#38bdf8",
-      tooltipBg: "rgba(13, 19, 34, 0.96)", tooltipBorder: "#324063",
-      zoomFill: "rgba(56, 189, 248, 0.10)", zoomHandle: "#38bdf8"
+      ink: "#f4f2ed", inkSoft: "#c9c5bc", inkMuted: "#918d84",
+      line: "#343434", lineStrong: "#6e6b64",
+      surface: "#181818", surfaceAlt: "#202020", accent: "#d7a0a8",
+      tooltipBg: "rgba(24, 24, 24, 0.96)", tooltipBorder: "#6e6b64",
+      zoomFill: "rgba(215, 160, 168, 0.12)", zoomHandle: "#d7a0a8"
     },
     light: {
-      ink: "#0f1729", inkSoft: "#45506b", inkMuted: "#6b7589",
-      line: "#d7deec", lineStrong: "#b3c0da",
-      surface: "#ffffff", surfaceAlt: "#f4f7fc", accent: "#0ea5e9",
-      tooltipBg: "rgba(255, 255, 255, 0.98)", tooltipBorder: "#b3c0da",
-      zoomFill: "rgba(14, 165, 233, 0.10)", zoomHandle: "#0ea5e9"
+      ink: "#151515", inkSoft: "#4b4b4b", inkMuted: "#73706a",
+      line: "#d7d5cf", lineStrong: "#9c9990",
+      surface: "#ffffff", surfaceAlt: "#f2f2ef", accent: "#8b1e2d",
+      tooltipBg: "rgba(255, 255, 255, 0.98)", tooltipBorder: "#9c9990",
+      zoomFill: "rgba(139, 30, 45, 0.10)", zoomHandle: "#8b1e2d"
     }
   };
 
   var PALETTE = {
-    dark: ["#38bdf8", "#fbbf24", "#a78bfa", "#34d399", "#fb7185"],
-    light: ["#0284c7", "#d97706", "#7c3aed", "#059669", "#e11d48"]
+    dark: ["#9fb8c9", "#d7a0a8", "#c0b974", "#93b69f", "#b4a0b2"],
+    light: ["#315f7c", "#8b1e2d", "#6f6a2f", "#3d7457", "#6d596a"]
   };
 
   function tokens(theme) { return TOKENS[theme] || TOKENS.dark; }

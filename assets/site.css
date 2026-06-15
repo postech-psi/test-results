@@ -1,6 +1,6 @@
 /* ==========================================================================
    POSTECH PSI — Static Fire Test Results
-   Mission-control / observatory design system (dark + light)
+   Scientific report design system (light + dark)
    ========================================================================== */
 
 @font-face {
@@ -11,113 +11,97 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: "Space Grotesk";
-  src: url("fonts/SpaceGrotesk.woff2") format("woff2");
-  font-weight: 300 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "JetBrains Mono";
-  src: url("fonts/JetBrainsMono.woff2") format("woff2");
-  font-weight: 100 800;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ---- Tokens: light (observatory) ---- */
+/* ---- Tokens: light (laboratory report) ---- */
 :root {
   color-scheme: light;
-  --font-sans: "Pretendard", Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
-  --font-display: "Space Grotesk", var(--font-sans);
-  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --font-sans: "Pretendard", "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: var(--font-sans);
 
-  --bg: #eef1f8;
-  --bg-deep: #e4e9f4;
+  --bg: #f6f6f4;
+  --bg-deep: #ececea;
   --surface: #ffffff;
-  --surface-alt: #f4f7fc;
-  --surface-strong: #e9eef7;
-  --surface-glass: rgba(255, 255, 255, 0.72);
+  --surface-alt: #f2f2ef;
+  --surface-strong: #e7e6e2;
+  --surface-glass: rgba(255, 255, 255, 0.88);
 
-  --ink: #0f1729;
-  --ink-soft: #45506b;
-  --ink-muted: #6b7589;
+  --ink: #151515;
+  --ink-soft: #4b4b4b;
+  --ink-muted: #73706a;
 
-  --line: #d7deec;
-  --line-strong: #b3c0da;
+  --line: #d7d5cf;
+  --line-strong: #9c9990;
 
-  --accent: #0ea5e9;
-  --accent-strong: #0284c7;
-  --accent-soft: rgba(14, 165, 233, 0.12);
-  --accent-glow: rgba(14, 165, 233, 0.28);
-  --secondary: #d97706;
+  --accent: #8b1e2d;
+  --accent-strong: #6f1723;
+  --accent-soft: rgba(139, 30, 45, 0.08);
+  --accent-glow: rgba(139, 30, 45, 0.14);
+  --secondary: #315f7c;
 
   --ok: #059669;
   --ok-soft: rgba(5, 150, 105, 0.14);
   --warn: #d97706;
   --warn-soft: rgba(217, 119, 6, 0.16);
-  --neutral: #64748b;
-  --neutral-soft: rgba(100, 116, 139, 0.14);
+  --neutral: #63635e;
+  --neutral-soft: rgba(99, 99, 94, 0.12);
 
   /* categorical run palette */
-  --run-1: #0284c7;
-  --run-2: #d97706;
-  --run-3: #7c3aed;
-  --run-4: #059669;
-  --run-5: #e11d48;
+  --run-1: #315f7c;
+  --run-2: #8b1e2d;
+  --run-3: #6f6a2f;
+  --run-4: #3d7457;
+  --run-5: #6d596a;
 
-  --radius: 12px;
-  --radius-sm: 9px;
-  --shadow: 0 1px 2px rgba(15, 23, 41, 0.05), 0 12px 30px -18px rgba(15, 23, 41, 0.28);
-  --shadow-soft: 0 1px 2px rgba(15, 23, 41, 0.04);
-  --grid-color: rgba(40, 70, 130, 0.05);
-  --star-color: rgba(40, 70, 130, 0.10);
+  --radius: 6px;
+  --radius-sm: 4px;
+  --shadow: 0 1px 2px rgba(21, 21, 21, 0.08);
+  --shadow-soft: none;
+  --grid-color: rgba(21, 21, 21, 0.035);
+  --star-color: transparent;
 
   --content-width: min(1140px, calc(100% - 48px));
 }
 
-/* ---- Tokens: dark (deep space mission control) ---- */
+/* ---- Tokens: dark (high contrast report) ---- */
 body[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #070b16;
-  --bg-deep: #04060d;
-  --surface: #101728;
-  --surface-alt: #161f34;
-  --surface-strong: #1d2840;
-  --surface-glass: rgba(16, 23, 40, 0.66);
+  --bg: #111111;
+  --bg-deep: #080808;
+  --surface: #181818;
+  --surface-alt: #202020;
+  --surface-strong: #2b2b2b;
+  --surface-glass: rgba(24, 24, 24, 0.88);
 
-  --ink: #e9eef9;
-  --ink-soft: #9fabc6;
-  --ink-muted: #69748f;
+  --ink: #f4f2ed;
+  --ink-soft: #c9c5bc;
+  --ink-muted: #918d84;
 
-  --line: #1f2942;
-  --line-strong: #324063;
+  --line: #343434;
+  --line-strong: #6e6b64;
 
-  --accent: #38bdf8;
-  --accent-strong: #7dd3fc;
-  --accent-soft: rgba(56, 189, 248, 0.14);
-  --accent-glow: rgba(56, 189, 248, 0.40);
-  --secondary: #fbbf24;
+  --accent: #d7a0a8;
+  --accent-strong: #f0c3c9;
+  --accent-soft: rgba(215, 160, 168, 0.10);
+  --accent-glow: rgba(215, 160, 168, 0.16);
+  --secondary: #9fb8c9;
 
   --ok: #34d399;
   --ok-soft: rgba(52, 211, 153, 0.15);
   --warn: #fbbf24;
   --warn-soft: rgba(251, 191, 36, 0.16);
-  --neutral: #7c89a6;
-  --neutral-soft: rgba(124, 137, 166, 0.18);
+  --neutral: #a09c93;
+  --neutral-soft: rgba(160, 156, 147, 0.14);
 
-  --run-1: #38bdf8;
-  --run-2: #fbbf24;
-  --run-3: #a78bfa;
-  --run-4: #34d399;
-  --run-5: #fb7185;
+  --run-1: #9fb8c9;
+  --run-2: #d7a0a8;
+  --run-3: #c0b974;
+  --run-4: #93b69f;
+  --run-5: #b4a0b2;
 
-  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 18px 44px -22px rgba(0, 0, 0, 0.8);
-  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --grid-color: rgba(120, 160, 230, 0.055);
-  --star-color: rgba(150, 185, 255, 0.16);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-soft: none;
+  --grid-color: rgba(255, 255, 255, 0.035);
+  --star-color: transparent;
 }
 
 * {
@@ -139,7 +123,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Background motif: faint blueprint grid + starfield, fixed, perf-light */
+/* Background motif: faint lab-grid, fixed and unobtrusive */
 body::before {
   content: "";
   position: fixed;
@@ -152,32 +136,7 @@ body::before {
 }
 
 body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  background:
-    radial-gradient(1px 1px at 18% 28%, var(--star-color), transparent),
-    radial-gradient(1px 1px at 64% 14%, var(--star-color), transparent),
-    radial-gradient(1.4px 1.4px at 82% 62%, var(--star-color), transparent),
-    radial-gradient(1px 1px at 36% 78%, var(--star-color), transparent),
-    radial-gradient(1.2px 1.2px at 8% 64%, var(--star-color), transparent),
-    radial-gradient(1px 1px at 92% 36%, var(--star-color), transparent),
-    radial-gradient(1px 1px at 50% 50%, var(--star-color), transparent);
-  pointer-events: none;
-}
-
-/* Aurora glow anchored top, themed */
-.bg-aurora {
-  position: fixed;
-  inset: 0 0 auto 0;
-  height: 70vh;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(60% 55% at 18% -8%, var(--accent-soft), transparent 70%),
-    radial-gradient(55% 50% at 88% -12%, rgba(124, 58, 237, 0.10), transparent 72%);
-  opacity: 0.9;
+  display: none;
 }
 
 a {
@@ -217,14 +176,14 @@ a:focus-visible {
   position: sticky;
   top: 0;
   z-index: 30;
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
   border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(10px);
 }
 
 .site-header__inner {
   width: var(--content-width);
-  min-height: 62px;
+  min-height: 72px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -235,25 +194,38 @@ a:focus-visible {
 .brand {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 14px;
+  max-width: 100%;
   min-width: 0;
 }
 
-.brand__mark {
+.brand__banner {
   flex: none;
-  width: 30px;
-  height: 30px;
-  filter: drop-shadow(0 0 6px var(--accent-glow));
+  width: min(290px, 42vw);
+  height: auto;
+  max-height: 48px;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  background: #000000;
+}
+
+.brand__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .brand__eyebrow,
 .eyebrow {
-  color: var(--accent-strong);
+  color: var(--ink-muted);
   font-family: var(--font-mono);
   font-size: 0.64rem;
   font-weight: 600;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .brand__title {
@@ -304,14 +276,14 @@ a:focus-visible {
   gap: 3px;
   padding: 3px;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   background: var(--surface-alt);
 }
 
 .pill-toggle button,
 .mode-toggle button {
   border: 0;
-  border-radius: 999px;
+  border-radius: 3px;
   padding: 6px 13px;
   background: transparent;
   color: var(--ink-soft);
@@ -357,15 +329,15 @@ a:focus-visible {
 .pill-toggle button[aria-pressed="true"],
 .mode-toggle button[aria-pressed="true"] {
   background: var(--accent);
-  color: #04121d;
-  box-shadow: 0 0 14px -2px var(--accent-glow);
+  color: #ffffff;
+  box-shadow: none;
 }
 
 .tablist button[aria-selected="true"] {
   background: var(--accent);
   border-color: var(--accent);
-  color: #04121d;
-  box-shadow: 0 0 16px -3px var(--accent-glow);
+  color: #ffffff;
+  box-shadow: none;
 }
 
 .highlight-toggle {
@@ -408,7 +380,7 @@ a:focus-visible {
 
 .hero__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr);
+  grid-template-columns: minmax(0, 1.03fr) minmax(320px, 0.97fr);
   gap: 30px;
   align-items: center;
   padding-top: 30px;
@@ -419,15 +391,14 @@ a:focus-visible {
   margin: 0;
   max-width: 17ch;
   font-family: var(--font-display);
-  font-size: clamp(2.3rem, 4.4vw, 3.5rem);
+  font-size: 3.25rem;
   line-height: 1.03;
-  letter-spacing: -0.02em;
-  font-weight: 600;
+  letter-spacing: 0;
+  font-weight: 750;
 }
 
 .hero__title .accent {
   color: var(--accent);
-  text-shadow: 0 0 28px var(--accent-glow);
 }
 
 .hero__lead,
@@ -455,7 +426,7 @@ a:focus-visible {
   margin-bottom: 14px;
   padding: 5px 12px;
   border: 1px solid var(--line-strong);
-  border-radius: 999px;
+  border-radius: var(--radius-sm);
   background: var(--surface-alt);
   color: var(--accent-strong);
   font-family: var(--font-mono);
@@ -469,9 +440,8 @@ a:focus-visible {
   content: "";
   width: 7px;
   height: 7px;
-  border-radius: 999px;
+  border-radius: 1px;
   background: var(--ok);
-  box-shadow: 0 0 9px 1px var(--ok);
 }
 
 /* Hero visual panel (signature chart) */
@@ -479,8 +449,24 @@ a:focus-visible {
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: linear-gradient(180deg, var(--surface) 0%, var(--surface-alt) 100%);
+  background: var(--surface);
   box-shadow: var(--shadow);
+}
+
+.hero__panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.hero__emblem {
+  flex: none;
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  background: #000000;
 }
 
 .hero__panel h2 {
@@ -496,7 +482,7 @@ a:focus-visible {
 .hero__spark {
   width: 100%;
   height: 150px;
-  margin-top: 6px;
+  margin-top: 12px;
 }
 
 .hero__summary {
@@ -590,7 +576,7 @@ a:focus-visible {
 .metric-card {
   position: relative;
   overflow: hidden;
-  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  transition: border-color 0.18s ease;
 }
 
 .metric-card::before {
@@ -603,9 +589,7 @@ a:focus-visible {
 }
 
 .metric-card:hover {
-  transform: translateY(-2px);
   border-color: var(--line-strong);
-  box-shadow: var(--shadow);
 }
 
 .metric-card__value,
@@ -724,8 +708,7 @@ a:focus-visible {
   position: relative;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background:
-    radial-gradient(120% 120% at 50% 0%, var(--surface-alt) 0%, var(--surface) 60%);
+  background: var(--surface);
   overflow: hidden;
 }
 
@@ -777,6 +760,7 @@ a:focus-visible {
 .sr-table {
   position: absolute;
   width: 1px;
+  min-width: 0;
   height: 1px;
   padding: 0;
   margin: -1px;
@@ -797,12 +781,20 @@ a:focus-visible {
 
 .archive-table {
   padding: 0;
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  overflow-y: hidden;
+  contain: inline-size;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+}
+
+.archive-table table {
+  min-width: 760px;
 }
 
 th,
@@ -1149,6 +1141,32 @@ tbody tr:last-child th {
 
   .chart-canvas {
     height: 380px;
+  }
+
+  .brand {
+    width: 100%;
+  }
+
+  .brand__banner {
+    width: min(260px, 72vw);
+  }
+
+  .brand__text {
+    display: none;
+  }
+
+  .hero__title,
+  .detail-hero__title {
+    font-size: 2.3rem;
+  }
+
+  .archive-table table {
+    min-width: 0;
+  }
+
+  .archive-table th,
+  .archive-table td {
+    white-space: normal;
   }
 
   .section {
