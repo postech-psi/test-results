@@ -51,7 +51,7 @@
         chartsTitle: "재구성 신호", chartsLead: "상세 페이지 그래프도 원 PNG가 아니라 pipeline data 수치열에서 다시 렌더링합니다.",
         methodsTitle: "시험 조건과 처리", methodsLead: "필터, 기준선 보정, 임계값, 보정식을 결과와 함께 제시합니다.",
         artifactsLead: "내보낸 그림 파일은 빠른 확인용 참고 자료입니다.",
-        evidenceTitle: "근거 자료", evidenceLead: "보고서, Markdown 기록, pipeline data를 직접 열어 확인할 수 있습니다."
+        evidenceTitle: "자료 파일", evidenceLead: "보고서, Markdown 기록, pipeline data를 직접 열어 확인할 수 있습니다."
       },
       labels: {
         ignition: "점화", burnEnd: "연소 종료", peak: "피크",
@@ -98,7 +98,7 @@
         chartsTitle: "Signals", chartsLead: "Charts are rendered from numeric pipeline series, not reused PNGs.",
         methodsTitle: "Methods", methodsLead: "Filters, baselines, thresholds, and calibration formulas are shown beside the results.",
         artifactsLead: "Exported figures are retained as secondary references.",
-        evidenceTitle: "Evidence", evidenceLead: "Reports, Markdown records, and pipeline data can be opened directly."
+        evidenceTitle: "Result files", evidenceLead: "Reports, Markdown records, and pipeline data can be opened directly."
       },
       labels: {
         ignition: "Ignition", burnEnd: "Burn End", peak: "Peak",
@@ -595,23 +595,6 @@
       </section>`;
   }
 
-  function buildAccess(tests) {
-    const latest = tests[0];
-    return `
-      <section class="section" id="access">
-        <div class="section-heading">
-          <h2>${copy("home.accessTitle")}</h2>
-          <p>${copy("detail.evidenceLead")}</p>
-        </div>
-        <div class="data-links">
-          <a class="data-link" href="${resolvePath(latest.links.page)}"><div class="data-link__title">${copy("common.detailPage")}</div><div class="data-link__meta">${localize(latest.title)}</div></a>
-          <a class="data-link" href="${resolvePath(latest.links.executiveReport)}"><div class="data-link__title">${copy("common.executiveReport")}</div><div class="data-link__meta">${latest.date}</div></a>
-          <a class="data-link" href="${resolvePath(latest.links.markdown)}"><div class="data-link__title">${copy("common.markdownRecord")}</div><div class="data-link__meta">${latest.date}</div></a>
-          <a class="data-link" href="${resolvePath(latest.links.pipelineData)}"><div class="data-link__title">${copy("common.pipelineData")}</div><div class="data-link__meta">${copy("common.filteredSource")}</div></a>
-        </div>
-      </section>`;
-  }
-
   function renderHeader() {
     return `
       <header class="site-header">
@@ -648,7 +631,6 @@
             <a href="#findings">${copy("nav.findings")}</a>
             <a href="#archive">${copy("nav.archive")}</a>
             <a href="#methods">${copy("nav.methods")}</a>
-            <a href="#access">${copy("nav.access")}</a>
           </nav>
           <div class="hero__grid">
             <div>
@@ -681,7 +663,6 @@
         ${buildFindings(tests)}
         ${buildArchive(tests)}
         ${buildMethods(tests)}
-        ${buildAccess(tests)}
       </main>
       <footer class="footer">${localize(catalog.site.mission)}</footer>`;
     bindCommonControls();

@@ -123,11 +123,6 @@ def build_home(data):
               <td><a class="archive-action" href="{esc(t['links']['page'])}">View test</a></td>
             </tr>""")
 
-    evidence = f"""        <a class="data-link" href="{esc(latest['links']['executiveReport'])}"><div class="data-link__title">Executive report</div><div class="data-link__meta">{esc(latest['date'])}</div></a>
-        <a class="data-link" href="{esc(latest['links']['pipelineData'])}"><div class="data-link__title">Pipeline data</div><div class="data-link__meta">filtered force / filtered gauge pressure</div></a>
-        <a class="data-link" href="{esc(latest['links']['markdown'])}"><div class="data-link__title">Markdown record</div><div class="data-link__meta">{esc(en(latest['title']))}</div></a>
-        <a class="data-link" href="tests/index.json"><div class="data-link__title">Catalog JSON</div><div class="data-link__meta">Site data</div></a>"""
-
     body = f"""{head(en(meta['title']), en(meta['description']), 'assets/site.css')}
 {brand_header('.', name)}
 
@@ -173,13 +168,6 @@ def build_home(data):
       </div>
     </section>
 
-    <section class="section" id="access">
-      <div class="section-heading"><h2>Evidence</h2><p>Reports, Markdown records, and pipeline data can be opened directly.</p></div>
-      <div class="data-links">
-{evidence}
-      </div>
-      <noscript><div class="empty-state" style="margin-top:18px;">JavaScript is disabled. The summary, test pages, and evidence links remain available.</div></noscript>
-    </section>
   </main>
 
 {scripts('.', {'page': 'home', 'rootPath': '.'})}"""
@@ -232,7 +220,7 @@ def build_detail(data, test):
     </section>
 
     <section class="section">
-      <div class="section-heading"><h2>Evidence</h2><p>Reports, Markdown records, and pipeline data can be opened directly.</p></div>
+      <div class="section-heading"><h2>Result files</h2><p>Reports, Markdown records, and pipeline data can be opened directly.</p></div>
       <div class="fallback-grid">
         <article class="fallback-card">
           <h3>Result files</h3>
@@ -249,7 +237,7 @@ def build_detail(data, test):
           <p>Charts use filtered force and filtered gauge pressure from pipeline data, not reused PNG exports.</p>
         </article>
       </div>
-      <noscript><div class="empty-state" style="margin-top:18px;">JavaScript is disabled. The summary and evidence links remain available.</div></noscript>
+      <noscript><div class="empty-state" style="margin-top:18px;">JavaScript is disabled. The summary and file links remain available.</div></noscript>
     </section>
   </main>
 
