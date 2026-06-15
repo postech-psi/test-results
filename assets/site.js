@@ -39,19 +39,19 @@
       home: {
         eyebrow: "Postech Aerospace Initiative", title: "연소 시험 결과 공개 기록",
         titleAccent: "공개 기록",
-        lead: "POSTECH PSI 연소 시험 데이터를 공개 검토에 맞게 정리했습니다. 최신 결과, 이전 시험과의 변화, 원자료, 처리 방법을 한 흐름에서 확인할 수 있습니다.",
-        executiveTitle: "최신 결과", executiveLead: "최신 시험과 직전 시험의 차이를 먼저 보여 주고, 필요한 경우 원자료와 처리 방법까지 내려가 확인할 수 있습니다.",
-        comparisonTitle: "시험 간 비교", comparisonLead: "추력과 압력은 같은 기준으로 다시 그려 비교합니다. 시간축은 원 기록 그대로 보거나 점화 시점으로 정렬할 수 있습니다.",
-        findingsTitle: "공개 해석", findingsLead: "수치 변화와 시험 노트를 함께 읽어야 하는 항목을 간결하게 정리했습니다.",
+        lead: "",
+        executiveTitle: "최신 결과", executiveLead: "",
+        comparisonTitle: "시험 간 비교", comparisonLead: "",
+        findingsTitle: "공개 해석", findingsLead: "",
         methodsTitle: "측정과 처리", archiveTitle: "시험 아카이브",
-        archiveSubtitle: "공개된 시험을 날짜, 성능, 이슈 상태로 빠르게 확인합니다.", accessTitle: "자료 접근",
+        archiveSubtitle: "", accessTitle: "자료 접근",
         sparkTitle: "최신 추력 곡선"
       },
       detail: {
-        chartsTitle: "재구성 신호", chartsLead: "상세 페이지 그래프도 원 PNG가 아니라 pipeline data 수치열에서 다시 렌더링합니다.",
-        methodsTitle: "시험 조건과 처리", methodsLead: "필터, 기준선 보정, 임계값, 보정식을 결과와 함께 제시합니다.",
-        artifactsLead: "내보낸 그림 파일은 빠른 확인용 참고 자료입니다.",
-        evidenceTitle: "자료 파일", evidenceLead: "보고서, Markdown 기록, pipeline data를 직접 열어 확인할 수 있습니다."
+        chartsTitle: "재구성 신호", chartsLead: "",
+        methodsTitle: "시험 조건과 처리", methodsLead: "",
+        artifactsLead: "",
+        evidenceTitle: "자료 파일", evidenceLead: ""
       },
       labels: {
         ignition: "점화", burnEnd: "연소 종료", peak: "피크",
@@ -87,18 +87,18 @@
       },
       home: {
         eyebrow: "Postech Aerospace Initiative", title: "Static Fire Test Results", titleAccent: "Results",
-        lead: "A concise record of published static fire tests, with measured performance, run-to-run comparison, methods, and source files kept together.",
-        executiveTitle: "Latest test", executiveLead: "The latest run produced higher peak thrust and total impulse than the previous test, with a shorter burn duration.",
-        comparisonTitle: "Run comparison", comparisonLead: "Thrust and pressure are replotted on a shared basis. Time can be viewed as recorded or aligned to ignition.",
-        findingsTitle: "Findings", findingsLead: "Measured changes and test notes are summarized for quick review.",
-        methodsTitle: "Methods", archiveTitle: "Archive", archiveSubtitle: "Published tests organized by date, performance, and issue state.",
+        lead: "",
+        executiveTitle: "Latest test", executiveLead: "",
+        comparisonTitle: "Run comparison", comparisonLead: "",
+        findingsTitle: "Findings", findingsLead: "",
+        methodsTitle: "Methods", archiveTitle: "Archive", archiveSubtitle: "",
         accessTitle: "Evidence", sparkTitle: "Latest thrust curve"
       },
       detail: {
-        chartsTitle: "Signals", chartsLead: "Charts are rendered from numeric pipeline series, not reused PNGs.",
-        methodsTitle: "Methods", methodsLead: "Filters, baselines, thresholds, and calibration formulas are shown beside the results.",
-        artifactsLead: "Exported figures are retained as secondary references.",
-        evidenceTitle: "Result files", evidenceLead: "Reports, Markdown records, and pipeline data can be opened directly."
+        chartsTitle: "Signals", chartsLead: "",
+        methodsTitle: "Methods", methodsLead: "",
+        artifactsLead: "",
+        evidenceTitle: "Result files", evidenceLead: ""
       },
       labels: {
         ignition: "Ignition", burnEnd: "Burn End", peak: "Peak",
@@ -139,6 +139,11 @@
 
   function copy(path) {
     return path.split(".").reduce((value, key) => value && value[key], UI[state.lang]) || "";
+  }
+
+  function optionalParagraph(text, className = "") {
+    const value = String(text || "").trim();
+    return value ? `<p${className ? ` class="${className}"` : ""}>${value}</p>` : "";
   }
 
   function localize(field) {
@@ -444,7 +449,7 @@
       <section class="section" id="comparison">
         <div class="section-heading">
           <h2>${copy("home.comparisonTitle")}</h2>
-          <p>${copy("home.comparisonLead")}</p>
+          ${optionalParagraph(copy("home.comparisonLead"))}
         </div>
         <div class="panel comparison-layout">
           <div class="toolbar">
@@ -485,7 +490,7 @@
       <section class="section" id="findings">
         <div class="section-heading">
           <h2>${copy("home.findingsTitle")}</h2>
-          <p>${copy("home.findingsLead")}</p>
+          ${optionalParagraph(copy("home.findingsLead"))}
         </div>
         <div class="publication-layout">
           <article class="mini-panel">
@@ -531,7 +536,7 @@
       <section class="section" id="archive">
         <div class="section-heading">
           <h2>${copy("home.archiveTitle")}</h2>
-          <p>${copy("home.archiveSubtitle")}</p>
+          ${optionalParagraph(copy("home.archiveSubtitle"))}
         </div>
         <div class="archive-tools">
           <div class="muted">${tests.length} ${copy("common.publishedRuns")}</div>
@@ -576,7 +581,6 @@
       <section class="section" id="methods">
         <div class="section-heading">
           <h2>${copy("home.methodsTitle")}</h2>
-          <p>${localize(catalog.site.methodologySummary)}</p>
         </div>
         <div class="finding-grid">
           <article class="mini-panel">
@@ -636,7 +640,7 @@
             <div>
               <div class="verdict">${copy("common.verdict")}</div>
               <h1 class="hero__title">${copy("home.title")}</h1>
-              <p class="hero__lead">${copy("home.lead")}</p>
+              ${optionalParagraph(copy("home.lead"), "hero__lead")}
             </div>
             <aside class="hero__panel" aria-label="${copy("home.sparkTitle")}">
               <div class="hero__panel-header">
@@ -655,7 +659,7 @@
         <section class="section">
           <div class="section-heading">
             <h2>${copy("home.executiveTitle")}</h2>
-            <p>${copy("home.executiveLead")}</p>
+            ${optionalParagraph(copy("home.executiveLead"))}
           </div>
           <div class="overview-grid">${buildOverviewCards(tests)}</div>
         </section>
@@ -664,7 +668,7 @@
         ${buildArchive(tests)}
         ${buildMethods(tests)}
       </main>
-      <footer class="footer">${localize(catalog.site.mission)}</footer>`;
+      <footer class="footer"></footer>`;
     bindCommonControls();
     bindHomeControls();
     initHomeCharts();
@@ -707,7 +711,7 @@
         <section class="section">
           <div class="section-heading">
             <h2>${copy("detail.chartsTitle")}</h2>
-            <p>${copy("detail.chartsLead")}</p>
+            ${optionalParagraph(copy("detail.chartsLead"))}
           </div>
           <div class="panel comparison-layout">
             <div class="toolbar">${chartPanelTabs("dt", tabs)}</div>
@@ -715,7 +719,7 @@
               <div class="tabpanel" id="dt-panel-${tab}" role="tabpanel" aria-labelledby="dt-tab-${tab}" ${state.comparisonTab === tab ? "" : "hidden"}>
                 <div class="chart-header">
                   <div class="chart-header__title">${copy(`common.${tab}`)}</div>
-                  <div class="chart-header__note">${tab === "metrics" ? copy("home.executiveLead") : copy("common.chartHint")}</div>
+                  <div class="chart-header__note">${tab === "metrics" ? copy("common.metricsScaleNote") : copy("common.chartHint")}</div>
                 </div>
                 <div class="chart-shell">
                   ${tab === "metrics" ? "" : `<div class="hint-chip">${copy("common.chartHint")}</div>`}
@@ -728,7 +732,7 @@
         <section class="section">
           <div class="section-heading">
             <h2>${copy("detail.methodsTitle")}</h2>
-            <p>${copy("detail.methodsLead")}</p>
+            ${optionalParagraph(copy("detail.methodsLead"))}
           </div>
           <div class="detail-grid">
             <div class="detail-stack">
@@ -738,7 +742,7 @@
             <div class="detail-stack">
               <article class="panel">
                 <div class="subsection-title">${copy("detail.evidenceTitle")}</div>
-                <p class="detail-meta-note">${copy("detail.evidenceLead")}</p>
+                ${optionalParagraph(copy("detail.evidenceLead"), "detail-meta-note")}
                 <div class="data-links" style="grid-template-columns:1fr;margin-top:12px;">
                   <a class="data-link" href="${resolvePath(test.links.executiveReport)}"><div class="data-link__title">${copy("common.executiveReport")}</div><div class="data-link__meta">${test.date}</div></a>
                   <a class="data-link" href="${resolvePath(test.links.pipelineData)}"><div class="data-link__title">${copy("common.pipelineData")}</div><div class="data-link__meta">${copy("common.filteredSource")}</div></a>
@@ -755,7 +759,7 @@
           <div class="panel">${issues.length ? `<ul class="detail-list">${issues.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` : `<div class="empty-state">${copy("common.noIssues")}</div>`}</div>
         </section>
         <section class="section">
-          <div class="section-heading"><h2>${copy("common.exportedFigures")}</h2><p>${copy("detail.artifactsLead")}</p></div>
+          <div class="section-heading"><h2>${copy("common.exportedFigures")}</h2>${optionalParagraph(copy("detail.artifactsLead"))}</div>
           <div class="artifact-grid">
             ${test.artifacts.figures.map((figure) => `
               <article class="artifact-card">
@@ -765,7 +769,7 @@
           </div>
         </section>
       </main>
-      <footer class="footer">${localize(catalog.site.mission)}</footer>`;
+      <footer class="footer"></footer>`;
     bindCommonControls();
     bindDetailControls(test);
     updateDetailChart(test);

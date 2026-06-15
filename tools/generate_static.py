@@ -11,7 +11,7 @@ import json
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-VERSION = "2026-06-16-postech-red"
+VERSION = "2026-06-16-no-intro-copy"
 
 CARD_DIGITS = {
     "maxThrustN": (2, "N"),
@@ -97,7 +97,6 @@ def build_home(data):
     latest = tests[0]
     previous = tests[1] if len(tests) > 1 else None
     name = en(site["name"])
-    mission = en(site["mission"])
     meta = site["pageMeta"]["home"]
 
     cards = []
@@ -132,14 +131,12 @@ def build_home(data):
         <div>
           <div class="verdict">Static fire test report</div>
           <h1 class="hero__title">{esc(en(site['name']))}</h1>
-          <p class="hero__lead">{esc(mission)}</p>
         </div>
         <aside class="hero__panel">
           <div class="hero__panel-header">
             <h2>Latest test &middot; {esc(latest['date'])}</h2>
             <span class="logo-surface hero__logo-surface"><img class="hero__emblem" src="assets/logos/psi-logo-circle.jpg" alt="Postech Aerospace Initiative circular logo"></span>
           </div>
-          <p class="detail-meta-note">{esc(en(latest['summary']))}</p>
           <div class="hero__summary">
             <div class="hero-stat"><div class="hero-stat__label">Peak thrust</div><div class="hero-stat__value">{esc(latest['metrics']['maxThrustN']['display'])}</div></div>
             <div class="hero-stat"><div class="hero-stat__label">Total impulse</div><div class="hero-stat__value">{esc(latest['metrics']['totalImpulseNs']['display'])}</div></div>
@@ -150,14 +147,14 @@ def build_home(data):
     </section>
 
     <section class="section">
-      <div class="section-heading"><h2>Latest test</h2><p>Measured performance for the most recent published run.</p></div>
+      <div class="section-heading"><h2>Latest test</h2></div>
       <div class="overview-grid">
 {chr(10).join(cards)}
       </div>
     </section>
 
     <section class="section" id="archive">
-      <div class="section-heading"><h2>Archive</h2><p>Published tests and direct evidence links.</p></div>
+      <div class="section-heading"><h2>Archive</h2></div>
       <div class="archive-table">
         <table>
           <thead><tr><th>Date</th><th>Test</th><th>Status</th><th>Issue</th><th>Peak thrust</th><th>Total impulse</th><th>Peak pressure</th><th>Link</th></tr></thead>
@@ -213,14 +210,13 @@ def build_detail(data, test):
       <a class="detail-hero__back" href="../../index.html">&larr; Back to results</a>
       <div class="verdict">Static fire test report</div>
       <h1 class="detail-hero__title">{esc(en(test['title']))}</h1>
-      <p class="detail-hero__lead">{esc(en(test['summary']))} With JavaScript enabled, charts are replotted directly from pipeline data.</p>
       <div class="detail-summary">
 {cards}
       </div>
     </section>
 
     <section class="section">
-      <div class="section-heading"><h2>Result files</h2><p>Reports, Markdown records, and pipeline data can be opened directly.</p></div>
+      <div class="section-heading"><h2>Result files</h2></div>
       <div class="fallback-grid">
         <article class="fallback-card">
           <h3>Result files</h3>
@@ -231,10 +227,6 @@ def build_detail(data, test):
         <article class="fallback-card">
           <h3>Reference figures</h3>
 {figures}
-        </article>
-        <article class="fallback-card">
-          <h3>Processing note</h3>
-          <p>Charts use filtered force and filtered gauge pressure from pipeline data, not reused PNG exports.</p>
         </article>
       </div>
       <noscript><div class="empty-state" style="margin-top:18px;">JavaScript is disabled. The summary and file links remain available.</div></noscript>
