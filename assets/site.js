@@ -69,7 +69,9 @@
         actions: "링크",
         sourceInput: "입력 파일",
         ignitionDelay: "점화 지연",
-        peakTime: "피크 시점"
+        peakTime: "피크 시점",
+        highlightRun: "강조할 시험",
+        allRunsBackground: "전체"
       },
       home: {
         eyebrow: "POSTECH PSI",
@@ -173,7 +175,9 @@
         actions: "Links",
         sourceInput: "Input File",
         ignitionDelay: "Ignition Delay",
-        peakTime: "Peak Time"
+        peakTime: "Peak Time",
+        highlightRun: "Highlight test",
+        allRunsBackground: "All"
       },
       home: {
         eyebrow: "POSTECH PSI",
@@ -221,6 +225,7 @@
     theme: "light",
     comparisonTab: "thrust",
     comparisonMode: "absolute",
+    selectedTestId: null,
     archiveSort: "date"
   };
 
@@ -391,10 +396,14 @@
     const allPoints = config.series.flatMap((series) => series.points).filter((point) => Number.isFinite(point.x) && Number.isFinite(point.y));
     if (!allPoints.length) return `<div class="chart-empty">${copy("common.noData")}</div>`;
 
-    const xMin = Math.min(...allPoints.map((point) => point.x));
-    const xMax = Math.max(...allPoints.map((point) => point.x));
-    const rawYMin = Math.min(...allPoints.map((point) => point.y), 0);
-    const rawYMax = Math.max(...allPoints.map((point) => point.y), 0);
+    const scalePoints = (config.scalePoints || allPoints).filter((point) => Number.isFinite(point.x) && Number.isFinite(point.y));
+    const axisPoints = scalePoints.length ? scalePoints : allPoints;
+    const xAxisPoints = (config.xScalePoints || axisPoints).filter((point) => Number.isFinite(point.x));
+    const yAxisPoints = (config.yScalePoints || axisPoints).filter((point) => Number.isFinite(point.y));
+    const xMin = Math.min(...(xAxisPoints.length ? xAxisPoints : allPoints).map((point) => point.x));
+    const xMax = Math.max(...(xAxisPoints.length ? xAxisPoints : allPoints).map((point) => point.x));
+    const rawYMin = Math.min(...(yAxisPoints.length ? yAxisPoints : allPoints).map((point) => point.y), 0);
+    const rawYMax = Math.max(...(yAxisPoints.length ? yAxisPoints : allPoints).map((point) => point.y), 0);
     const yPadding = Math.max((rawYMax - rawYMin) * 0.08, 1);
     const yMin = rawYMin - yPadding;
     const yMax = rawYMax + yPadding;
@@ -418,18 +427,18 @@
     `).join("");
 
     const series = config.series.map((item) => `
-      <path d="${linePath(item.points, xScale, yScale)}" fill="none" stroke="${item.color}" stroke-width="${item.strokeWidth || 2.8}" ${item.dash ? `stroke-dasharray="${item.dash}"` : ""} stroke-linejoin="round" stroke-linecap="round"></path>
+      <path d="${linePath(item.points, xScale, yScale)}" fill="none" stroke="${item.color}" stroke-width="${item.strokeWidth || 2.8}" opacity="${item.opacity == null ? 1 : item.opacity}" ${item.className ? `class="${escapeHtml(item.className)}"` : ""} ${item.dash ? `stroke-dasharray="${item.dash}"` : ""} stroke-linejoin="round" stroke-linecap="round"></path>
     `).join("");
 
     const events = (config.events || []).map((event) => `
-      <g>
-        <line x1="${xScale(event.x)}" y1="${margin.top}" x2="${xScale(event.x)}" y2="${height - margin.bottom}" stroke="${event.color}" stroke-width="1.2" stroke-dasharray="4 5"></line>
+      <g opacity="${event.opacity == null ? 1 : event.opacity}">
+        <line x1="${xScale(event.x)}" y1="${margin.top}" x2="${xScale(event.x)}" y2="${height - margin.bottom}" stroke="${event.color}" stroke-width="${event.strokeWidth || 1.2}" stroke-dasharray="4 5"></line>
         <text x="${Math.min(width - margin.right - 6, xScale(event.x) + 7)}" y="${margin.top + 15}" fill="${event.color}" font-size="12" font-weight="800">${escapeHtml(event.label)}</text>
       </g>
     `).join("");
 
     const peaks = (config.peaks || []).map((peak) => `
-      <g>
+      <g opacity="${peak.opacity == null ? 1 : peak.opacity}">
         <circle cx="${xScale(peak.x)}" cy="${yScale(peak.y)}" r="4" fill="${peak.color}" stroke="var(--surface)" stroke-width="2"></circle>
         <text x="${Math.min(width - margin.right - 40, xScale(peak.x) + 8)}" y="${Math.max(margin.top + 18, yScale(peak.y) - 8)}" fill="${peak.color}" font-size="12" font-weight="800">${escapeHtml(peak.label)}</text>
       </g>
@@ -450,7 +459,7 @@
     `;
   }
 
-  function renderMetricBars(tests) {
+  function renderMetricBars(tests, selectedTestId) {
     const metrics = [
       { key: "maxThrustN", label: copy("common.peakThrust"), digits: 1 },
       { key: "totalImpulseNs", label: copy("common.totalImpulse"), digits: 1 },
@@ -458,13 +467,16 @@
       { key: "maxPressureBar", label: copy("common.peakPressure"), digits: 1 }
     ];
     const palette = getThemePalette();
-    const maxValue = Math.max(...metrics.flatMap((metric) => tests.map((test) => test.metrics[metric.key].value)));
+    const hasHighlight = selectedTestId && selectedTestId !== "all";
     const groups = metrics.map((metric) => {
+      const maxValue = Math.max(...tests.map((test) => test.metrics[metric.key].value));
       const bars = tests.map((test, index) => {
         const value = test.metrics[metric.key].value;
         const width = Math.max(4, (value / maxValue) * 100);
+        const isActive = !hasHighlight || test.id === selectedTestId;
+        const opacity = isActive ? 1 : 0.24;
         return `
-          <div class="metric-bar-row">
+          <div class="metric-bar-row" style="opacity:${opacity};">
             <div class="muted">${test.date}</div>
             <div style="height:12px;border-radius:999px;background:${palette[index % palette.length]};width:${width}%;"></div>
             <strong>${formatNumber(value, metric.digits)} ${test.metrics[metric.key].unit}</strong>
@@ -505,48 +517,69 @@
   }
 
   function buildComparisonChart(tests, activeTab, activeMode) {
-    if (activeTab === "metrics") return renderMetricBars(tests);
+    const selectedTestId = state.selectedTestId || (tests[0] && tests[0].id) || "all";
+    if (activeTab === "metrics") return renderMetricBars(tests, selectedTestId);
     const palette = getThemePalette();
     const labels = copy("labels");
     const field = activeTab === "pressure" ? "filtered_gauge_pressure" : "filtered_force_N";
     const yLabel = activeTab === "pressure" ? labels.pressureUnit : labels.thrustUnit;
     const title = activeTab === "pressure" ? copy("common.pressure") : copy("common.thrust");
-    const series = tests.map((test, index) => {
+    const hasHighlight = selectedTestId !== "all";
+    const chartItems = tests.map((test, index) => ({ test, index })).sort((a, b) => {
+      if (!hasHighlight) return a.index - b.index;
+      if (a.test.id === selectedTestId) return 1;
+      if (b.test.id === selectedTestId) return -1;
+      return a.index - b.index;
+    });
+    const series = chartItems.map(({ test, index }) => {
       const derived = dataCache.get(test.id);
       const rows = downsample(derived.rows, 420);
+      const isActive = !hasHighlight || test.id === selectedTestId;
       return {
         name: `${test.date} - ${localize(test.title)}`,
         color: palette[index % palette.length],
-        strokeWidth: index === 0 ? 2.8 : 1.8,
-        dash: index === 0 ? "" : "5 5",
+        strokeWidth: isActive ? 3.2 : 1.25,
+        opacity: isActive ? 1 : 0.22,
+        className: isActive ? "chart-line-active" : "chart-line-background",
+        dash: isActive ? "" : "5 5",
         points: rows.map((row) => ({
           x: activeMode === "aligned" ? row.time_s - test.events.ignitionTimeS : row.time_s,
           y: row[field]
         }))
       };
     });
+    const allScalePoints = series.flatMap((item) => item.points);
+    const selectedSeries = hasHighlight ? series.find((item) => item.className === "chart-line-active") : null;
+    const yScalePoints = selectedSeries ? selectedSeries.points : allScalePoints;
     const events = activeMode === "absolute"
-      ? tests.flatMap((test, index) => ([
-          { x: test.events.ignitionTimeS, color: palette[index % palette.length], label: `${test.date} ${labels.ignition}` },
-          { x: test.events.burnEndTimeS, color: palette[index % palette.length], label: `${test.date} ${labels.burnEnd}` }
-        ]))
+      ? tests.flatMap((test, index) => {
+        const isActive = !hasHighlight || test.id === selectedTestId;
+        return [
+          { x: test.events.ignitionTimeS, color: palette[index % palette.length], label: `${test.date} ${labels.ignition}`, opacity: isActive ? 1 : 0.2, strokeWidth: isActive ? 1.4 : 0.8 },
+          { x: test.events.burnEndTimeS, color: palette[index % palette.length], label: `${test.date} ${labels.burnEnd}`, opacity: isActive ? 1 : 0.2, strokeWidth: isActive ? 1.4 : 0.8 }
+        ];
+      })
       : [{ x: 0, color: palette[0], label: labels.ignition }];
     const peaks = tests.map((test, index) => {
       const derived = dataCache.get(test.id);
       const peak = activeTab === "pressure" ? derived.peakPressure : derived.peakThrust;
+      const isActive = !hasHighlight || test.id === selectedTestId;
       return {
         x: activeMode === "aligned" ? peak.time_s - test.events.ignitionTimeS : peak.time_s,
         y: peak[field],
         color: palette[index % palette.length],
-        label: `${test.date} ${labels.peak}`
+        label: `${test.date} ${labels.peak}`,
+        opacity: isActive ? 1 : 0.18
       };
-    });
+    }).filter((peak) => !hasHighlight || peak.opacity === 1);
     return `
       <div class="chart-shell">${renderLineChart({
         ariaLabel: `${title} comparison chart`,
         xLabel: activeMode === "aligned" ? labels.alignedTimeSeconds : labels.timeSeconds,
         yLabel,
         series,
+        xScalePoints: allScalePoints,
+        yScalePoints,
         events,
         peaks
       })}</div>
@@ -564,6 +597,7 @@
 
   function buildComparisonPanel(tests) {
     const tabs = ["thrust", "pressure", "metrics"];
+    const selectedTestId = state.selectedTestId || (tests[0] && tests[0].id) || "all";
     return `
       <section class="section" id="comparison">
         <div class="section-heading">
@@ -580,6 +614,10 @@
             <div class="mode-toggle" aria-label="${state.lang === "ko" ? "시간축 선택" : "Time mode selection"}">
               <button type="button" data-comparison-mode="absolute" aria-pressed="${state.comparisonMode === "absolute"}">${copy("common.directView")}</button>
               <button type="button" data-comparison-mode="aligned" aria-pressed="${state.comparisonMode === "aligned"}">${copy("common.alignedView")}</button>
+            </div>
+            <div class="mode-toggle" aria-label="${copy("common.highlightRun")}">
+              <button type="button" data-highlight-test="all" aria-pressed="${selectedTestId === "all"}">${copy("common.allRunsBackground")}</button>
+              ${tests.map((test) => `<button type="button" data-highlight-test="${test.id}" aria-pressed="${selectedTestId === test.id}">${test.date}</button>`).join("")}
             </div>
           </div>
           ${tabs.map((tab) => `
@@ -1011,6 +1049,12 @@
     document.querySelectorAll("[data-comparison-mode]").forEach((button) => {
       button.addEventListener("click", () => {
         state.comparisonMode = button.dataset.comparisonMode;
+        rerender();
+      });
+    });
+    document.querySelectorAll("[data-highlight-test]").forEach((button) => {
+      button.addEventListener("click", () => {
+        state.selectedTestId = button.dataset.highlightTest;
         rerender();
       });
     });

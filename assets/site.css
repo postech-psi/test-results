@@ -1,5 +1,6 @@
 :root {
   color-scheme: light;
+  --font-sans: "Pretendard", Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
   --bg: #f7f6f2;
   --surface: #ffffff;
   --surface-alt: #f1f0ec;
@@ -19,6 +20,14 @@
   --blue: #111111;
   --shadow: none;
   --content-width: min(1040px, calc(100% - 44px));
+}
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("fonts/PretendardVariable.woff2") format("woff2");
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
 }
 
 body[data-theme="dark"] {
@@ -53,7 +62,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: Georgia, "Times New Roman", "Noto Serif KR", serif;
+  font-family: var(--font-sans);
   line-height: 1.55;
   color: var(--ink);
   background: var(--bg);
@@ -113,7 +122,7 @@ a:focus-visible {
 .brand__eyebrow,
 .eyebrow {
   color: var(--ink-muted);
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.12em;
@@ -122,7 +131,7 @@ a:focus-visible {
 
 .brand__title {
   margin-top: 2px;
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0;
@@ -150,7 +159,7 @@ a:focus-visible {
 .site-nav a,
 .detail-hero__back {
   color: var(--ink-soft);
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.88rem;
   text-decoration: none;
 }
@@ -180,7 +189,7 @@ a:focus-visible {
   border-radius: 0;
   background: var(--surface);
   color: var(--ink);
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.84rem;
   font-weight: 650;
 }
@@ -251,7 +260,7 @@ a:focus-visible {
   width: max-content;
   margin-bottom: 10px;
   color: var(--ink-muted);
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -326,7 +335,7 @@ a:focus-visible {
 .metric-card__label,
 .fact-line__label {
   color: var(--ink-muted);
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.09em;
@@ -337,7 +346,7 @@ a:focus-visible {
 .metric-card__value,
 .fact-line__value {
   margin-top: 4px;
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.12rem;
   font-weight: 750;
 }
@@ -405,7 +414,7 @@ a:focus-visible {
 .metric-card__delta {
   margin-top: 8px;
   color: var(--ink-soft);
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.86rem;
 }
 
@@ -419,7 +428,7 @@ a:focus-visible {
   grid-template-columns: minmax(84px, 0.4fr) minmax(130px, 1fr) minmax(90px, auto);
   gap: 10px;
   align-items: center;
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.86rem;
 }
 
@@ -479,7 +488,7 @@ a:focus-visible {
 
 .chart-header__title,
 .subsection-title {
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-weight: 750;
 }
 
@@ -497,6 +506,7 @@ a:focus-visible {
   width: 100%;
   min-width: 720px;
   height: auto;
+  font-family: var(--font-sans);
 }
 
 .chart-empty,
@@ -511,7 +521,7 @@ a:focus-visible {
 .chart-source {
   margin-top: 8px;
   color: var(--ink-muted);
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.78rem;
 }
 
@@ -527,7 +537,7 @@ a:focus-visible {
   align-items: center;
   gap: 7px;
   color: var(--ink-soft);
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.84rem;
 }
 
@@ -565,7 +575,7 @@ td {
 
 th {
   color: var(--ink-muted);
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -586,7 +596,7 @@ tbody tr:last-child th {
   border-radius: 0;
   color: var(--ink);
   background: transparent;
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.68rem;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -620,14 +630,14 @@ tbody tr:last-child th {
 }
 
 .data-link__title {
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-weight: 750;
 }
 
 .data-link__meta {
   margin-top: 6px;
   color: var(--ink-soft);
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.86rem;
 }
 
@@ -657,7 +667,7 @@ tbody tr:last-child th {
 
 .artifact-card__title {
   margin-top: 10px;
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-weight: 750;
 }
 
@@ -685,7 +695,7 @@ tbody tr:last-child th {
   padding: 28px 0 46px;
   border-top: 1px solid var(--line);
   color: var(--ink-soft);
-  font-family: Inter, "Segoe UI", "Noto Sans KR", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-size: 0.86rem;
 }
 
