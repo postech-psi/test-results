@@ -392,13 +392,6 @@
   function metricBarOption(params) {
     var t = tokens(params.theme);
     var vals = (params.values || []).filter(function (v) { return v != null && isFinite(v); });
-    var yMin, yMax;
-    if (vals.length) {
-      var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
-      var span = (hi - lo) || Math.abs(hi) || 1;
-      yMin = Math.max(0, lo - span * 0.35);
-      yMax = hi + span * 0.18;
-    }
     var rotate = (params.names || []).length > 5 ? 30 : 0;
     return {
       backgroundColor: "transparent",
@@ -437,11 +430,13 @@
         type: "value",
         name: params.unit,
         nameTextStyle: { color: t.inkMuted, fontFamily: FONT_MONO, fontSize: 10, align: "left" },
-        min: yMin,
-        max: yMax,
         scale: true,
+        splitNumber: 4,
         axisLine: { show: false },
-        axisLabel: { color: t.inkSoft, fontFamily: FONT_MONO, fontSize: 10 },
+        axisLabel: {
+          color: t.inkSoft, fontFamily: FONT_MONO, fontSize: 10,
+          formatter: function (val) { return (Math.round(val * 100) / 100).toLocaleString(); }
+        },
         splitLine: { lineStyle: { color: t.line, type: "dashed" } }
       },
       series: [{
