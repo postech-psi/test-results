@@ -171,6 +171,7 @@
   /* Comparison tooltip: per-run value at x, plus that run's ignition/burn-end
      times and peak (value @ time). params has runs[] with event metadata. */
   function comparisonTooltipFormatter(params, includeEvents) {
+    return tooltipFormatter(params.xUnit, params.yUnit, params.yDigits);
     var runMap = {};
     (params.runs || []).forEach(function (r) { runMap[r.name] = r; });
     var L = params.labels || {};
@@ -212,7 +213,7 @@
     units = units || {};
     var xU = units.xUnit ? " " + units.xUnit : "";
     var labelBase = {
-      show: showLabel, color: color, fontFamily: FONT_MONO, fontSize: 10,
+      show: false, color: color, fontFamily: FONT_MONO, fontSize: 10,
       backgroundColor: t.surface, padding: [2, 4], borderRadius: 3
     };
     var data = [];
@@ -269,6 +270,53 @@
     };
   }
 
+  function eventAxisLabelSeries(runs, labels, colorFallback, t, units, yValue) {
+    units = units || {};
+    var xU = units.xUnit ? " " + units.xUnit : "";
+    var data = [];
+    (runs || []).forEach(function (run, runIndex) {
+      var color = run.color || colorFallback;
+      [
+        { x: run.ignitionX, name: labels.ignition },
+        { x: run.burnEndX, name: labels.burnEnd }
+      ].forEach(function (event) {
+        if (event.x == null) return;
+        data.push({
+          value: [event.x, yValue],
+          itemStyle: { color: color, opacity: 0 },
+          label: {
+            show: true,
+            formatter: event.name + " " + fmt(event.x, 2) + xU,
+            color: color,
+            fontFamily: FONT_MONO,
+            fontSize: 10,
+            position: "top",
+            distance: 4,
+            offset: [0, -runIndex * 15],
+            backgroundColor: t.surface,
+            borderColor: color,
+            borderWidth: 1,
+            borderRadius: 4,
+            padding: [2, 5]
+          }
+        });
+      });
+    });
+    if (!data.length) return null;
+    return {
+      name: "__event_axis_labels",
+      type: "scatter",
+      silent: true,
+      tooltip: { show: false },
+      animation: false,
+      symbolSize: 0,
+      z: 30,
+      clip: false,
+      labelLayout: { hideOverlap: true },
+      data: data
+    };
+  }
+
   /* Comparison chart: multiple runs, one measurement (thrust|pressure).
      params.viewMode: "overview" | "focus" | "single"
      params.selectedIds: string[] (focus mode — which runs to show)
@@ -278,9 +326,7 @@
     var opt = baseOption(params);
     var viewMode = params.viewMode || "single";
     var units = { xUnit: params.xUnit, yUnit: params.yUnit, yDigits: params.yDigits };
-    // On-chart labels carry the event details for focus/single; in overview
-    // (labels off) the tooltip carries them instead.
-    opt.tooltip.formatter = comparisonTooltipFormatter(params, viewMode === "overview");
+    opt.tooltip.formatter = tooltipFormatter(params.xUnit, params.yUnit, params.yDigits);
 
     /* ---- Overview: all runs, hover-reveal, no permanent labels ---- */
     if (viewMode === "overview") {
@@ -304,6 +350,8 @@
           data: run.data
         };
       });
+      var overviewEventSeries = eventAxisLabelSeries(params.runs.slice(0, 1), params.labels, t.accent, t, units, ext ? ext.min : 0);
+      if (overviewEventSeries) opt.series.push(overviewEventSeries);
       return opt;
     }
 
@@ -312,7 +360,7 @@
       var sel = params.selectedIds || [];
       var focused = params.runs.filter(function (r) { return sel.indexOf(r.id) !== -1; });
       var n = focused.length;
-      var showML = n <= 2;
+      var showML = false;
       var showMP = n <= 4;
       var focusData = focused.reduce(function (acc, r) { return acc.concat(r.data || []); }, []);
       var ext2 = niceExtent(focusData);
@@ -336,6 +384,10 @@
           data: run.data
         };
       });
+      if (n > 0 && n <= 3) {
+        var focusEventSeries = eventAxisLabelSeries(focused, params.labels, t.accent, t, units, ext2 ? ext2.min : 0);
+        if (focusEventSeries) opt.series.push(focusEventSeries);
+      }
       return opt;
     }
 
@@ -353,7 +405,7 @@
     };
     opt.series = params.runs.map(function (run) {
       var active = !hasHighlight || run.id === params.highlightId;
-      var showLabel = hasHighlight && run.id === params.highlightId;
+      var showLabel = false;
       var mlOpacity = active ? 0.75 : 0.08;
       var mpOpacity = active ? 1 : 0.08;
       return {
@@ -369,6 +421,9 @@
         data: run.data
       };
     });
+    var singleEventRuns = params.runs.filter(function (run) { return hasHighlight ? run.id === params.highlightId : false; });
+    var singleEventSeries = eventAxisLabelSeries(singleEventRuns, params.labels, t.accent, t, units, ext3 ? ext3.min : 0);
+    if (singleEventSeries) opt.series.push(singleEventSeries);
     return opt;
   }
 
@@ -388,6 +443,10 @@
       inactiveColor: t.inkMuted,
       data: params.series.map(function (s) { return s.name; })
     };
+
+    var detailData = params.series.reduce(function (acc, s) { return acc.concat(s.data || []); }, []);
+    var detailExt = niceExtent(detailData);
+    if (detailExt) { opt.yAxis.min = detailExt.min; opt.yAxis.max = detailExt.max; }
 
     opt.series = params.series.map(function (s, i) {
       var isPrimary = !!s.primary;
@@ -422,6 +481,15 @@
       }
       return series;
     });
+    var detailEventSeries = eventAxisLabelSeries(
+      [{ ignitionX: params.ignitionX, burnEndX: params.burnEndX, color: t.lineStrong }],
+      params.labels,
+      t.lineStrong,
+      t,
+      { xUnit: params.xUnit },
+      detailExt ? detailExt.min : 0
+    );
+    if (detailEventSeries) opt.series.push(detailEventSeries);
     return opt;
   }
 
