@@ -371,20 +371,28 @@
     }[id];
   }
 
-  /* Per-metric chart data, mode-aware. Returns one params object per metric. */
+  /* Per-metric chart data, mode-aware. Returns one params object per metric.
+     overview: all runs · focus: selected subset · single: only the one run */
   function metricChartsParams(allTests) {
     const pal = PSICharts.palette(state.theme);
     const vm = state.comparisonViewMode;
     const selIds = state.selectedTestIds;
     const singleId = state.selectedTestId;
-    const tests = vm === "focus" ? allTests.filter((t) => selIds.indexOf(t.id) !== -1) : allTests;
+    let tests;
+    if (vm === "focus") {
+      tests = allTests.filter((t) => selIds.indexOf(t.id) !== -1);
+    } else if (vm === "single") {
+      const one = allTests.find((t) => t.id === singleId);
+      tests = one ? [one] : allTests.slice(0, 1);
+    } else {
+      tests = allTests;
+    }
     const n = tests.length;
     const colorOf = (test, index) => {
       if (vm === "overview") return n > pal.length ? hslRunColor(index, n, state.theme) : pal[index % pal.length];
       if (vm === "focus") { const i = selIds.indexOf(test.id); return i >= 0 ? pal[i % pal.length] : pal[index % pal.length]; }
-      return pal[index % pal.length];
+      return pal[0];
     };
-    const dimOf = (test) => vm === "single" && singleId && singleId !== "all" && test.id !== singleId;
     return METRIC_DEFS.map((m) => ({
       theme: state.theme,
       title: metricLabel(m.id),
@@ -394,7 +402,7 @@
       colors: tests.map((t, i) => colorOf(t, i)),
       values: tests.map((t) => t.metrics[m.key].value),
       displays: tests.map((t) => t.metrics[m.key].display),
-      dim: tests.map((t) => dimOf(t))
+      dim: tests.map(() => false)
     }));
   }
 

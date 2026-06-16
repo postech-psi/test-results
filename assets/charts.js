@@ -168,6 +168,44 @@
     };
   }
 
+  /* Comparison tooltip: per-run value at x, plus that run's ignition/burn-end
+     times and peak (value @ time). params has runs[] with event metadata. */
+  function comparisonTooltipFormatter(params) {
+    var runMap = {};
+    (params.runs || []).forEach(function (r) { runMap[r.name] = r; });
+    var L = params.labels || {};
+    var xU = params.xUnit, yU = params.yUnit, yD = params.yDigits;
+    return function (items) {
+      if (!items || !items.length) return "";
+      var x = items[0].axisValue;
+      var head = '<div style="font-weight:600;margin-bottom:6px;opacity:.85">' +
+        fmt(x, 3) + " " + xU + "</div>";
+      var rows = items.map(function (it) {
+        var v = it.value && it.value.length ? it.value[1] : it.value;
+        var main = '<div style="display:flex;gap:12px;align-items:center;justify-content:space-between">' +
+          '<span>' + it.marker + it.seriesName + '</span>' +
+          '<strong style="font-variant-numeric:tabular-nums">' + fmt(v, yD) + " " + yU + "</strong></div>";
+        var run = runMap[it.seriesName];
+        if (!run) return main;
+        var parts = [];
+        if (run.ignitionX != null) parts.push(L.ignition + " " + fmt(run.ignitionX, 2) + " " + xU);
+        if (run.burnEndX != null) parts.push(L.burnEnd + " " + fmt(run.burnEndX, 2) + " " + xU);
+        var peakStr = "";
+        if (run.peak && run.peak.x != null) {
+          peakStr = L.peak + " " + fmt(run.peak.y, yD) + " " + yU + " @ " + fmt(run.peak.x, 2) + " " + xU;
+        }
+        var detailLines = [];
+        if (parts.length) detailLines.push(parts.join(" · "));
+        if (peakStr) detailLines.push(peakStr);
+        if (!detailLines.length) return main;
+        return main +
+          '<div style="font-size:11px;opacity:.65;margin:1px 0 6px 16px;font-variant-numeric:tabular-nums">' +
+          detailLines.join("<br>") + "</div>";
+      }).join("");
+      return head + rows;
+    };
+  }
+
   function markLineData(run, labels, showLabel, color, t, opacity) {
     var op = opacity == null ? 0.75 : opacity;
     var data = [];
@@ -222,7 +260,7 @@
     var t = tokens(params.theme);
     var opt = baseOption(params);
     var viewMode = params.viewMode || "single";
-    opt.tooltip.formatter = tooltipFormatter(params.xUnit, params.yUnit, params.yDigits);
+    opt.tooltip.formatter = comparisonTooltipFormatter(params);
 
     /* ---- Overview: all runs, hover-reveal, no permanent labels ---- */
     if (viewMode === "overview") {
