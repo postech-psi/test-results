@@ -388,10 +388,16 @@
       tests = allTests;
     }
     const n = tests.length;
+    const allN = allTests.length;
+    // overview color of a run = its color when all runs are shown (by full-list index)
+    const overviewColor = (test) => {
+      const idxAll = allTests.indexOf(test);
+      return allN > pal.length ? hslRunColor(idxAll, allN, state.theme) : pal[idxAll % pal.length];
+    };
     const colorOf = (test, index) => {
       if (vm === "overview") return n > pal.length ? hslRunColor(index, n, state.theme) : pal[index % pal.length];
       if (vm === "focus") { const i = selIds.indexOf(test.id); return i >= 0 ? pal[i % pal.length] : pal[index % pal.length]; }
-      return pal[0];
+      return overviewColor(test); // single: keep the run's overview color
     };
     return METRIC_DEFS.map((m) => ({
       theme: state.theme,

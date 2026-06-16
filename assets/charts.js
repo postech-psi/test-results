@@ -170,7 +170,7 @@
 
   /* Comparison tooltip: per-run value at x, plus that run's ignition/burn-end
      times and peak (value @ time). params has runs[] with event metadata. */
-  function comparisonTooltipFormatter(params) {
+  function comparisonTooltipFormatter(params, includeEvents) {
     var runMap = {};
     (params.runs || []).forEach(function (r) { runMap[r.name] = r; });
     var L = params.labels || {};
@@ -185,6 +185,7 @@
         var main = '<div style="display:flex;gap:12px;align-items:center;justify-content:space-between">' +
           '<span>' + it.marker + it.seriesName + '</span>' +
           '<strong style="font-variant-numeric:tabular-nums">' + fmt(v, yD) + " " + yU + "</strong></div>";
+        if (!includeEvents) return main;
         var run = runMap[it.seriesName];
         if (!run) return main;
         var parts = [];
@@ -206,19 +207,25 @@
     };
   }
 
-  function markLineData(run, labels, showLabel, color, t, opacity) {
+  function markLineData(run, labels, showLabel, color, t, opacity, units) {
     var op = opacity == null ? 0.75 : opacity;
+    units = units || {};
+    var xU = units.xUnit ? " " + units.xUnit : "";
+    var labelBase = {
+      show: showLabel, color: color, fontFamily: FONT_MONO, fontSize: 10,
+      backgroundColor: t.surface, padding: [2, 4], borderRadius: 3
+    };
     var data = [];
     if (run.ignitionX != null) {
       data.push({
         xAxis: run.ignitionX,
-        label: { show: showLabel, formatter: labels.ignition, color: color, fontFamily: FONT_MONO, fontSize: 10, position: "insideEndTop" }
+        label: Object.assign({}, labelBase, { formatter: labels.ignition + " " + fmt(run.ignitionX, 2) + xU, position: "insideEndTop" })
       });
     }
     if (run.burnEndX != null) {
       data.push({
         xAxis: run.burnEndX,
-        label: { show: showLabel, formatter: labels.burnEnd, color: color, fontFamily: FONT_MONO, fontSize: 10, position: "insideEndBottom" }
+        label: Object.assign({}, labelBase, { formatter: labels.burnEnd + " " + fmt(run.burnEndX, 2) + xU, position: "insideEndBottom" })
       });
     }
     return {
@@ -230,21 +237,31 @@
     };
   }
 
-  function markPointData(run, labels, showLabel, color, t, opacity) {
+  function markPointData(run, labels, showLabel, color, t, opacity, units) {
     if (!run.peak || run.peak.x == null) return undefined;
     var op = opacity == null ? 1 : opacity;
+    units = units || {};
+    var xU = units.xUnit ? " " + units.xUnit : "";
+    var yU = units.yUnit ? " " + units.yUnit : "";
+    var yD = units.yDigits == null ? 1 : units.yDigits;
+    var peakLabel = labels.peak + " " + fmt(run.peak.y, yD) + yU + "\n@ " + fmt(run.peak.x, 2) + xU;
     return {
       symbol: "circle",
       symbolSize: 9,
       itemStyle: { color: color, borderColor: t.surface, borderWidth: 2, opacity: op },
       label: {
         show: showLabel,
-        formatter: labels.peak,
+        formatter: peakLabel,
         color: color,
         fontFamily: FONT_MONO,
         fontSize: 10,
+        lineHeight: 13,
+        align: "center",
         position: "top",
-        distance: 8
+        distance: 8,
+        backgroundColor: t.surface,
+        padding: [3, 5],
+        borderRadius: 4
       },
       emphasis: { disabled: true },
       blur: { itemStyle: { opacity: 0.06 }, label: { opacity: 0.06 } },
@@ -260,7 +277,10 @@
     var t = tokens(params.theme);
     var opt = baseOption(params);
     var viewMode = params.viewMode || "single";
-    opt.tooltip.formatter = comparisonTooltipFormatter(params);
+    var units = { xUnit: params.xUnit, yUnit: params.yUnit, yDigits: params.yDigits };
+    // On-chart labels carry the event details for focus/single; in overview
+    // (labels off) the tooltip carries them instead.
+    opt.tooltip.formatter = comparisonTooltipFormatter(params, viewMode === "overview");
 
     /* ---- Overview: all runs, hover-reveal, no permanent labels ---- */
     if (viewMode === "overview") {
@@ -279,8 +299,8 @@
           itemStyle: { color: run.color },
           emphasis: { focus: "series", blurScope: "global", lineStyle: { width: 3, opacity: 1 } },
           blur: { lineStyle: { opacity: 0.18 } },
-          markLine: markLineData(run, params.labels, false, run.color, t),
-          markPoint: markPointData(run, params.labels, false, run.color, t),
+          markLine: markLineData(run, params.labels, false, run.color, t, null, units),
+          markPoint: markPointData(run, params.labels, false, run.color, t, null, units),
           data: run.data
         };
       });
@@ -311,8 +331,8 @@
           itemStyle: { color: run.color },
           emphasis: { focus: "series", lineStyle: { width: 3 } },
           areaStyle: n === 1 ? { color: areaGradient(run.color) } : undefined,
-          markLine: markLineData(run, params.labels, showML, run.color, t),
-          markPoint: markPointData(run, params.labels, showMP, run.color, t),
+          markLine: markLineData(run, params.labels, showML, run.color, t, null, units),
+          markPoint: markPointData(run, params.labels, showMP, run.color, t, null, units),
           data: run.data
         };
       });
@@ -344,8 +364,8 @@
         emphasis: { focus: "series", lineStyle: { width: 3 } },
         areaStyle: (showLabel || (!hasHighlight && params.runs.length === 1))
           ? { color: areaGradient(run.color) } : undefined,
-        markLine: markLineData(run, params.labels, showLabel, run.color, t, mlOpacity),
-        markPoint: markPointData(run, params.labels, showLabel, run.color, t, mpOpacity),
+        markLine: markLineData(run, params.labels, showLabel, run.color, t, mlOpacity, units),
+        markPoint: markPointData(run, params.labels, showLabel, run.color, t, mpOpacity, units),
         data: run.data
       };
     });
@@ -390,13 +410,14 @@
         data: s.data
       };
       if (isPrimary) {
+        var dUnits = { xUnit: params.xUnit, yUnit: params.yUnit, yDigits: params.yDigits };
         series.markLine = markLineData(
           { ignitionX: params.ignitionX, burnEndX: params.burnEndX },
-          params.labels, true, t.inkSoft, t
+          params.labels, true, t.inkSoft, t, null, dUnits
         );
         series.markLine.lineStyle.color = t.lineStrong;
         if (params.peak) {
-          series.markPoint = markPointData({ peak: params.peak }, params.labels, true, s.color, t);
+          series.markPoint = markPointData({ peak: params.peak }, params.labels, true, s.color, t, null, dUnits);
         }
       }
       return series;
