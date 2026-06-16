@@ -14,14 +14,14 @@
       line: "#2a3340", lineStrong: "#667789",
       surface: "#040506", surfaceAlt: "#0d1117", accent: "#c23a72",
       tooltipBg: "rgba(4, 5, 6, 0.99)", tooltipBorder: "#667789",
-      zoomFill: "rgba(194, 58, 114, 0.13)", zoomHandle: "#c23a72"
+      zoomFill: "rgba(255, 255, 255, 0.16)", zoomHandle: "#c23a72"
     },
     light: {
       ink: "#071827", inkSoft: "#26394b", inkMuted: "#536273",
       line: "#c6d2df", lineStrong: "#7b8fa4",
       surface: "#ffffff", surfaceAlt: "#f3f6fa", accent: "#a61955",
       tooltipBg: "rgba(255, 255, 255, 0.99)", tooltipBorder: "#7b8fa4",
-      zoomFill: "rgba(166, 25, 85, 0.10)", zoomHandle: "#a61955"
+      zoomFill: "rgba(120, 132, 148, 0.22)", zoomHandle: "#a61955"
     }
   };
 
@@ -90,10 +90,10 @@
   function baseOption(params) {
     var t = tokens(params.theme);
     var axisCommon = {
-      nameTextStyle: { color: t.inkMuted, fontFamily: FONT_MONO, fontSize: 11 },
+      nameTextStyle: { color: t.inkSoft, fontFamily: FONT_MONO, fontSize: 14, fontWeight: 600 },
       axisLine: { lineStyle: { color: t.lineStrong } },
       axisTick: { lineStyle: { color: t.lineStrong } },
-      axisLabel: { color: t.inkSoft, fontFamily: FONT_MONO, fontSize: 11 },
+      axisLabel: { color: t.inkSoft, fontFamily: FONT_MONO, fontSize: 12 },
       splitLine: { lineStyle: { color: t.line, type: "dashed" } }
     };
 
@@ -103,7 +103,7 @@
       animationDuration: 620,
       animationEasing: "cubicOut",
       textStyle: { fontFamily: FONT_MONO, color: t.ink },
-      grid: { left: 14, right: 22, top: 46, bottom: 78, containLabel: true },
+      grid: { left: 32, right: 24, top: 46, bottom: 80, containLabel: true },
       tooltip: {
         trigger: "axis",
         axisPointer: {
@@ -130,7 +130,7 @@
         type: "value",
         name: params.yLabel,
         nameLocation: "middle",
-        nameGap: 52,
+        nameGap: 58,
         scale: true
       }, axisCommon),
       dataZoom: [
