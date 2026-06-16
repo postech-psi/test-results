@@ -149,7 +149,7 @@ def audit_html(failures: list[str]) -> None:
 def audit_css_js(failures: list[str]) -> None:
     css = (ROOT / "assets" / "site.css").read_text(encoding="utf-8")
     js = (ROOT / "assets" / "site.js").read_text(encoding="utf-8")
-    required_css = ["@media (max-width: 720px)", ".chart-shell", ".status-badge", ".visually-hidden", ".chart-source"]
+    required_css = ["@media (max-width: 720px)", ".chart-shell", ".visually-hidden", ".chart-source"]
     required_js = ["buildComparisonPanel", "renderDetail", "localStorage", "aria-selected", "PSICharts", "chartRegistry"]
     for token in required_css:
         if token not in css:

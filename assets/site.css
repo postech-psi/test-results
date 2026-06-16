@@ -183,15 +183,6 @@ a:focus-visible {
   box-shadow: 0 1px 2px rgba(7, 24, 39, 0.06);
 }
 
-.site-header::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), transparent 36%, transparent 64%, var(--secondary));
-  opacity: 0.82;
-}
-
 .site-header__inner {
   width: var(--content-width);
   min-height: 72px;
@@ -208,6 +199,12 @@ a:focus-visible {
   gap: 14px;
   max-width: 100%;
   min-width: 0;
+}
+
+.brand__home-link {
+  display: inline-flex;
+  color: inherit;
+  text-decoration: none;
 }
 
 .logo-surface {
@@ -695,18 +692,6 @@ body[data-theme="dark"] .logo-surface img {
   box-shadow: var(--shadow);
 }
 
-.hero__panel::before,
-.panel::before,
-.chart-shell::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), transparent 42%);
-  opacity: 0.62;
-  pointer-events: none;
-}
-
 .hero__panel-header {
   display: flex;
   align-items: center;
@@ -1170,9 +1155,7 @@ tbody tr:last-child th {
 .archive-table td:nth-child(3),
 .archive-table td:nth-child(4),
 .archive-table td:nth-child(5),
-.archive-table td:nth-child(6),
-.archive-table td:nth-child(7),
-.archive-table td:nth-child(8) {
+.archive-table td:nth-child(6) {
   white-space: nowrap;
 }
 
@@ -1203,44 +1186,6 @@ tbody tr:last-child th {
   border-color: var(--line-strong);
   background: var(--surface-strong);
   color: var(--ink);
-}
-
-/* ---- Status badges (semantic) ---- */
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-height: 24px;
-  padding: 3px 10px;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.status-badge::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 999px;
-  background: currentColor;
-}
-
-.status-badge.published,
-.status-badge.none {
-  color: var(--ok);
-  background: var(--ok-soft);
-  border-color: color-mix(in srgb, var(--ok) 36%, transparent);
-}
-
-.status-badge.attention {
-  color: var(--warn);
-  background: var(--warn-soft);
-  border-color: color-mix(in srgb, var(--warn) 38%, transparent);
 }
 
 /* ---- Data links ---- */

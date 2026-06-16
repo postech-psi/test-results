@@ -30,11 +30,6 @@
       "id": "2026-05-28-combustion",
       "date": "2026-05-28",
       "category": "combustion",
-      "status": "published",
-      "statusLabel": {
-        "ko": "공개 완료",
-        "en": "Published"
-      },
       "title": {
         "ko": "5월 28일 연소 시험",
         "en": "May 28 Static Fire Test"
@@ -68,13 +63,6 @@
           "Recorded 366.33 N s total impulse over a 2818.7 ms burn duration.",
           "Peak pressure reached 42.496 bar at 4.228 s."
         ]
-      },
-      "issueSummary": {
-        "level": "none",
-        "label": {
-          "ko": "이슈 없음",
-          "en": "No issues reported"
-        }
       },
       "metrics": {
         "ignitionDelayMs": {
@@ -253,10 +241,6 @@
           }
         }
       ],
-      "issues": {
-        "ko": [],
-        "en": []
-      },
       "media": {
         "videoUrl": null,
         "videoLabel": {
@@ -304,11 +288,6 @@
       "id": "2026-04-08-combustion",
       "date": "2026-04-08",
       "category": "combustion",
-      "status": "published",
-      "statusLabel": {
-        "ko": "공개 완료",
-        "en": "Published"
-      },
       "title": {
         "ko": "4월 8일 연소 시험",
         "en": "April 8 Static Fire Test"
@@ -340,15 +319,8 @@
         "en": [
           "Peak thrust increased relative to the previous test.",
           "Total impulse improved despite a shorter burn duration.",
-          "No anomalous issues were recorded in the test notes."
+          "Test notes recorded nominal operation."
         ]
-      },
-      "issueSummary": {
-        "level": "none",
-        "label": {
-          "ko": "이슈 없음",
-          "en": "No issues reported"
-        }
       },
       "metrics": {
         "ignitionDelayMs": {
@@ -527,10 +499,6 @@
           }
         }
       ],
-      "issues": {
-        "ko": [],
-        "en": []
-      },
       "media": {
         "videoUrl": null,
         "videoLabel": {
@@ -578,11 +546,6 @@
       "id": "2026-04-03-combustion",
       "date": "2026-04-03",
       "category": "combustion",
-      "status": "published",
-      "statusLabel": {
-        "ko": "공개 완료",
-        "en": "Published"
-      },
       "title": {
         "ko": "2026년 4월 3일 연소 시험",
         "en": "April 3, 2026 Static Fire Test"
@@ -593,8 +556,8 @@
           "en": "April 3, 2026 Static Fire Test | POSTECH PSI"
         },
         "description": {
-          "ko": "2026년 4월 3일 연소 시험의 재구성 차트, 시험 이슈, 보정 값, 결과 파일을 포함한 상세 페이지입니다.",
-          "en": "Detail page for the April 3, 2026 static fire test including replotted signals, test issues, calibration, and result files."
+          "ko": "2026년 4월 3일 연소 시험의 재구성 차트, 보정 값, 결과 파일을 포함한 상세 페이지입니다.",
+          "en": "Detail page for the April 3, 2026 static fire test including replotted signals, calibration, and result files."
         }
       },
       "summary": {
@@ -616,13 +579,6 @@
           "Test notes report rig shifting and late flame recurrence.",
           "Pressure data shows a transient spike near the 5-second region."
         ]
-      },
-      "issueSummary": {
-        "level": "attention",
-        "label": {
-          "ko": "검토 필요",
-          "en": "Review required"
-        }
       },
       "metrics": {
         "ignitionDelayMs": {
@@ -801,20 +757,6 @@
           }
         }
       ],
-      "issues": {
-        "ko": [
-          "연소 중간에 시험 기기가 밀렸습니다. 고정 구조 점검이 필요합니다.",
-          "연소가 거의 종료된 뒤 다시 불꽃이 발생했습니다. 연소실 또는 노즐 상태 점검이 필요합니다.",
-          "압력 값이 5초 부근에서 일시적으로 튀었습니다. ignitor 발화 구간 영향으로 추정됩니다.",
-          "녹물이 확인되어 장치 또는 배관 부식 여부 점검이 필요합니다."
-        ],
-        "en": [
-          "The rig shifted during the burn, indicating a need to inspect the mechanical restraint system.",
-          "Flame reappeared after the burn was nearly complete, suggesting a chamber or nozzle follow-up inspection.",
-          "A transient pressure spike appears near 5 seconds, likely influenced by ignitor firing.",
-          "Rust-colored residue was observed and should trigger an inspection of hardware or plumbing corrosion."
-        ]
-      },
       "media": {
         "videoUrl": "https://www.instagram.com/postech_psi/reel/DWqwlBcE8Gz/",
         "videoLabel": {

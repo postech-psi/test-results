@@ -15,10 +15,10 @@
       nav: { overview: "요약", comparison: "비교", findings: "해석", archive: "아카이브", methods: "방법", access: "자료" },
       common: {
         latestRun: "최신 시험", publishedRuns: "공개 시험", comparisonScope: "비교 범위", allRuns: "전체 공개 시험",
-        verdict: "연소 시험 결과", directView: "절대 시간", alignedView: "점화 정렬",
-        noIssues: "이슈 없음", reviewRequired: "검토 필요", published: "공개 완료",
+        verdict: "연소 시험", directView: "절대 시간", alignedView: "점화 정렬",
+        published: "공개 완료",
         pipelineDerived: "Pipeline data 기준", filteredSource: "filtered force / filtered gauge pressure",
-        backToSite: "전체 결과로 돌아가기", methodology: "처리 방법", calibration: "보정", issues: "시험 이슈",
+        backToSite: "전체 결과로 돌아가기", methodology: "처리 방법", calibration: "보정",
         media: "시험 영상", files: "자료 파일", exportedFigures: "참고 그림",
         chartMethodNote: "차트는 PNG가 아니라 pipeline data 수치열에서 직접 그립니다.",
         alignmentNote: "점화 정렬은 ignition 시점을 0 s로 맞춰 시험 간 응답을 비교합니다.",
@@ -35,9 +35,9 @@
         executiveReport: "Executive report", detailPage: "상세 보기",
         sortingNewest: "최신순", sortingThrust: "최대 추력순", sortingImpulse: "총 임펄스순", sortingPressure: "최대 압력순",
         loading: "자료를 불러오는 중입니다.", loadError: "자료를 불러오지 못했습니다. 파일 경로와 JSON 형식을 확인해 주세요.",
-        noData: "표시할 자료가 없습니다.", date: "날짜", test: "시험", status: "상태",
+        noData: "표시할 자료가 없습니다.", date: "날짜", test: "시험",
         peakThrust: "최대 추력", totalImpulse: "총 임펄스", burnDuration: "연소 시간", peakPressure: "최대 압력",
-        averageThrust: "평균 추력", issueFlag: "이슈", actions: "링크", sourceInput: "입력 파일",
+        averageThrust: "평균 추력", actions: "링크", sourceInput: "입력 파일",
         ignitionDelay: "점화 지연", peakTime: "피크 시점", highlightRun: "강조할 시험", allRunsBackground: "전체"
       },
       home: {
@@ -68,10 +68,10 @@
       nav: { overview: "Summary", comparison: "Comparison", findings: "Findings", archive: "Archive", methods: "Methods", access: "Data" },
       common: {
         latestRun: "Latest test", publishedRuns: "Published tests", comparisonScope: "Comparison", allRuns: "All runs",
-        verdict: "Static fire test report", directView: "Recorded time", alignedView: "Ignition aligned",
-        noIssues: "No issues", reviewRequired: "Review required", published: "Published",
+        verdict: "Static fire test", directView: "Recorded time", alignedView: "Ignition aligned",
+        published: "Published",
         pipelineDerived: "Pipeline data", filteredSource: "filtered force / filtered gauge pressure",
-        backToSite: "Back to results", methodology: "Processing method", calibration: "Calibration", issues: "Test issues",
+        backToSite: "Back to results", methodology: "Processing method", calibration: "Calibration",
         media: "Test video", files: "Data files", exportedFigures: "Reference Figures",
         chartMethodNote: "Source: pipeline data. Lines are replotted from numeric series, not exported PNGs.",
         alignmentNote: "Ignition aligned mode shifts each run so ignition is 0 s.",
@@ -88,9 +88,9 @@
         executiveReport: "Executive report", detailPage: "View test",
         sortingNewest: "Newest first", sortingThrust: "Peak thrust", sortingImpulse: "Total impulse", sortingPressure: "Peak pressure",
         loading: "Loading data.", loadError: "Unable to load data. Check file paths and JSON format.",
-        noData: "No data available.", date: "Date", test: "Test", status: "Status",
+        noData: "No data available.", date: "Date", test: "Test",
         peakThrust: "Peak Thrust", totalImpulse: "Total Impulse", burnDuration: "Burn Duration", peakPressure: "Peak Pressure",
-        averageThrust: "Average Thrust", issueFlag: "Issue", actions: "Links", sourceInput: "Input File",
+        averageThrust: "Average Thrust", actions: "Links", sourceInput: "Input File",
         ignitionDelay: "Ignition Delay", peakTime: "Peak Time", highlightRun: "Highlight test", allRunsBackground: "All"
       },
       home: {
@@ -752,7 +752,6 @@
   function buildFindings(tests) {
     const latest = tests[0];
     const previous = tests[1];
-    const issueItems = localize(latest.issues);
     return `
       <section class="section" id="findings">
         <div class="section-heading">
@@ -764,7 +763,6 @@
             <h3>${localize(latest.title)}</h3>
             <ul>
               ${localize(latest.highlights).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}
-              ${issueItems.length ? issueItems.map((item) => `<li>${escapeHtml(item)}</li>`).join("") : `<li>${copy("common.noIssues")}</li>`}
             </ul>
           </article>
           <article class="mini-panel">
@@ -789,15 +787,6 @@
     });
   }
 
-  function renderStatusBadge(test) {
-    const level = test.issueSummary && test.issueSummary.level ? test.issueSummary.level : "none";
-    return `<span class="status-badge ${level}">${localize(test.issueSummary.label)}</span>`;
-  }
-
-  function renderPublicationBadge(test) {
-    return `<span class="status-badge published">${localize(test.statusLabel)}</span>`;
-  }
-
   function buildArchive(tests) {
     return `
       <section class="section" id="archive">
@@ -819,8 +808,8 @@
           <table>
             <thead>
               <tr>
-                <th>${copy("common.date")}</th><th>${copy("common.test")}</th><th>${copy("common.status")}</th>
-                <th>${copy("common.issueFlag")}</th><th>${copy("common.peakThrust")}</th><th>${copy("common.totalImpulse")}</th>
+                <th>${copy("common.date")}</th><th>${copy("common.test")}</th>
+                <th>${copy("common.peakThrust")}</th><th>${copy("common.totalImpulse")}</th>
                 <th>${copy("common.peakPressure")}</th><th>${copy("common.actions")}</th>
               </tr>
             </thead>
@@ -829,8 +818,6 @@
                 <tr>
                   <td>${test.date}</td>
                   <td><strong>${localize(test.title)}</strong><div class="muted">${localize(test.summary)}</div></td>
-                  <td>${renderPublicationBadge(test)}</td>
-                  <td>${renderStatusBadge(test)}</td>
                   <td>${test.metrics.maxThrustN.display}</td>
                   <td>${test.metrics.totalImpulseNs.display}</td>
                   <td>${test.metrics.maxPressureBar.display}</td>
@@ -871,7 +858,9 @@
       <header class="site-header">
         <div class="site-header__inner">
           <div class="brand">
-            ${logoImage("assets/logos/psi-logo-banner.jpeg", "brand__banner", "PSI Postech Aerospace Initiative", "brand__logo-surface")}
+            <a class="brand__home-link" href="${resolvePath("index.html")}" aria-label="${state.lang === "ko" ? "홈으로" : "Home"}">
+              ${logoImage("assets/logos/psi-logo-banner.jpeg", "brand__banner", "PSI Postech Aerospace Initiative", "brand__logo-surface")}
+            </a>
             <div class="brand__text">
               <div class="brand__eyebrow">${copy("home.eyebrow")}</div>
               <div class="brand__title">${localize(catalog.site.name)}</div>
@@ -959,7 +948,6 @@
     if (!test) { renderError(); return; }
     setDocumentMeta(test.meta);
     const tabs = ["thrust", "pressure", "metrics"];
-    const issues = localize(test.issues);
     document.body.innerHTML = `
       ${renderHeader()}
       <main class="site-shell">
@@ -969,7 +957,7 @@
           <h1 class="detail-hero__title">${localize(test.title)}</h1>
           <p class="detail-hero__lead">${localize(test.summary)}</p>
           <div class="detail-summary">
-            <article class="metric-card"><div class="metric-card__label">${copy("common.date")}</div><div class="metric-card__value">${test.date}</div><div class="metric-card__delta">${renderPublicationBadge(test)} ${renderStatusBadge(test)}</div></article>
+            <article class="metric-card"><div class="metric-card__label">${copy("common.date")}</div><div class="metric-card__value">${test.date}</div></article>
             <article class="metric-card"><div class="metric-card__label">${copy("common.peakThrust")}</div><div class="metric-card__value">${test.metrics.maxThrustN.display}</div><div class="metric-card__delta">${copy("common.averageThrust")}: ${test.metrics.averageThrustN.display}</div></article>
             <article class="metric-card"><div class="metric-card__label">${copy("common.totalImpulse")}</div><div class="metric-card__value">${test.metrics.totalImpulseNs.display}</div><div class="metric-card__delta">${copy("common.burnDuration")}: ${test.metrics.burnTimeMs.display}</div></article>
             <article class="metric-card"><div class="metric-card__label">${copy("common.peakPressure")}</div><div class="metric-card__value">${test.metrics.maxPressureBar.display}</div><div class="metric-card__delta">${copy("common.peakTime")}: ${test.metrics.maxPressureTimeS.display}</div></article>
@@ -1033,10 +1021,6 @@
               <article class="panel"><div class="subsection-title">${copy("common.sourceInput")}</div><p class="detail-meta-note">${escapeHtml(test.source.inputFile)}</p></article>
             </div>
           </div>
-        </section>
-        <section class="section">
-          <div class="section-heading"><h2>${copy("common.issues")}</h2><p>${localize(test.context)}</p></div>
-          <div class="panel">${issues.length ? `<ul class="detail-list">${issues.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>` : `<div class="empty-state">${copy("common.noIssues")}</div>`}</div>
         </section>
         <section class="section">
           <div class="section-heading"><h2>${copy("common.exportedFigures")}</h2>${optionalParagraph(copy("detail.artifactsLead"))}</div>
@@ -1213,8 +1197,6 @@
             <tr>
               <td>${test.date}</td>
               <td><strong>${localize(test.title)}</strong><div class="muted">${localize(test.summary)}</div></td>
-              <td>${renderPublicationBadge(test)}</td>
-              <td>${renderStatusBadge(test)}</td>
               <td>${test.metrics.maxThrustN.display}</td>
               <td>${test.metrics.totalImpulseNs.display}</td>
               <td>${test.metrics.maxPressureBar.display}</td>

@@ -11,7 +11,7 @@ import json
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-VERSION = "2026-06-16-icon-art-polish"
+VERSION = "2026-06-16-clean-archive-logo"
 
 CARD_DIGITS = {
     "maxThrustN": (2, "N"),
@@ -69,28 +69,20 @@ def scripts(root_path, page_config):
 
 
 def metric_card(label, value, delta=""):
-    delta_html = f'<div class="metric-card__delta">{delta}</div>' if delta else ""
+    delta_html = f'\n          <div class="metric-card__delta">{delta}</div>' if delta else ""
     return f"""        <article class="metric-card">
           <div class="metric-card__label">{esc(label)}</div>
-          <div class="metric-card__value">{esc(value)}</div>
-          {delta_html}
+          <div class="metric-card__value">{esc(value)}</div>{delta_html}
         </article>"""
 
 
-def status_badges(test):
-    level = (test.get("issueSummary") or {}).get("level", "none")
-    issue_label = en((test.get("issueSummary") or {}).get("label", "No issues"))
-    pub = en(test.get("statusLabel", "Published"))
-    return (f'<span class="status-badge published">{esc(pub)}</span> '
-            f'<span class="status-badge {esc(level)}">{esc(issue_label)}</span>')
-
-
-def brand_header(root_path, title="Static Fire Test Results", controls='<span class="muted">EN / KO</span>'):
+def brand_header(root_path, title="POSTECH PSI Static Fire Test Results", controls='<span class="muted">EN / KO</span>'):
     base = f"{root_path}/assets"
+    home_href = f"{root_path}/index.html" if root_path != "." else "index.html"
     return f"""  <header class="site-header">
     <div class="site-header__inner">
       <div class="brand">
-        <span class="logo-surface brand__logo-surface"><img class="brand__banner" src="{base}/logos/psi-logo-banner.jpeg" alt="PSI Postech Aerospace Initiative"></span>
+        <a class="brand__home-link" href="{home_href}" aria-label="Home"><span class="logo-surface brand__logo-surface"><img class="brand__banner" src="{base}/logos/psi-logo-banner.jpeg" alt="PSI Postech Aerospace Initiative"></span></a>
         <div class="brand__text"><div class="brand__eyebrow">Postech Aerospace Initiative</div><div class="brand__title">{esc(title)}</div></div>
       </div>
       <div class="site-header__controls">{controls}</div>
@@ -121,8 +113,6 @@ def build_home(data):
         rows.append(f"""            <tr>
               <td>{esc(t['date'])}</td>
               <td><strong>{esc(en(t['title']))}</strong><div class="muted">{esc(en(t['summary']))}</div></td>
-              <td><span class="status-badge published">{esc(en(t['statusLabel']))}</span></td>
-              <td><span class="status-badge {esc((t.get('issueSummary') or {}).get('level','none'))}">{esc(en((t.get('issueSummary') or {}).get('label','No issues')))}</span></td>
               <td>{esc(t['metrics']['maxThrustN']['display'])}</td>
               <td>{esc(t['metrics']['totalImpulseNs']['display'])}</td>
               <td>{esc(t['metrics']['maxPressureBar']['display'])}</td>
@@ -136,7 +126,7 @@ def build_home(data):
     <section class="hero" id="overview">
       <div class="hero__grid">
         <div>
-          <div class="verdict">Static fire test report</div>
+          <div class="verdict">Static fire test</div>
           <h1 class="hero__title">{esc(en(site['name']))}</h1>
         </div>
         <aside class="hero__panel">
@@ -164,7 +154,7 @@ def build_home(data):
       <div class="section-heading"><h2>Archive</h2></div>
       <div class="archive-table">
         <table>
-          <thead><tr><th>Date</th><th>Test</th><th>Status</th><th>Issue</th><th>Peak thrust</th><th>Total impulse</th><th>Peak pressure</th><th>Link</th></tr></thead>
+          <thead><tr><th>Date</th><th>Test</th><th>Peak thrust</th><th>Total impulse</th><th>Peak pressure</th><th>Link</th></tr></thead>
           <tbody>
 {chr(10).join(rows)}
           </tbody>
@@ -198,7 +188,7 @@ def rel_from_detail(test, path):
 def build_detail(data, test):
     meta = test["meta"]
     cards = "\n".join([
-        metric_card("Date", test["date"], status_badges(test)),
+        metric_card("Date", test["date"]),
         metric_card("Peak thrust", test["metrics"]["maxThrustN"]["display"], f"Average thrust: {esc(test['metrics']['averageThrustN']['display'])}"),
         metric_card("Total impulse", test["metrics"]["totalImpulseNs"]["display"], f"Burn duration: {esc(test['metrics']['burnTimeMs']['display'])}"),
         metric_card("Peak pressure", test["metrics"]["maxPressureBar"]["display"], f"Peak time: {esc(test['metrics']['maxPressureTimeS']['display'])}"),
@@ -210,12 +200,12 @@ def build_detail(data, test):
     ])
 
     body = f"""{head(en(meta['title']), en(meta['description']), '../../assets/site.css')}
-{brand_header('../..', 'Static Fire Test Results', '<a href="../../index.html">All results</a>')}
+{brand_header('../..', en(data["site"]["name"]), '<a href="../../index.html">All results</a>')}
 
   <main class="site-shell static-shell">
     <section class="detail-hero">
       <a class="detail-hero__back" href="../../index.html">&larr; Back to results</a>
-      <div class="verdict">Static fire test report</div>
+      <div class="verdict">Static fire test</div>
       <h1 class="detail-hero__title">{esc(en(test['title']))}</h1>
       <div class="detail-summary">
 {cards}
