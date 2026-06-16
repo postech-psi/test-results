@@ -11,7 +11,7 @@ import json
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-VERSION = "2026-06-16-axis-overlay-polish"
+VERSION = "2026-06-16-icon-art-polish"
 
 CARD_DIGITS = {
     "maxThrustN": (2, "N"),
@@ -37,6 +37,7 @@ def fmt_delta(value, unit, digits):
 
 
 def head(title, description, css_href, lang="en"):
+    asset_root = css_href.rsplit("/", 1)[0]
     return f"""<!doctype html>
 <html lang="{lang}">
 <head>
@@ -44,6 +45,12 @@ def head(title, description, css_href, lang="en"):
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{esc(title)}</title>
   <meta name="description" content="{esc(description)}">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="{asset_root}/icons/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="{asset_root}/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="{asset_root}/icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="{asset_root}/icons/apple-touch-icon.png">
   <link rel="stylesheet" href="{css_href}?v={VERSION}">
 </head>
 <body data-theme="light">"""

@@ -55,8 +55,8 @@
 
   --radius: 6px;
   --radius-sm: 4px;
-  --shadow: 0 1px 2px rgba(7, 24, 39, 0.10);
-  --shadow-soft: 0 1px 2px rgba(7, 24, 39, 0.06);
+  --shadow: 0 12px 30px rgba(7, 24, 39, 0.08), 0 1px 2px rgba(7, 24, 39, 0.08);
+  --shadow-soft: 0 8px 22px rgba(7, 24, 39, 0.045), 0 1px 2px rgba(7, 24, 39, 0.06);
   --grid-color: transparent;
   --star-color: transparent;
 
@@ -100,8 +100,8 @@ body[data-theme="dark"] {
   --run-4: #cda14a;
   --run-5: #9aa8b7;
 
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
-  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.38);
+  --shadow: 0 14px 34px rgba(0, 0, 0, 0.64), 0 1px 2px rgba(0, 0, 0, 0.55);
+  --shadow-soft: 0 10px 26px rgba(0, 0, 0, 0.38), 0 1px 2px rgba(0, 0, 0, 0.45);
   --grid-color: transparent;
   --star-color: transparent;
 }
@@ -181,6 +181,15 @@ a:focus-visible {
   background: var(--surface);
   border-bottom: 1px solid var(--line-strong);
   box-shadow: 0 1px 2px rgba(7, 24, 39, 0.06);
+}
+
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent 36%, transparent 64%, var(--secondary));
+  opacity: 0.82;
 }
 
 .site-header__inner {
@@ -287,6 +296,7 @@ body[data-theme="dark"] .logo-surface img {
 
 .site-nav a,
 .detail-hero__back {
+  position: relative;
   color: var(--ink-soft);
   font-family: var(--font-mono);
   font-size: 0.78rem;
@@ -294,9 +304,28 @@ body[data-theme="dark"] .logo-surface img {
   text-decoration: none;
 }
 
+.site-nav a::after,
+.detail-hero__back::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.16s ease;
+}
+
 .site-nav a:hover,
 .detail-hero__back:hover {
   color: var(--accent);
+}
+
+.site-nav a:hover::after,
+.detail-hero__back:hover::after {
+  transform: scaleX(1);
 }
 
 /* ---- Controls ---- */
@@ -658,11 +687,24 @@ body[data-theme="dark"] .logo-surface img {
 
 /* Hero visual panel (signature chart) */
 .hero__panel {
+  position: relative;
   padding: 18px;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
   background: var(--surface);
   box-shadow: var(--shadow);
+}
+
+.hero__panel::before,
+.panel::before,
+.chart-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent 42%);
+  opacity: 0.62;
+  pointer-events: none;
 }
 
 .hero__panel-header {
@@ -778,6 +820,7 @@ body[data-theme="dark"] .logo-surface img {
 .data-link,
 .artifact-card,
 .fallback-card {
+  position: relative;
   padding: 18px;
   background: var(--surface);
   border: 1px solid var(--line);
