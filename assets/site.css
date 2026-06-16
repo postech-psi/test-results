@@ -66,20 +66,20 @@
 /* ---- Tokens: dark (high contrast report) ---- */
 body[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #05080d;
-  --bg-deep: #020409;
-  --surface: #0b111a;
-  --surface-alt: #111a26;
-  --surface-strong: #1a2634;
-  --surface-glass: rgba(11, 17, 26, 0.98);
-  --logo-surface: #05080d;
+  --bg: #000000;
+  --bg-deep: #000000;
+  --surface: #050608;
+  --surface-alt: #0b0f14;
+  --surface-strong: #141a22;
+  --surface-glass: rgba(5, 6, 8, 0.98);
+  --logo-surface: #000000;
 
   --ink: #f8fbff;
   --ink-soft: #d8e2ed;
   --ink-muted: #a7b4c2;
 
-  --line: #253241;
-  --line-strong: #56687b;
+  --line: #202733;
+  --line-strong: #4b5968;
 
   --accent: #c23a72;
   --accent-strong: #e56a9a;

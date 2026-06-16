@@ -11,9 +11,9 @@
   var TOKENS = {
     dark: {
       ink: "#f8fbff", inkSoft: "#d8e2ed", inkMuted: "#a7b4c2",
-      line: "#253241", lineStrong: "#56687b",
-      surface: "#0b111a", surfaceAlt: "#111a26", accent: "#c23a72",
-      tooltipBg: "rgba(11, 17, 26, 0.98)", tooltipBorder: "#56687b",
+      line: "#202733", lineStrong: "#4b5968",
+      surface: "#050608", surfaceAlt: "#0b0f14", accent: "#c23a72",
+      tooltipBg: "rgba(5, 6, 8, 0.98)", tooltipBorder: "#4b5968",
       zoomFill: "rgba(194, 58, 114, 0.13)", zoomHandle: "#c23a72"
     },
     light: {
