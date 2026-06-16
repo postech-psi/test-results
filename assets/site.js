@@ -26,6 +26,7 @@
         sourceArtifactsNote: "PNG 그림은 참고용이며, 비교 판단은 재구성 차트와 원자료를 기준으로 합니다.",
         chartHint: "드래그 줌 · 휠 확대 · 범례 클릭",
         metricsScaleNote: "항목별 최고값을 100%로 둔 정규화 비교입니다.",
+        metricsRealNote: "지표별 실제 값과 단위로, 각 차트는 자체 스케일을 사용합니다.",
         metrics: "핵심 지표", thrust: "추력", pressure: "압력",
         viewOverview: "전체 조감", viewFocus: "선택 비교", viewSingle: "단일 집중",
         addRun: "+ 추가", latestN: "최신 5개", clearAll: "전체 해제", removeRun: "제거",
@@ -78,6 +79,7 @@
         sourceArtifactsNote: "PNG figures are secondary references; comparison uses replotted signals and source data.",
         chartHint: "Drag to zoom · scroll · click legend",
         metricsScaleNote: "Normalized comparison: best run per metric = 100%.",
+        metricsRealNote: "Real values per metric — each chart uses its own scale and unit.",
         metrics: "Key metrics", thrust: "Thrust", pressure: "Pressure",
         viewOverview: "Overview", viewFocus: "Focus", viewSingle: "Single",
         addRun: "+ Add", latestN: "Latest 5", clearAll: "Clear all", removeRun: "Remove",
@@ -353,22 +355,63 @@
     };
   }
 
-  function metricsParams(tests) {
+  const METRIC_DEFS = [
+    { id: "thrust", key: "maxThrustN", unit: "N", digits: 2 },
+    { id: "impulse", key: "totalImpulseNs", unit: "N·s", digits: 2 },
+    { id: "burn", key: "burnTimeMs", unit: "ms", digits: 1 },
+    { id: "pressure", key: "maxPressureBar", unit: "bar", digits: 3 }
+  ];
+
+  function metricLabel(id) {
+    return {
+      thrust: copy("common.peakThrust"),
+      impulse: copy("common.totalImpulse"),
+      burn: copy("common.burnDuration"),
+      pressure: copy("common.peakPressure")
+    }[id];
+  }
+
+  /* Per-metric chart data, mode-aware. Returns one params object per metric. */
+  function metricChartsParams(allTests) {
     const pal = PSICharts.palette(state.theme);
-    const metrics = [
-      { key: "maxThrustN", label: copy("common.peakThrust") },
-      { key: "totalImpulseNs", label: copy("common.totalImpulse") },
-      { key: "burnTimeMs", label: copy("common.burnDuration") },
-      { key: "maxPressureBar", label: copy("common.peakPressure") }
-    ];
-    const maxByMetric = metrics.map((m) => Math.max(...tests.map((t) => t.metrics[m.key].value)) || 1);
-    const runs = tests.map((test, index) => ({
-      name: test.date,
-      color: pal[index % pal.length],
-      values: metrics.map((m, mi) => Number(((test.metrics[m.key].value / maxByMetric[mi]) * 100).toFixed(1))),
-      display: metrics.map((m) => test.metrics[m.key].display)
+    const vm = state.comparisonViewMode;
+    const selIds = state.selectedTestIds;
+    const singleId = state.selectedTestId;
+    const tests = vm === "focus" ? allTests.filter((t) => selIds.indexOf(t.id) !== -1) : allTests;
+    const n = tests.length;
+    const colorOf = (test, index) => {
+      if (vm === "overview") return n > pal.length ? hslRunColor(index, n, state.theme) : pal[index % pal.length];
+      if (vm === "focus") { const i = selIds.indexOf(test.id); return i >= 0 ? pal[i % pal.length] : pal[index % pal.length]; }
+      return pal[index % pal.length];
+    };
+    const dimOf = (test) => vm === "single" && singleId && singleId !== "all" && test.id !== singleId;
+    return METRIC_DEFS.map((m) => ({
+      theme: state.theme,
+      title: metricLabel(m.id),
+      unit: m.unit,
+      yDigits: m.digits,
+      names: tests.map((t) => t.date),
+      colors: tests.map((t, i) => colorOf(t, i)),
+      values: tests.map((t) => t.metrics[m.key].value),
+      displays: tests.map((t) => t.metrics[m.key].display),
+      dim: tests.map((t) => dimOf(t))
     }));
-    return { theme: state.theme, categories: metrics.map((m) => m.label), runs, yLabel: "Best run per metric (%)" };
+  }
+
+  /* Single test (detail page): one bar per metric, real values. */
+  function detailMetricChartsParams(test) {
+    const pal = PSICharts.palette(state.theme);
+    return METRIC_DEFS.map((m) => ({
+      theme: state.theme,
+      title: metricLabel(m.id),
+      unit: m.unit,
+      yDigits: m.digits,
+      names: [test.date],
+      colors: [pal[0]],
+      values: [test.metrics[m.key].value],
+      displays: [test.metrics[m.key].display],
+      dim: [false]
+    }));
   }
 
   /* ======================================================================
@@ -408,7 +451,10 @@
   function updateComparison() {
     const tab = state.comparisonTab;
     if (tab === "metrics") {
-      ensureChart("cmp-canvas-metrics", () => PSICharts.metricsOption(metricsParams(catalog.tests)));
+      const charts = metricChartsParams(catalog.tests);
+      METRIC_DEFS.forEach((m, i) => {
+        ensureChart(`cmp-canvas-metric-${m.id}`, () => PSICharts.metricBarOption(charts[i]));
+      });
     } else {
       ensureChart(`cmp-canvas-${tab}`, (legendSelected) => {
         const params = comparisonParams(catalog.tests, tab, state.comparisonMode);
@@ -421,7 +467,10 @@
   function updateDetailChart(test) {
     const tab = state.comparisonTab;
     if (tab === "metrics") {
-      ensureChart("dt-canvas-metrics", () => PSICharts.metricsOption(metricsParams([test])));
+      const charts = detailMetricChartsParams(test);
+      METRIC_DEFS.forEach((m, i) => {
+        ensureChart(`dt-canvas-metric-${m.id}`, () => PSICharts.metricBarOption(charts[i]));
+      });
     } else {
       ensureChart(`dt-canvas-${tab}`, () => PSICharts.detailOption(detailParams(test, tab)));
     }
@@ -511,6 +560,16 @@
     </div>`;
   }
 
+  function metricsGridHTML(prefix) {
+    return `<div class="metrics-grid">
+      ${METRIC_DEFS.map((m) => `
+        <div class="metric-chart-card">
+          <div class="metric-chart-card__title">${metricLabel(m.id)} <span class="metric-chart-card__unit">${m.unit}</span></div>
+          <div class="chart-canvas metric-chart-canvas" id="${prefix}-canvas-metric-${m.id}"></div>
+        </div>`).join("")}
+    </div>`;
+  }
+
   function buildComparisonPanel(tests) {
     const tabs = ["thrust", "pressure", "metrics"];
     const vm = state.comparisonViewMode;
@@ -537,19 +596,32 @@
           </div>
           <div id="cmp-run-picker-row" ${vm !== "focus" ? "hidden" : ""}>${buildRunPickerHTML(tests)}</div>
           <div id="cmp-single-row" ${vm !== "single" ? "hidden" : ""}>${buildSingleSelectHTML(tests)}</div>
-          ${tabs.map((tab) => `
+          ${tabs.map((tab) => {
+            if (tab === "metrics") {
+              return `
+            <div class="tabpanel" id="cmp-panel-metrics" role="tabpanel" aria-labelledby="cmp-tab-metrics" ${state.comparisonTab === "metrics" ? "" : "hidden"}>
+              <div class="chart-header">
+                <div class="chart-header__title">${copy("common.metrics")}</div>
+                <div class="chart-header__note">${copy("common.metricsRealNote")}</div>
+              </div>
+              ${metricsGridHTML("cmp")}
+              <div class="chart-source">${copy("common.chartMethodNote")}</div>
+            </div>`;
+            }
+            return `
             <div class="tabpanel" id="cmp-panel-${tab}" role="tabpanel" aria-labelledby="cmp-tab-${tab}" ${state.comparisonTab === tab ? "" : "hidden"}>
               <div class="chart-header">
                 <div class="chart-header__title">${copy(`common.${tab}`)}</div>
-                <div class="chart-header__note">${tab === "metrics" ? copy("common.metricsScaleNote") : (state.comparisonMode === "aligned" ? copy("common.alignmentNote") : copy("common.absoluteNote"))}</div>
+                <div class="chart-header__note">${state.comparisonMode === "aligned" ? copy("common.alignmentNote") : copy("common.absoluteNote")}</div>
               </div>
               <div class="chart-shell">
-                ${tab === "metrics" ? "" : `<div class="hint-chip">${copy("common.chartHint")}</div>`}
+                <div class="hint-chip">${copy("common.chartHint")}</div>
                 <div class="chart-canvas" id="cmp-canvas-${tab}"></div>
               </div>
-              ${tab === "metrics" ? "" : srTable(tests, tab)}
-              <div class="chart-source">${tab === "metrics" ? copy("common.metricsScaleNote") : copy("common.chartMethodNote")}</div>
-            </div>`).join("")}
+              ${srTable(tests, tab)}
+              <div class="chart-source">${copy("common.chartMethodNote")}</div>
+            </div>`;
+          }).join("")}
         </div>
       </section>`;
   }
@@ -787,18 +859,31 @@
           </div>
           <div class="panel comparison-layout">
             <div class="toolbar">${chartPanelTabs("dt", tabs)}</div>
-            ${tabs.map((tab) => `
+            ${tabs.map((tab) => {
+              if (tab === "metrics") {
+                return `
+              <div class="tabpanel" id="dt-panel-metrics" role="tabpanel" aria-labelledby="dt-tab-metrics" ${state.comparisonTab === "metrics" ? "" : "hidden"}>
+                <div class="chart-header">
+                  <div class="chart-header__title">${copy("common.metrics")}</div>
+                  <div class="chart-header__note">${copy("common.metricsRealNote")}</div>
+                </div>
+                ${metricsGridHTML("dt")}
+                <div class="chart-source">${copy("common.chartMethodNote")}</div>
+              </div>`;
+              }
+              return `
               <div class="tabpanel" id="dt-panel-${tab}" role="tabpanel" aria-labelledby="dt-tab-${tab}" ${state.comparisonTab === tab ? "" : "hidden"}>
                 <div class="chart-header">
                   <div class="chart-header__title">${copy(`common.${tab}`)}</div>
-                  <div class="chart-header__note">${tab === "metrics" ? copy("common.metricsScaleNote") : copy("common.chartHint")}</div>
+                  <div class="chart-header__note">${copy("common.chartHint")}</div>
                 </div>
                 <div class="chart-shell">
-                  ${tab === "metrics" ? "" : `<div class="hint-chip">${copy("common.chartHint")}</div>`}
+                  <div class="hint-chip">${copy("common.chartHint")}</div>
                   <div class="chart-canvas" id="dt-canvas-${tab}"></div>
                 </div>
                 <div class="chart-source">${copy("common.chartMethodNote")}</div>
-              </div>`).join("")}
+              </div>`;
+            }).join("")}
           </div>
         </section>
         <section class="section">

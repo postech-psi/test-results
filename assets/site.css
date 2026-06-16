@@ -931,6 +931,42 @@ body[data-theme="dark"] .logo-surface img {
   height: 460px;
 }
 
+/* ---- Metrics grid (4 separate per-metric charts) ---- */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.metric-chart-card {
+  padding: 14px 14px 8px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.metric-chart-card__title {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.metric-chart-card__unit {
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+.metric-chart-canvas {
+  height: 230px;
+}
+
 .hint-chip {
   position: absolute;
   top: 12px;
@@ -1400,6 +1436,14 @@ tbody tr:last-child th {
 
   .chart-canvas {
     height: 380px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-chart-canvas {
+    height: 220px;
   }
 
   .brand {

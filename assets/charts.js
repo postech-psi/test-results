@@ -366,18 +366,25 @@
     return opt;
   }
 
-  /* Metrics grouped bar chart. Bars are normalized per metric (% of best run);
-     tooltip shows the real value via runs[i].display[catIndex].
-     params: { theme, categories:[label], runs:[{name,color,values:[norm], display:[str]}] } */
-  function metricsOption(params) {
+  /* Single-metric bar chart with real values + own scale.
+     params: { theme, title, unit, yDigits, names:[date], colors:[hex], values:[num], displays:[str], dim:[bool] } */
+  function metricBarOption(params) {
     var t = tokens(params.theme);
-    var displays = params.runs.map(function (r) { return r.display || []; });
+    var vals = (params.values || []).filter(function (v) { return v != null && isFinite(v); });
+    var yMin, yMax;
+    if (vals.length) {
+      var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+      var span = (hi - lo) || Math.abs(hi) || 1;
+      yMin = Math.max(0, lo - span * 0.35);
+      yMax = hi + span * 0.18;
+    }
+    var rotate = (params.names || []).length > 5 ? 30 : 0;
     return {
       backgroundColor: "transparent",
-      color: palette(params.theme),
-      animationDuration: 600,
+      animationDuration: 480,
+      animationEasing: "cubicOut",
       textStyle: { fontFamily: FONT_MONO, color: t.ink },
-      grid: { left: 14, right: 22, top: 40, bottom: 20, containLabel: true },
+      grid: { left: 6, right: 14, top: 14, bottom: rotate ? 14 : 6, containLabel: true },
       tooltip: {
         trigger: "axis",
         axisPointer: { type: "shadow" },
@@ -385,60 +392,53 @@
         borderColor: t.tooltipBorder,
         borderWidth: 1,
         textStyle: { color: t.ink, fontFamily: FONT_MONO, fontSize: 12 },
-        extraCssText: "border-radius: 10px;",
+        extraCssText: "border-radius: 8px;",
         formatter: function (items) {
           if (!items || !items.length) return "";
-          var head = '<div style="font-weight:600;margin-bottom:6px">' + items[0].name + "</div>";
-          var rows = items.map(function (it) {
-            var disp = (displays[it.seriesIndex] && displays[it.seriesIndex][it.dataIndex] != null)
-              ? displays[it.seriesIndex][it.dataIndex] : it.value;
-            return '<div style="display:flex;gap:10px;justify-content:space-between">' +
-              "<span>" + it.marker + it.seriesName + "</span>" +
-              '<strong style="font-variant-numeric:tabular-nums">' + disp + "</strong></div>";
-          }).join("");
-          return head + rows;
+          var it = items[0];
+          var color = (params.colors && params.colors[it.dataIndex]) || t.accent;
+          var disp = (params.displays && params.displays[it.dataIndex] != null) ? params.displays[it.dataIndex] : it.value;
+          var marker = '<span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:' + color + ';margin-right:6px;vertical-align:middle"></span>';
+          return '<div style="font-weight:600;margin-bottom:4px">' + it.name + "</div>" +
+            '<div style="display:flex;gap:12px;justify-content:space-between">' +
+            "<span>" + marker + params.title + "</span>" +
+            '<strong style="font-variant-numeric:tabular-nums">' + disp + "</strong></div>";
         }
-      },
-      legend: {
-        top: 6, left: "center", icon: "roundRect",
-        itemWidth: 14, itemHeight: 10,
-        textStyle: { color: t.inkSoft, fontFamily: FONT_MONO, fontSize: 11 },
-        data: params.runs.map(function (r) { return r.name; })
       },
       xAxis: {
         type: "category",
-        data: params.categories,
+        data: params.names,
         axisLine: { lineStyle: { color: t.lineStrong } },
         axisTick: { show: false },
-        axisLabel: { color: t.inkSoft, fontFamily: FONT_MONO, fontSize: 11, interval: 0 }
+        axisLabel: { color: t.inkSoft, fontFamily: FONT_MONO, fontSize: 10, interval: 0, rotate: rotate }
       },
       yAxis: {
         type: "value",
-        name: params.yLabel || "Best run per metric (%)",
-        nameLocation: "middle",
-        nameGap: 42,
-        min: 0,
-        max: 100,
+        name: params.unit,
+        nameTextStyle: { color: t.inkMuted, fontFamily: FONT_MONO, fontSize: 10, align: "left" },
+        min: yMin,
+        max: yMax,
+        scale: true,
         axisLine: { show: false },
-        axisLabel: {
-          color: t.inkSoft,
-          fontFamily: FONT_MONO,
-          fontSize: 11,
-          formatter: function (value) { return value + "%"; }
-        },
-        nameTextStyle: { color: t.inkMuted, fontFamily: FONT_MONO, fontSize: 11 },
+        axisLabel: { color: t.inkSoft, fontFamily: FONT_MONO, fontSize: 10 },
         splitLine: { lineStyle: { color: t.line, type: "dashed" } }
       },
-      series: params.runs.map(function (r) {
-        return {
-          name: r.name,
-          type: "bar",
-          barMaxWidth: 34,
-          itemStyle: { color: r.color, borderRadius: [4, 4, 0, 0] },
-          emphasis: { focus: "series" },
-          data: r.values
-        };
-      })
+      series: [{
+        type: "bar",
+        barMaxWidth: 48,
+        emphasis: { focus: "self" },
+        data: (params.values || []).map(function (v, i) {
+          var dim = params.dim && params.dim[i];
+          return {
+            value: v,
+            itemStyle: {
+              color: (params.colors && params.colors[i]) || t.accent,
+              borderRadius: [4, 4, 0, 0],
+              opacity: dim ? 0.26 : 1
+            }
+          };
+        })
+      }]
     };
   }
 
@@ -470,7 +470,7 @@
     tokens: tokens,
     comparisonOption: comparisonOption,
     detailOption: detailOption,
-    metricsOption: metricsOption,
+    metricBarOption: metricBarOption,
     sparkOption: sparkOption,
     fmt: fmt
   };
