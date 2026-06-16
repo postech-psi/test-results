@@ -173,65 +173,69 @@
     return tooltipFormatter(params.xUnit, params.yUnit, params.yDigits);
   }
 
-  function markLineData(run, labels, showLabel, color, t, opacity, units) {
+  /* labelMode: "static" (always shown) | "hover" (shown on series emphasis) | "none" */
+  function markLineData(run, labels, labelMode, color, t, opacity, units) {
     var op = opacity == null ? 0.75 : opacity;
     units = units || {};
     var xU = units.xUnit ? " " + units.xUnit : "";
-    var labelBase = {
-      show: false, color: color, fontFamily: FONT_MONO, fontSize: 10,
+    var showStatic = labelMode === "static";
+    var showHover = labelMode === "hover";
+    var pill = {
+      color: color, fontFamily: FONT_MONO, fontSize: 10,
       backgroundColor: t.surface, padding: [2, 4], borderRadius: 3
     };
+    function item(xVal, text, position) {
+      var base = Object.assign({ formatter: text, position: position }, pill);
+      return {
+        xAxis: xVal,
+        label: Object.assign({ show: showStatic }, base),
+        emphasis: { label: Object.assign({ show: showHover || showStatic }, base) }
+      };
+    }
     var data = [];
     if (run.ignitionX != null) {
-      data.push({
-        xAxis: run.ignitionX,
-        label: Object.assign({}, labelBase, { formatter: labels.ignition + " " + fmt(run.ignitionX, 2) + xU, position: "insideEndTop" })
-      });
+      data.push(item(run.ignitionX, labels.ignition + " " + fmt(run.ignitionX, 2) + xU, "insideEndTop"));
     }
     if (run.burnEndX != null) {
-      data.push({
-        xAxis: run.burnEndX,
-        label: Object.assign({}, labelBase, { formatter: labels.burnEnd + " " + fmt(run.burnEndX, 2) + xU, position: "insideEndBottom" })
-      });
+      data.push(item(run.burnEndX, labels.burnEnd + " " + fmt(run.burnEndX, 2) + xU, "insideEndBottom"));
     }
     return {
       symbol: "none",
       lineStyle: { color: color, type: "dashed", width: 1, opacity: op },
-      emphasis: { disabled: true },
-      blur: { lineStyle: { opacity: 0.06 }, label: { opacity: 0.06 } },
+      label: { show: showStatic },
+      emphasis: { disabled: false, label: { show: showHover || showStatic } },
+      blur: { lineStyle: { opacity: 0.06 }, label: { show: false } },
       data: data
     };
   }
 
-  function markPointData(run, labels, showLabel, color, t, opacity, units) {
+  function markPointData(run, labels, labelMode, color, t, opacity, units) {
     if (!run.peak || run.peak.x == null) return undefined;
     var op = opacity == null ? 1 : opacity;
     units = units || {};
     var xU = units.xUnit ? " " + units.xUnit : "";
     var yU = units.yUnit ? " " + units.yUnit : "";
     var yD = units.yDigits == null ? 1 : units.yDigits;
+    var showStatic = labelMode === "static";
+    var showHover = labelMode === "hover";
     var peakLabel = labels.peak + " " + fmt(run.peak.y, yD) + yU + "\n@ " + fmt(run.peak.x, 2) + xU;
+    var labelStyle = {
+      formatter: peakLabel, color: color, fontFamily: FONT_MONO, fontSize: 10,
+      lineHeight: 13, align: "center", position: "top", distance: 8,
+      backgroundColor: t.surface, padding: [3, 5], borderRadius: 4
+    };
     return {
       symbol: "circle",
       symbolSize: 9,
       itemStyle: { color: color, borderColor: t.surface, borderWidth: 2, opacity: op },
-      label: {
-        show: showLabel,
-        formatter: peakLabel,
-        color: color,
-        fontFamily: FONT_MONO,
-        fontSize: 10,
-        lineHeight: 13,
-        align: "center",
-        position: "top",
-        distance: 8,
-        backgroundColor: t.surface,
-        padding: [3, 5],
-        borderRadius: 4
-      },
-      emphasis: { disabled: true },
-      blur: { itemStyle: { opacity: 0.06 }, label: { opacity: 0.06 } },
-      data: [{ coord: [run.peak.x, run.peak.y] }]
+      label: { show: showStatic },
+      emphasis: { disabled: false, label: { show: showHover || showStatic } },
+      blur: { itemStyle: { opacity: 0.06 }, label: { show: false } },
+      data: [{
+        coord: [run.peak.x, run.peak.y],
+        label: Object.assign({ show: showStatic }, labelStyle),
+        emphasis: { label: Object.assign({ show: showHover || showStatic }, labelStyle) }
+      }]
     };
   }
 
@@ -263,21 +267,19 @@
           itemStyle: { color: run.color },
           emphasis: { focus: "series", blurScope: "global", lineStyle: { width: 3, opacity: 1 } },
           blur: { lineStyle: { opacity: 0.18 } },
-          markLine: markLineData(run, params.labels, false, run.color, t, null, units),
-          markPoint: markPointData(run, params.labels, false, run.color, t, null, units),
+          markLine: markLineData(run, params.labels, "none", run.color, t, null, units),
+          markPoint: markPointData(run, params.labels, "none", run.color, t, null, units),
           data: run.data
         };
       });
       return opt;
     }
 
-    /* ---- Focus: selected runs only, per-count label strategy ---- */
+    /* ---- Focus: selected runs only; event/peak labels reveal on hover ---- */
     if (viewMode === "focus") {
       var sel = params.selectedIds || [];
       var focused = params.runs.filter(function (r) { return sel.indexOf(r.id) !== -1; });
       var n = focused.length;
-      var showML = false;
-      var showMP = n <= 4;
       var focusData = focused.reduce(function (acc, r) { return acc.concat(r.data || []); }, []);
       var ext2 = niceExtent(focusData);
       if (ext2) { opt.yAxis.min = ext2.min; opt.yAxis.max = ext2.max; }
@@ -293,43 +295,35 @@
           name: run.name, type: "line", showSymbol: false, smooth: 0.12, sampling: "lttb",
           lineStyle: { color: run.color, width: 2.2 },
           itemStyle: { color: run.color },
-          emphasis: { focus: "series", lineStyle: { width: 3 } },
+          emphasis: { focus: "series", blurScope: "global", lineStyle: { width: 3 } },
+          blur: { lineStyle: { opacity: 0.18 } },
           areaStyle: n === 1 ? { color: areaGradient(run.color) } : undefined,
-          markLine: markLineData(run, params.labels, showML, run.color, t, null, units),
-          markPoint: markPointData(run, params.labels, showMP, run.color, t, null, units),
+          markLine: markLineData(run, params.labels, "none", run.color, t, null, units),
+          markPoint: markPointData(run, params.labels, "none", run.color, t, null, units),
           data: run.data
         };
       });
       return opt;
     }
 
-    /* ---- Single: one run highlighted, rest faded ---- */
+    /* ---- Single: only the selected run, with static event/peak labels ---- */
     var hasHighlight = params.highlightId && params.highlightId !== "all";
-    var axisRuns = visibleRuns(params, hasHighlight);
-    var ext3 = niceExtent(axisRuns.reduce(function (acc, r) { return acc.concat(r.data || []); }, []));
+    var only = hasHighlight
+      ? params.runs.filter(function (r) { return r.id === params.highlightId; })
+      : params.runs.slice(0, 1);
+    if (!only.length) only = params.runs.slice(0, 1);
+    var ext3 = niceExtent(only.reduce(function (acc, r) { return acc.concat(r.data || []); }, []));
     if (ext3) { opt.yAxis.min = ext3.min; opt.yAxis.max = ext3.max; }
-    opt.legend = {
-      type: "scroll", top: 8, left: "center", icon: "roundRect",
-      itemWidth: 18, itemHeight: 4,
-      textStyle: { color: t.inkSoft, fontFamily: FONT_MONO, fontSize: 11 },
-      inactiveColor: t.inkMuted,
-      data: params.runs.map(function (r) { return r.name; })
-    };
-    opt.series = params.runs.map(function (run) {
-      var active = !hasHighlight || run.id === params.highlightId;
-      var showLabel = false;
-      var mlOpacity = active ? 0.75 : 0.08;
-      var mpOpacity = active ? 1 : 0.08;
+    opt.legend = { show: false };
+    opt.series = only.map(function (run) {
       return {
         name: run.name, type: "line", showSymbol: false, smooth: 0.12, sampling: "lttb",
-        z: active ? 5 : 2,
-        lineStyle: { color: run.color, width: active ? 2.6 : 1.4, opacity: active ? 1 : 0.42 },
+        lineStyle: { color: run.color, width: 2.6 },
         itemStyle: { color: run.color },
-        emphasis: { focus: "series", lineStyle: { width: 3 } },
-        areaStyle: (showLabel || (!hasHighlight && params.runs.length === 1))
-          ? { color: areaGradient(run.color) } : undefined,
-        markLine: markLineData(run, params.labels, showLabel, run.color, t, mlOpacity, units),
-        markPoint: markPointData(run, params.labels, showLabel, run.color, t, mpOpacity, units),
+        emphasis: { focus: "none", lineStyle: { width: 3 } },
+        areaStyle: { color: areaGradient(run.color) },
+        markLine: markLineData(run, params.labels, "none", run.color, t, 0.75, units),
+        markPoint: markPointData(run, params.labels, "none", run.color, t, 1, units),
         data: run.data
       };
     });
@@ -381,11 +375,11 @@
         var dUnits = { xUnit: params.xUnit, yUnit: params.yUnit, yDigits: params.yDigits };
         series.markLine = markLineData(
           { ignitionX: params.ignitionX, burnEndX: params.burnEndX },
-          params.labels, true, t.inkSoft, t, null, dUnits
+          params.labels, "none", t.inkSoft, t, null, dUnits
         );
         series.markLine.lineStyle.color = t.lineStrong;
         if (params.peak) {
-          series.markPoint = markPointData({ peak: params.peak }, params.labels, true, s.color, t, null, dUnits);
+          series.markPoint = markPointData({ peak: params.peak }, params.labels, "none", s.color, t, null, dUnits);
         }
       }
       return series;

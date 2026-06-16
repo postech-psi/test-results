@@ -465,15 +465,26 @@
     chartRegistry.clear();
   }
 
-  function eventRunsForComparison(params) {
-    const viewMode = params.viewMode || "single";
-    if (viewMode === "overview") return params.runs.slice(0, 1);
-    if (viewMode === "focus") {
-      const selected = params.runs.filter((run) => params.selectedIds.indexOf(run.id) !== -1);
-      return selected.length > 0 && selected.length <= 3 ? selected : [];
+  /* Which runs' event/peak tags to render.
+     - detail: the single signal's events (static)
+     - single: the selected run (static)
+     - overview / focus: only the hovered run (hover-driven; none at rest) */
+  function overlayRunsFor(params, hoverRunName, isDetail) {
+    if (isDetail) {
+      return [{
+        ignitionX: params.ignitionX, burnEndX: params.burnEndX, peak: params.peak,
+        color: PSICharts.tokens(state.theme).lineStrong
+      }];
     }
-    if (!params.highlightId || params.highlightId === "all") return [];
-    return params.runs.filter((run) => run.id === params.highlightId);
+    const viewMode = params.viewMode || "single";
+    if (viewMode === "single") {
+      if (!params.highlightId || params.highlightId === "all") return params.runs.slice(0, 1);
+      return params.runs.filter((run) => run.id === params.highlightId);
+    }
+    if (!hoverRunName) return [];
+    let pool = params.runs;
+    if (viewMode === "focus") pool = params.runs.filter((run) => params.selectedIds.indexOf(run.id) !== -1);
+    return pool.filter((run) => run.name === hoverRunName);
   }
 
   function clearEventAxisOverlay(id) {
@@ -484,31 +495,17 @@
     if (overlay) overlay.remove();
   }
 
-  function renderEventAxisOverlay(id, entry, params, runs) {
+  function renderEventAxisOverlay(id, entry, params, options) {
+    const opts = options || {};
     const chart = entry && entry.instance;
     const el = chart && chart.getDom ? chart.getDom() : document.getElementById(id);
     const shell = el && el.closest(".chart-shell");
     if (!shell || !chart) return;
 
     const draw = () => {
-      const events = [];
-      (runs || []).forEach((run, rowIndex) => {
-        [
-          { x: run.ignitionX, label: params.labels.ignition },
-          { x: run.burnEndX, label: params.labels.burnEnd }
-        ].forEach((event) => {
-          if (event.x == null) return;
-          events.push({
-            x: event.x,
-            text: `${event.label} ${PSICharts.fmt(event.x, 2)} ${params.xUnit}`,
-            color: run.color,
-            rowIndex
-          });
-        });
-      });
-
       clearEventAxisOverlay(id);
-      if (!events.length) return;
+      const runs = overlayRunsFor(params, entry.hoverRunName, opts.isDetail);
+      if (!runs.length) return;
 
       const overlay = document.createElement("div");
       overlay.className = "chart-event-overlay";
@@ -517,22 +514,40 @@
       const width = chart.getWidth();
       const height = chart.getHeight();
       const nodes = [];
-      events.forEach((event) => {
-        let x;
-        try {
-          x = chart.convertToPixel({ xAxisIndex: 0 }, event.x);
-        } catch (_) {
-          x = null;
-        }
-        if (!Number.isFinite(x)) return;
+
+      const addAxisTag = (x, text, color, rowIndex) => {
+        let px;
+        try { px = chart.convertToPixel({ xAxisIndex: 0 }, x); } catch (_) { px = null; }
+        if (!Number.isFinite(px)) return;
         const node = document.createElement("span");
         node.className = "chart-event-tag";
-        node.textContent = event.text;
-        node.style.setProperty("--event-color", event.color);
-        node.style.top = `${Math.max(42, height - 70 - event.rowIndex * 20)}px`;
-        node.style.left = `${Math.min(Math.max(x, 8), width - 8)}px`;
+        node.textContent = text;
+        node.style.setProperty("--event-color", color);
+        node.style.top = `${Math.max(42, height - 70 - rowIndex * 20)}px`;
+        node.style.left = `${Math.min(Math.max(px, 8), width - 8)}px`;
         overlay.appendChild(node);
-        nodes.push({ node, x });
+        nodes.push({ node, x: px });
+      };
+
+      const addPeakTag = (peak, color) => {
+        if (!peak || peak.x == null || peak.y == null) return;
+        let pt;
+        try { pt = chart.convertToPixel({ xAxisIndex: 0, yAxisIndex: 0 }, [peak.x, peak.y]); } catch (_) { pt = null; }
+        if (!pt || !Number.isFinite(pt[0]) || !Number.isFinite(pt[1])) return;
+        const node = document.createElement("span");
+        node.className = "chart-event-tag chart-peak-tag";
+        node.textContent = `${params.labels.peak} ${PSICharts.fmt(peak.y, params.yDigits)} ${params.yUnit} @ ${PSICharts.fmt(peak.x, 2)} ${params.xUnit}`;
+        node.style.setProperty("--event-color", color);
+        node.style.top = `${Math.max(18, pt[1] - 8)}px`;
+        node.style.left = `${Math.min(Math.max(pt[0], 8), width - 8)}px`;
+        overlay.appendChild(node);
+        nodes.push({ node, x: pt[0] });
+      };
+
+      runs.forEach((run, rowIndex) => {
+        if (run.ignitionX != null) addAxisTag(run.ignitionX, `${params.labels.ignition} ${PSICharts.fmt(run.ignitionX, 2)} ${params.xUnit}`, run.color, rowIndex);
+        if (run.burnEndX != null) addAxisTag(run.burnEndX, `${params.labels.burnEnd} ${PSICharts.fmt(run.burnEndX, 2)} ${params.xUnit}`, run.color, rowIndex);
+        addPeakTag(run.peak, run.color);
       });
 
       window.requestAnimationFrame(() => {
@@ -544,6 +559,7 @@
       });
     };
 
+    entry.hoverRunName = null;
     entry.syncEventAxisOverlay = draw;
     if (!entry.eventAxisOverlayBound) {
       const syncLatestOverlay = () => {
@@ -551,6 +567,18 @@
       };
       entry.instance.on("datazoom", syncLatestOverlay);
       entry.instance.on("finished", syncLatestOverlay);
+      entry.instance.on("mouseover", (p) => {
+        if (p && p.seriesName && entry.hoverRunName !== p.seriesName) {
+          entry.hoverRunName = p.seriesName;
+          if (entry.syncEventAxisOverlay) entry.syncEventAxisOverlay();
+        }
+      });
+      entry.instance.on("globalout", () => {
+        if (entry.hoverRunName != null) {
+          entry.hoverRunName = null;
+          if (entry.syncEventAxisOverlay) entry.syncEventAxisOverlay();
+        }
+      });
       entry.eventAxisOverlayBound = true;
     }
     draw();
@@ -573,7 +601,7 @@
         currentParams = params;
         return PSICharts.comparisonOption(params);
       });
-      if (entry && currentParams) renderEventAxisOverlay(`cmp-canvas-${tab}`, entry, currentParams, eventRunsForComparison(currentParams));
+      if (entry && currentParams) renderEventAxisOverlay(`cmp-canvas-${tab}`, entry, currentParams);
     }
   }
 
@@ -590,11 +618,7 @@
       const params = detailParams(test, tab);
       const entry = ensureChart(`dt-canvas-${tab}`, () => PSICharts.detailOption(params));
       if (entry) {
-        renderEventAxisOverlay(`dt-canvas-${tab}`, entry, params, [{
-          ignitionX: params.ignitionX,
-          burnEndX: params.burnEndX,
-          color: PSICharts.tokens(state.theme).lineStrong
-        }]);
+        renderEventAxisOverlay(`dt-canvas-${tab}`, entry, params, { isDetail: true });
       }
     }
   }
