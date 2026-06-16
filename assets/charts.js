@@ -168,7 +168,8 @@
     };
   }
 
-  function markLineData(run, labels, showLabel, color, t) {
+  function markLineData(run, labels, showLabel, color, t, opacity) {
+    var op = opacity == null ? 0.75 : opacity;
     var data = [];
     if (run.ignitionX != null) {
       data.push({
@@ -184,18 +185,20 @@
     }
     return {
       symbol: "none",
-      lineStyle: { color: color, type: "dashed", width: 1, opacity: 0.75 },
+      lineStyle: { color: color, type: "dashed", width: 1, opacity: op },
       emphasis: { disabled: true },
+      blur: { lineStyle: { opacity: 0.06 }, label: { opacity: 0.06 } },
       data: data
     };
   }
 
-  function markPointData(run, labels, showLabel, color, t) {
+  function markPointData(run, labels, showLabel, color, t, opacity) {
     if (!run.peak || run.peak.x == null) return undefined;
+    var op = opacity == null ? 1 : opacity;
     return {
       symbol: "circle",
       symbolSize: 9,
-      itemStyle: { color: color, borderColor: t.surface, borderWidth: 2 },
+      itemStyle: { color: color, borderColor: t.surface, borderWidth: 2, opacity: op },
       label: {
         show: showLabel,
         formatter: labels.peak,
@@ -205,6 +208,8 @@
         position: "top",
         distance: 8
       },
+      emphasis: { disabled: true },
+      blur: { itemStyle: { opacity: 0.06 }, label: { opacity: 0.06 } },
       data: [{ coord: [run.peak.x, run.peak.y] }]
     };
   }
@@ -291,6 +296,8 @@
     opt.series = params.runs.map(function (run) {
       var active = !hasHighlight || run.id === params.highlightId;
       var showLabel = hasHighlight && run.id === params.highlightId;
+      var mlOpacity = active ? 0.75 : 0.08;
+      var mpOpacity = active ? 1 : 0.08;
       return {
         name: run.name, type: "line", showSymbol: false, smooth: 0.12, sampling: "lttb",
         z: active ? 5 : 2,
@@ -299,8 +306,8 @@
         emphasis: { focus: "series", lineStyle: { width: 3 } },
         areaStyle: (showLabel || (!hasHighlight && params.runs.length === 1))
           ? { color: areaGradient(run.color) } : undefined,
-        markLine: markLineData(run, params.labels, showLabel, run.color, t),
-        markPoint: markPointData(run, params.labels, showLabel, run.color, t),
+        markLine: markLineData(run, params.labels, showLabel, run.color, t, mlOpacity),
+        markPoint: markPointData(run, params.labels, showLabel, run.color, t, mpOpacity),
         data: run.data
       };
     });
