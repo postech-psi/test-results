@@ -11,7 +11,7 @@ import json
 import os
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-VERSION = "2026-06-16-axis-event-custom"
+VERSION = "2026-06-16-axis-overlay-polish"
 
 CARD_DIGITS = {
     "maxThrustN": (2, "N"),

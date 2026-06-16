@@ -1,5 +1,5 @@
 /* ==========================================================================
-   PSICharts — ECharts option builders for the PSI results site.
+   PSICharts â€” ECharts option builders for the PSI results site.
    Pure: data in -> ECharts option out. Requires global `echarts`.
    ========================================================================== */
 (function () {
@@ -11,9 +11,9 @@
   var TOKENS = {
     dark: {
       ink: "#f8fbff", inkSoft: "#d8e2ed", inkMuted: "#a7b4c2",
-      line: "#202733", lineStrong: "#4b5968",
-      surface: "#050608", surfaceAlt: "#0b0f14", accent: "#c23a72",
-      tooltipBg: "rgba(5, 6, 8, 0.98)", tooltipBorder: "#4b5968",
+      line: "#2a3340", lineStrong: "#667789",
+      surface: "#040506", surfaceAlt: "#0d1117", accent: "#c23a72",
+      tooltipBg: "rgba(4, 5, 6, 0.99)", tooltipBorder: "#667789",
       zoomFill: "rgba(194, 58, 114, 0.13)", zoomHandle: "#c23a72"
     },
     light: {
@@ -43,7 +43,7 @@
   }
 
   function fmt(value, digits) {
-    if (value == null || isNaN(value)) return "—";
+    if (value == null || isNaN(value)) return "â€”";
     return Number(value).toLocaleString(undefined, {
       minimumFractionDigits: digits,
       maximumFractionDigits: digits
@@ -168,44 +168,9 @@
     };
   }
 
-  /* Comparison tooltip: per-run value at x, plus that run's ignition/burn-end
-     times and peak (value @ time). params has runs[] with event metadata. */
-  function comparisonTooltipFormatter(params, includeEvents) {
+  /* Comparison tooltip intentionally mirrors the base tooltip: time + y values only. */
+  function comparisonTooltipFormatter(params) {
     return tooltipFormatter(params.xUnit, params.yUnit, params.yDigits);
-    var runMap = {};
-    (params.runs || []).forEach(function (r) { runMap[r.name] = r; });
-    var L = params.labels || {};
-    var xU = params.xUnit, yU = params.yUnit, yD = params.yDigits;
-    return function (items) {
-      if (!items || !items.length) return "";
-      var x = items[0].axisValue;
-      var head = '<div style="font-weight:600;margin-bottom:6px;opacity:.85">' +
-        fmt(x, 3) + " " + xU + "</div>";
-      var rows = items.map(function (it) {
-        var v = it.value && it.value.length ? it.value[1] : it.value;
-        var main = '<div style="display:flex;gap:12px;align-items:center;justify-content:space-between">' +
-          '<span>' + it.marker + it.seriesName + '</span>' +
-          '<strong style="font-variant-numeric:tabular-nums">' + fmt(v, yD) + " " + yU + "</strong></div>";
-        if (!includeEvents) return main;
-        var run = runMap[it.seriesName];
-        if (!run) return main;
-        var parts = [];
-        if (run.ignitionX != null) parts.push(L.ignition + " " + fmt(run.ignitionX, 2) + " " + xU);
-        if (run.burnEndX != null) parts.push(L.burnEnd + " " + fmt(run.burnEndX, 2) + " " + xU);
-        var peakStr = "";
-        if (run.peak && run.peak.x != null) {
-          peakStr = L.peak + " " + fmt(run.peak.y, yD) + " " + yU + " @ " + fmt(run.peak.x, 2) + " " + xU;
-        }
-        var detailLines = [];
-        if (parts.length) detailLines.push(parts.join(" · "));
-        if (peakStr) detailLines.push(peakStr);
-        if (!detailLines.length) return main;
-        return main +
-          '<div style="font-size:11px;opacity:.65;margin:1px 0 6px 16px;font-variant-numeric:tabular-nums">' +
-          detailLines.join("<br>") + "</div>";
-      }).join("");
-      return head + rows;
-    };
   }
 
   function markLineData(run, labels, showLabel, color, t, opacity, units) {
@@ -270,69 +235,9 @@
     };
   }
 
-  function eventAxisLabelSeries(runs, labels, colorFallback, t, units, yValue) {
-    units = units || {};
-    var xU = units.xUnit ? " " + units.xUnit : "";
-    var data = [];
-    (runs || []).forEach(function (run, runIndex) {
-      var color = run.color || colorFallback;
-      [
-        { x: run.ignitionX, name: labels.ignition },
-        { x: run.burnEndX, name: labels.burnEnd }
-      ].forEach(function (event) {
-        if (event.x == null) return;
-        data.push([event.x, yValue, event.name + " " + fmt(event.x, 2) + xU, color, runIndex]);
-      });
-    });
-    if (!data.length) return null;
-    return {
-      name: "__event_axis_labels",
-      type: "custom",
-      silent: true,
-      tooltip: { show: false },
-      animation: false,
-      coordinateSystem: "cartesian2d",
-      encode: { x: 0, y: 1 },
-      z: 80,
-      clip: false,
-      renderItem: function (params, api) {
-        var point = api.coord([api.value(0), api.value(1)]);
-        var text = String(api.value(2));
-        var color = String(api.value(3));
-        var rowIndex = Number(api.value(4)) || 0;
-        var width = Math.max(76, text.length * 5.8 + 14);
-        return {
-          type: "group",
-          x: point[0],
-          y: point[1] - 12 - rowIndex * 17,
-          children: [
-            {
-              type: "rect",
-              shape: { x: -width / 2, y: -9, width: width, height: 18, r: 4 },
-              style: { fill: t.surface, stroke: color, lineWidth: 1, opacity: 0.96 }
-            },
-            {
-              type: "text",
-              style: {
-                text: text,
-                x: 0,
-                y: 0,
-                fill: color,
-                font: "10px " + FONT_MONO,
-                align: "center",
-                verticalAlign: "middle"
-              }
-            }
-          ]
-        };
-      },
-      data: data
-    };
-  }
-
   /* Comparison chart: multiple runs, one measurement (thrust|pressure).
      params.viewMode: "overview" | "focus" | "single"
-     params.selectedIds: string[] (focus mode — which runs to show)
+     params.selectedIds: string[] (focus mode â€” which runs to show)
      params.highlightId: string | "all" (single mode) */
   function comparisonOption(params) {
     var t = tokens(params.theme);
@@ -363,8 +268,6 @@
           data: run.data
         };
       });
-      var overviewEventSeries = eventAxisLabelSeries(params.runs.slice(0, 1), params.labels, t.accent, t, units, ext ? ext.min : 0);
-      if (overviewEventSeries) opt.series.push(overviewEventSeries);
       return opt;
     }
 
@@ -397,10 +300,6 @@
           data: run.data
         };
       });
-      if (n > 0 && n <= 3) {
-        var focusEventSeries = eventAxisLabelSeries(focused, params.labels, t.accent, t, units, ext2 ? ext2.min : 0);
-        if (focusEventSeries) opt.series.push(focusEventSeries);
-      }
       return opt;
     }
 
@@ -434,9 +333,6 @@
         data: run.data
       };
     });
-    var singleEventRuns = params.runs.filter(function (run) { return hasHighlight ? run.id === params.highlightId : false; });
-    var singleEventSeries = eventAxisLabelSeries(singleEventRuns, params.labels, t.accent, t, units, ext3 ? ext3.min : 0);
-    if (singleEventSeries) opt.series.push(singleEventSeries);
     return opt;
   }
 
@@ -494,15 +390,6 @@
       }
       return series;
     });
-    var detailEventSeries = eventAxisLabelSeries(
-      [{ ignitionX: params.ignitionX, burnEndX: params.burnEndX, color: t.lineStrong }],
-      params.labels,
-      t.lineStrong,
-      t,
-      { xUnit: params.xUnit },
-      detailExt ? detailExt.min : 0
-    );
-    if (detailEventSeries) opt.series.push(detailEventSeries);
     return opt;
   }
 

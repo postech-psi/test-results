@@ -68,18 +68,18 @@ body[data-theme="dark"] {
   color-scheme: dark;
   --bg: #000000;
   --bg-deep: #000000;
-  --surface: #050608;
-  --surface-alt: #0b0f14;
-  --surface-strong: #141a22;
-  --surface-glass: rgba(5, 6, 8, 0.98);
+  --surface: #040506;
+  --surface-alt: #0d1117;
+  --surface-strong: #18202b;
+  --surface-glass: rgba(4, 5, 6, 0.99);
   --logo-surface: #000000;
 
   --ink: #f8fbff;
   --ink-soft: #d8e2ed;
   --ink-muted: #a7b4c2;
 
-  --line: #202733;
-  --line-strong: #4b5968;
+  --line: #2a3340;
+  --line-strong: #667789;
 
   --accent: #c23a72;
   --accent-strong: #e56a9a;
@@ -207,7 +207,7 @@ a:focus-visible {
   justify-content: center;
   flex: none;
   border: 0;
-  background: transparent;
+  background: var(--logo-surface);
   overflow: hidden;
   isolation: isolate;
   transition: background 0.22s ease;
@@ -929,6 +929,35 @@ body[data-theme="dark"] .logo-surface img {
 .chart-canvas {
   width: 100%;
   height: 460px;
+}
+
+.chart-event-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.chart-event-tag {
+  position: absolute;
+  transform: translateX(-50%);
+  max-width: min(170px, calc(100% - 12px));
+  padding: 2px 7px;
+  border: 1px solid var(--event-color);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--event-color);
+  box-shadow: 0 1px 2px rgba(7, 24, 39, 0.14);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 650;
+  line-height: 1.25;
+  text-align: center;
+  white-space: nowrap;
+}
+
+body[data-theme="dark"] .chart-event-tag {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.65);
 }
 
 /* ---- Metrics grid (4 separate per-metric charts) ---- */

@@ -55,7 +55,7 @@
         chartsTitle: "재구성 신호", chartsLead: "",
         methodsTitle: "시험 조건과 처리", methodsLead: "",
         artifactsLead: "",
-        evidenceTitle: "자료 파일", evidenceLead: ""
+        filesTitle: "자료 파일", filesLead: ""
       },
       labels: {
         ignition: "점화", burnEnd: "연소 종료", peak: "피크",
@@ -65,14 +65,14 @@
       }
     },
     en: {
-      nav: { overview: "Summary", comparison: "Comparison", findings: "Findings", archive: "Archive", methods: "Methods", access: "Evidence" },
+      nav: { overview: "Summary", comparison: "Comparison", findings: "Findings", archive: "Archive", methods: "Methods", access: "Data" },
       common: {
         latestRun: "Latest test", publishedRuns: "Published tests", comparisonScope: "Comparison", allRuns: "All runs",
         verdict: "Static fire test report", directView: "Recorded time", alignedView: "Ignition aligned",
         noIssues: "No issues", reviewRequired: "Review required", published: "Published",
         pipelineDerived: "Pipeline data", filteredSource: "filtered force / filtered gauge pressure",
         backToSite: "Back to results", methodology: "Processing method", calibration: "Calibration", issues: "Test issues",
-        media: "Test video", files: "Evidence files", exportedFigures: "Reference Figures",
+        media: "Test video", files: "Data files", exportedFigures: "Reference Figures",
         chartMethodNote: "Source: pipeline data. Lines are replotted from numeric series, not exported PNGs.",
         alignmentNote: "Ignition aligned mode shifts each run so ignition is 0 s.",
         absoluteNote: "Absolute time preserves the original test timeline.",
@@ -100,13 +100,13 @@
         comparisonTitle: "Run comparison", comparisonLead: "",
         findingsTitle: "Findings", findingsLead: "",
         methodsTitle: "Methods", archiveTitle: "Archive", archiveSubtitle: "",
-        accessTitle: "Evidence", sparkTitle: "Latest thrust curve"
+        accessTitle: "Data files", sparkTitle: "Latest thrust curve"
       },
       detail: {
         chartsTitle: "Signals", chartsLead: "",
         methodsTitle: "Methods", methodsLead: "",
         artifactsLead: "",
-        evidenceTitle: "Result files", evidenceLead: ""
+        filesTitle: "Result files", filesLead: ""
       },
       labels: {
         ignition: "Ignition", burnEnd: "Burn End", peak: "Peak",
@@ -440,6 +440,7 @@
       entry.instance.on("legendselectchanged", (event) => {
         entry.legendSelected = event.selected || null;
         entry.instance.setOption(entry.build(entry.legendSelected), true);
+        if (entry.syncEventAxisOverlay) entry.syncEventAxisOverlay();
       });
       chartRegistry.set(id, entry);
     } else {
@@ -447,13 +448,15 @@
     }
     entry.instance.resize();
     entry.instance.setOption(entry.build(entry.legendSelected), true);
-    return entry.instance;
+    if (entry.syncEventAxisOverlay) entry.syncEventAxisOverlay();
+    return entry;
   }
 
   function refreshAllCharts() {
     chartRegistry.forEach((entry) => {
       entry.instance.resize();
       entry.instance.setOption(entry.build(entry.legendSelected), true);
+      if (entry.syncEventAxisOverlay) entry.syncEventAxisOverlay();
     });
   }
 
@@ -462,31 +465,137 @@
     chartRegistry.clear();
   }
 
+  function eventRunsForComparison(params) {
+    const viewMode = params.viewMode || "single";
+    if (viewMode === "overview") return params.runs.slice(0, 1);
+    if (viewMode === "focus") {
+      const selected = params.runs.filter((run) => params.selectedIds.indexOf(run.id) !== -1);
+      return selected.length > 0 && selected.length <= 3 ? selected : [];
+    }
+    if (!params.highlightId || params.highlightId === "all") return [];
+    return params.runs.filter((run) => run.id === params.highlightId);
+  }
+
+  function clearEventAxisOverlay(id) {
+    const el = document.getElementById(id);
+    const shell = el && el.closest(".chart-shell");
+    if (!shell) return;
+    const overlay = shell.querySelector(".chart-event-overlay");
+    if (overlay) overlay.remove();
+  }
+
+  function renderEventAxisOverlay(id, entry, params, runs) {
+    const chart = entry && entry.instance;
+    const el = chart && chart.getDom ? chart.getDom() : document.getElementById(id);
+    const shell = el && el.closest(".chart-shell");
+    if (!shell || !chart) return;
+
+    const draw = () => {
+      const events = [];
+      (runs || []).forEach((run, rowIndex) => {
+        [
+          { x: run.ignitionX, label: params.labels.ignition },
+          { x: run.burnEndX, label: params.labels.burnEnd }
+        ].forEach((event) => {
+          if (event.x == null) return;
+          events.push({
+            x: event.x,
+            text: `${event.label} ${PSICharts.fmt(event.x, 2)} ${params.xUnit}`,
+            color: run.color,
+            rowIndex
+          });
+        });
+      });
+
+      clearEventAxisOverlay(id);
+      if (!events.length) return;
+
+      const overlay = document.createElement("div");
+      overlay.className = "chart-event-overlay";
+      shell.appendChild(overlay);
+
+      const width = chart.getWidth();
+      const height = chart.getHeight();
+      const nodes = [];
+      events.forEach((event) => {
+        let x;
+        try {
+          x = chart.convertToPixel({ xAxisIndex: 0 }, event.x);
+        } catch (_) {
+          x = null;
+        }
+        if (!Number.isFinite(x)) return;
+        const node = document.createElement("span");
+        node.className = "chart-event-tag";
+        node.textContent = event.text;
+        node.style.setProperty("--event-color", event.color);
+        node.style.top = `${Math.max(42, height - 70 - event.rowIndex * 20)}px`;
+        node.style.left = `${Math.min(Math.max(x, 8), width - 8)}px`;
+        overlay.appendChild(node);
+        nodes.push({ node, x });
+      });
+
+      window.requestAnimationFrame(() => {
+        nodes.forEach(({ node, x }) => {
+          const half = node.offsetWidth / 2;
+          const clamped = Math.min(Math.max(x, half + 6), width - half - 6);
+          node.style.left = `${clamped}px`;
+        });
+      });
+    };
+
+    entry.syncEventAxisOverlay = draw;
+    if (!entry.eventAxisOverlayBound) {
+      const syncLatestOverlay = () => {
+        if (entry.syncEventAxisOverlay) entry.syncEventAxisOverlay();
+      };
+      entry.instance.on("datazoom", syncLatestOverlay);
+      entry.instance.on("finished", syncLatestOverlay);
+      entry.eventAxisOverlayBound = true;
+    }
+    draw();
+  }
+
   function updateComparison() {
     const tab = state.comparisonTab;
     if (tab === "metrics") {
+      clearEventAxisOverlay("cmp-canvas-thrust");
+      clearEventAxisOverlay("cmp-canvas-pressure");
       const charts = metricChartsParams(catalog.tests);
       METRIC_DEFS.forEach((m, i) => {
         ensureChart(`cmp-canvas-metric-${m.id}`, () => PSICharts.metricBarOption(charts[i]));
       });
     } else {
-      ensureChart(`cmp-canvas-${tab}`, (legendSelected) => {
+      let currentParams = null;
+      const entry = ensureChart(`cmp-canvas-${tab}`, (legendSelected) => {
         const params = comparisonParams(catalog.tests, tab, state.comparisonMode);
         params.legendSelected = legendSelected;
+        currentParams = params;
         return PSICharts.comparisonOption(params);
       });
+      if (entry && currentParams) renderEventAxisOverlay(`cmp-canvas-${tab}`, entry, currentParams, eventRunsForComparison(currentParams));
     }
   }
 
   function updateDetailChart(test) {
     const tab = state.comparisonTab;
     if (tab === "metrics") {
+      clearEventAxisOverlay("dt-canvas-thrust");
+      clearEventAxisOverlay("dt-canvas-pressure");
       const charts = detailMetricChartsParams(test);
       METRIC_DEFS.forEach((m, i) => {
         ensureChart(`dt-canvas-metric-${m.id}`, () => PSICharts.metricBarOption(charts[i]));
       });
     } else {
-      ensureChart(`dt-canvas-${tab}`, () => PSICharts.detailOption(detailParams(test, tab)));
+      const params = detailParams(test, tab);
+      const entry = ensureChart(`dt-canvas-${tab}`, () => PSICharts.detailOption(params));
+      if (entry) {
+        renderEventAxisOverlay(`dt-canvas-${tab}`, entry, params, [{
+          ignitionX: params.ignitionX,
+          burnEndX: params.burnEndX,
+          color: PSICharts.tokens(state.theme).lineStrong
+        }]);
+      }
     }
   }
 
@@ -912,8 +1021,8 @@
             </div>
             <div class="detail-stack">
               <article class="panel">
-                <div class="subsection-title">${copy("detail.evidenceTitle")}</div>
-                ${optionalParagraph(copy("detail.evidenceLead"), "detail-meta-note")}
+                <div class="subsection-title">${copy("detail.filesTitle")}</div>
+                ${optionalParagraph(copy("detail.filesLead"), "detail-meta-note")}
                 <div class="data-links" style="grid-template-columns:1fr;margin-top:12px;">
                   <a class="data-link" href="${resolvePath(test.links.executiveReport)}"><div class="data-link__title">${copy("common.executiveReport")}</div><div class="data-link__meta">${test.date}</div></a>
                   <a class="data-link" href="${resolvePath(test.links.pipelineData)}"><div class="data-link__title">${copy("common.pipelineData")}</div><div class="data-link__meta">${copy("common.filteredSource")}</div></a>
@@ -1149,7 +1258,10 @@
     try { state.lang = localStorage.getItem(STORAGE_KEYS.lang) || "en"; } catch (_) { state.lang = "en"; }
     try { state.theme = localStorage.getItem(STORAGE_KEYS.theme) || "light"; } catch (_) { state.theme = "light"; }
     document.body.dataset.theme = state.theme;
-    window.addEventListener("resize", () => chartRegistry.forEach((entry) => entry.instance.resize()));
+    window.addEventListener("resize", () => chartRegistry.forEach((entry) => {
+      entry.instance.resize();
+      if (entry.syncEventAxisOverlay) entry.syncEventAxisOverlay();
+    }));
     try {
       catalog = await fetchJson(resolvePath("tests/index.json"));
       await preloadData();
