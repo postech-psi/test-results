@@ -281,38 +281,51 @@
         { x: run.burnEndX, name: labels.burnEnd }
       ].forEach(function (event) {
         if (event.x == null) return;
-        data.push({
-          value: [event.x, yValue],
-          itemStyle: { color: color, opacity: 0 },
-          label: {
-            show: true,
-            formatter: event.name + " " + fmt(event.x, 2) + xU,
-            color: color,
-            fontFamily: FONT_MONO,
-            fontSize: 10,
-            position: "top",
-            distance: 4,
-            offset: [0, -runIndex * 15],
-            backgroundColor: t.surface,
-            borderColor: color,
-            borderWidth: 1,
-            borderRadius: 4,
-            padding: [2, 5]
-          }
-        });
+        data.push([event.x, yValue, event.name + " " + fmt(event.x, 2) + xU, color, runIndex]);
       });
     });
     if (!data.length) return null;
     return {
       name: "__event_axis_labels",
-      type: "scatter",
+      type: "custom",
       silent: true,
       tooltip: { show: false },
       animation: false,
-      symbolSize: 0,
-      z: 30,
+      coordinateSystem: "cartesian2d",
+      encode: { x: 0, y: 1 },
+      z: 80,
       clip: false,
-      labelLayout: { hideOverlap: true },
+      renderItem: function (params, api) {
+        var point = api.coord([api.value(0), api.value(1)]);
+        var text = String(api.value(2));
+        var color = String(api.value(3));
+        var rowIndex = Number(api.value(4)) || 0;
+        var width = Math.max(76, text.length * 5.8 + 14);
+        return {
+          type: "group",
+          x: point[0],
+          y: point[1] - 12 - rowIndex * 17,
+          children: [
+            {
+              type: "rect",
+              shape: { x: -width / 2, y: -9, width: width, height: 18, r: 4 },
+              style: { fill: t.surface, stroke: color, lineWidth: 1, opacity: 0.96 }
+            },
+            {
+              type: "text",
+              style: {
+                text: text,
+                x: 0,
+                y: 0,
+                fill: color,
+                font: "10px " + FONT_MONO,
+                align: "center",
+                verticalAlign: "middle"
+              }
+            }
+          ]
+        };
+      },
       data: data
     };
   }
