@@ -27,6 +27,9 @@
         chartHint: "드래그 줌 · 휠 확대 · 범례 클릭",
         metricsScaleNote: "항목별 최고값을 100%로 둔 정규화 비교입니다.",
         metrics: "핵심 지표", thrust: "추력", pressure: "압력",
+        viewOverview: "전체 조감", viewFocus: "선택 비교", viewSingle: "단일 집중",
+        addRun: "+ 추가", latestN: "최신 5개", clearAll: "전체 해제", removeRun: "제거",
+        allSelected: "모두 선택됨", maxReached: "최대 7개",
         latestReport: "최신 보고서", markdownRecord: "Markdown 기록", pipelineData: "Pipeline data",
         executiveReport: "Executive report", detailPage: "상세 보기",
         sortingNewest: "최신순", sortingThrust: "최대 추력순", sortingImpulse: "총 임펄스순", sortingPressure: "최대 압력순",
@@ -76,6 +79,9 @@
         chartHint: "Drag to zoom · scroll · click legend",
         metricsScaleNote: "Normalized comparison: best run per metric = 100%.",
         metrics: "Key metrics", thrust: "Thrust", pressure: "Pressure",
+        viewOverview: "Overview", viewFocus: "Focus", viewSingle: "Single",
+        addRun: "+ Add", latestN: "Latest 5", clearAll: "Clear all", removeRun: "Remove",
+        allSelected: "All selected", maxReached: "Max 7",
         latestReport: "Latest report", markdownRecord: "Markdown record", pipelineData: "Pipeline data",
         executiveReport: "Executive report", detailPage: "View test",
         sortingNewest: "Newest first", sortingThrust: "Peak thrust", sortingImpulse: "Total impulse", sortingPressure: "Peak pressure",
@@ -114,9 +120,12 @@
     theme: "light",
     comparisonTab: "thrust",
     comparisonMode: "absolute",
+    comparisonViewMode: "overview",
+    selectedTestIds: [],
     selectedTestId: "all",
     archiveSort: "date"
   };
+  const MAX_FOCUS_RUNS = 7;
 
   let catalog = null;
   const dataCache = new Map();
@@ -263,18 +272,37 @@
     return arr;
   }
 
+  function hslRunColor(index, total, theme) {
+    const l = theme === "dark" ? 58 : 40;
+    const s = theme === "dark" ? 68 : 62;
+    const hue = Math.round((index / Math.max(total, 1)) * 330 + 15) % 360;
+    return `hsl(${hue}, ${s}%, ${l}%)`;
+  }
+
   function comparisonParams(tests, tab, mode) {
     const field = tab === "pressure" ? "filtered_gauge_pressure" : "filtered_force_N";
     const labels = copy("labels");
     const pal = PSICharts.palette(state.theme);
+    const vm = state.comparisonViewMode;
+    const selIds = state.selectedTestIds;
+    const n = tests.length;
     const runs = tests.map((test, index) => {
       const derived = dataCache.get(test.id);
       const peakRow = tab === "pressure" ? derived.peakPressure : derived.peakThrust;
       const ig = test.events.ignitionTimeS;
+      let color;
+      if (vm === "overview") {
+        color = n > pal.length ? hslRunColor(index, n, state.theme) : pal[index % pal.length];
+      } else if (vm === "focus") {
+        const idx = selIds.indexOf(test.id);
+        color = idx >= 0 ? pal[idx % pal.length] : pal[index % pal.length];
+      } else {
+        color = pal[index % pal.length];
+      }
       return {
         id: test.id,
         name: test.date,
-        color: pal[index % pal.length],
+        color,
         data: runData(test, field, mode),
         ignitionX: mode === "aligned" ? 0 : ig,
         burnEndX: mode === "aligned" ? test.events.burnEndTimeS - ig : test.events.burnEndTimeS,
@@ -290,8 +318,9 @@
       yDigits: tab === "pressure" ? 2 : 1,
       labels: { ignition: labels.ignition, burnEnd: labels.burnEnd, peak: labels.peak },
       runs,
+      viewMode: vm,
+      selectedIds: selIds,
       highlightId: state.selectedTestId || "all",
-      axisMode: (state.selectedTestId && state.selectedTestId !== "all") ? "highlight" : "visible"
     };
   }
 
@@ -442,9 +471,49 @@
       <tbody>${tests.map((t) => `<tr><td>${t.date}</td><td>${t.metrics[field].display}</td></tr>`).join("")}</tbody></table>`;
   }
 
+  function buildRunPickerHTML(tests) {
+    const pal = PSICharts.palette(state.theme);
+    const sel = state.selectedTestIds;
+    const reachedMax = sel.length >= MAX_FOCUS_RUNS;
+    const chips = sel.map((id, idx) => {
+      const test = tests.find((t) => t.id === id);
+      if (!test) return "";
+      const color = pal[idx % pal.length];
+      return `<div class="run-chip">
+        <span class="run-chip__dot" style="background:${color}"></span>
+        <span class="run-chip__label">${test.date}</span>
+        <button class="run-chip__remove" data-remove-run="${escapeHtml(id)}" type="button" aria-label="${copy("common.removeRun")}" title="${copy("common.removeRun")}">×</button>
+      </div>`;
+    }).join("");
+    const unselected = tests.filter((t) => sel.indexOf(t.id) === -1);
+    const items = unselected.map((test) => `<button class="run-picker__item" data-add-run="${escapeHtml(test.id)}" type="button">${escapeHtml(test.date)} · ${escapeHtml(localize(test.title))}</button>`).join("");
+    return `<div class="run-picker" id="run-picker">
+      <div class="run-picker__chips" id="run-picker-chips">${chips || `<span class="run-picker__empty-hint">${copy("common.clearAll") ? "" : ""}</span>`}</div>
+      <div class="run-picker__footer">
+        <button class="run-picker__add-btn" id="run-picker-add-btn" type="button" ${reachedMax ? `disabled aria-disabled="true" title="${copy("common.maxReached")}"` : ""}>${copy("common.addRun")} ▾</button>
+        <button class="run-picker__reset-btn" data-reset-runs type="button">${copy("common.latestN")}</button>
+        <button class="run-picker__clear-btn" data-clear-runs type="button">${copy("common.clearAll")}</button>
+        ${reachedMax ? `<span class="run-picker__max-note">${copy("common.maxReached")}</span>` : ""}
+      </div>
+      <div class="run-picker__dropdown" id="run-picker-dropdown" hidden>
+        ${items || `<div class="run-picker__empty">${copy("common.allSelected")}</div>`}
+      </div>
+    </div>`;
+  }
+
+  function buildSingleSelectHTML(tests) {
+    const selId = (state.selectedTestId && state.selectedTestId !== "all") ? state.selectedTestId : (tests[0] && tests[0].id);
+    return `<div class="single-run-row">
+      <label class="visually-hidden" for="single-run-select">${state.lang === "ko" ? "시험 선택" : "Select test"}</label>
+      <select class="select-input" id="single-run-select">
+        ${tests.map((t) => `<option value="${escapeHtml(t.id)}" ${selId === t.id ? "selected" : ""}>${escapeHtml(t.date)} · ${escapeHtml(localize(t.title))}</option>`).join("")}
+      </select>
+    </div>`;
+  }
+
   function buildComparisonPanel(tests) {
     const tabs = ["thrust", "pressure", "metrics"];
-    const selectedTestId = state.selectedTestId || "all";
+    const vm = state.comparisonViewMode;
     return `
       <section class="section" id="comparison">
         <div class="section-heading">
@@ -459,12 +528,15 @@
                 <button type="button" data-comparison-mode="absolute" aria-pressed="${state.comparisonMode === "absolute"}">${copy("common.directView")}</button>
                 <button type="button" data-comparison-mode="aligned" aria-pressed="${state.comparisonMode === "aligned"}">${copy("common.alignedView")}</button>
               </div>
-              <div class="highlight-toggle" aria-label="${copy("common.highlightRun")}">
-                <button type="button" data-highlight-test="all" aria-pressed="${selectedTestId === "all"}">${copy("common.allRunsBackground")}</button>
-                ${tests.map((test) => `<button type="button" data-highlight-test="${test.id}" aria-pressed="${selectedTestId === test.id}">${test.date}</button>`).join("")}
+              <div class="view-mode-toggle" aria-label="${state.lang === "ko" ? "보기 모드" : "View mode"}">
+                <button type="button" data-view-mode="overview" aria-pressed="${vm === "overview"}">${copy("common.viewOverview")}</button>
+                <button type="button" data-view-mode="focus" aria-pressed="${vm === "focus"}">${copy("common.viewFocus")}</button>
+                <button type="button" data-view-mode="single" aria-pressed="${vm === "single"}">${copy("common.viewSingle")}</button>
               </div>
             </div>
           </div>
+          <div id="cmp-run-picker-row" ${vm !== "focus" ? "hidden" : ""}>${buildRunPickerHTML(tests)}</div>
+          <div id="cmp-single-row" ${vm !== "single" ? "hidden" : ""}>${buildSingleSelectHTML(tests)}</div>
           ${tabs.map((tab) => `
             <div class="tabpanel" id="cmp-panel-${tab}" role="tabpanel" aria-labelledby="cmp-tab-${tab}" ${state.comparisonTab === tab ? "" : "hidden"}>
               <div class="chart-header">
@@ -833,6 +905,64 @@
     bindTablistKeyboard();
   }
 
+  function refreshRunPickerRow(tests) {
+    const row = document.getElementById("cmp-run-picker-row");
+    if (row) row.innerHTML = buildRunPickerHTML(tests);
+    bindRunPickerControls(tests);
+  }
+
+  function bindRunPickerControls(tests) {
+    const addBtn = document.getElementById("run-picker-add-btn");
+    const dropdown = document.getElementById("run-picker-dropdown");
+
+    if (addBtn && dropdown) {
+      addBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdown.hidden = !dropdown.hidden;
+      });
+      document.addEventListener("click", function closeDropdown(e) {
+        if (!dropdown.contains(e.target) && e.target !== addBtn) {
+          dropdown.hidden = true;
+          document.removeEventListener("click", closeDropdown);
+        }
+      });
+      dropdown.querySelectorAll("[data-add-run]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.addRun;
+          if (state.selectedTestIds.indexOf(id) === -1 && state.selectedTestIds.length < MAX_FOCUS_RUNS) {
+            state.selectedTestIds = [...state.selectedTestIds, id];
+          }
+          dropdown.hidden = true;
+          refreshRunPickerRow(tests);
+          updateComparison();
+        });
+      });
+    }
+    document.querySelectorAll("[data-remove-run]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        state.selectedTestIds = state.selectedTestIds.filter((id) => id !== btn.dataset.removeRun);
+        refreshRunPickerRow(tests);
+        updateComparison();
+      });
+    });
+    const resetBtn = document.querySelector("[data-reset-runs]");
+    if (resetBtn) {
+      resetBtn.addEventListener("click", () => {
+        state.selectedTestIds = tests.slice(0, MAX_FOCUS_RUNS).map((t) => t.id);
+        refreshRunPickerRow(tests);
+        updateComparison();
+      });
+    }
+    const clearBtn = document.querySelector("[data-clear-runs]");
+    if (clearBtn) {
+      clearBtn.addEventListener("click", () => {
+        state.selectedTestIds = [];
+        refreshRunPickerRow(tests);
+        updateComparison();
+      });
+    }
+  }
+
   function bindHomeControls() {
     document.querySelectorAll("[data-chart-tab]").forEach((button) => {
       button.addEventListener("click", () => { switchChartTab("cmp", button.dataset.chartTab); updateComparison(); });
@@ -841,19 +971,30 @@
       button.addEventListener("click", () => {
         state.comparisonMode = button.dataset.comparisonMode;
         document.querySelectorAll("[data-comparison-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.comparisonMode === state.comparisonMode)));
-        document.querySelectorAll(".chart-header__note").forEach(() => {});
         const note = document.querySelector(`#cmp-panel-${state.comparisonTab} .chart-header__note`);
         if (note) note.textContent = state.comparisonTab === "metrics" ? copy("common.metricsScaleNote") : (state.comparisonMode === "aligned" ? copy("common.alignmentNote") : copy("common.absoluteNote"));
         updateComparison();
       });
     });
-    document.querySelectorAll("[data-highlight-test]").forEach((button) => {
+    document.querySelectorAll("[data-view-mode]").forEach((button) => {
       button.addEventListener("click", () => {
-        state.selectedTestId = button.dataset.highlightTest;
-        document.querySelectorAll("[data-highlight-test]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.highlightTest === state.selectedTestId)));
+        state.comparisonViewMode = button.dataset.viewMode;
+        document.querySelectorAll("[data-view-mode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.viewMode === state.comparisonViewMode)));
+        const pickerRow = document.getElementById("cmp-run-picker-row");
+        const singleRow = document.getElementById("cmp-single-row");
+        if (pickerRow) pickerRow.hidden = state.comparisonViewMode !== "focus";
+        if (singleRow) singleRow.hidden = state.comparisonViewMode !== "single";
         updateComparison();
       });
     });
+    const singleSelect = document.getElementById("single-run-select");
+    if (singleSelect) {
+      singleSelect.addEventListener("change", () => {
+        state.selectedTestId = singleSelect.value;
+        updateComparison();
+      });
+    }
+    bindRunPickerControls(catalog.tests);
     const sortInput = document.getElementById("archive-sort");
     if (sortInput) {
       sortInput.addEventListener("change", (event) => {
@@ -913,6 +1054,8 @@
     try {
       catalog = await fetchJson(resolvePath("tests/index.json"));
       await preloadData();
+      state.selectedTestIds = catalog.tests.slice(0, MAX_FOCUS_RUNS).map((t) => t.id);
+      if (catalog.tests.length > 0) state.selectedTestId = catalog.tests[0].id;
       rerender();
     } catch (error) {
       console.error(error);

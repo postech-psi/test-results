@@ -26,8 +26,8 @@
   };
 
   var PALETTE = {
-    dark: ["#5f9fd6", "#c23a72", "#64b887", "#cda14a", "#9aa8b7"],
-    light: ["#124f85", "#a61955", "#2f7d52", "#9a6a16", "#566b7f"]
+    dark:  ["#5f9fd6", "#c23a72", "#64b887", "#cda14a", "#9aa8b7", "#b07ada", "#e08060"],
+    light: ["#124f85", "#a61955", "#2f7d52", "#9a6a16", "#566b7f", "#7b42b8", "#c45a28"]
   };
 
   function tokens(theme) { return TOKENS[theme] || TOKENS.dark; }
@@ -210,51 +210,95 @@
   }
 
   /* Comparison chart: multiple runs, one measurement (thrust|pressure).
-     params: { theme, xLabel, yLabel, xUnit, yUnit, yDigits, labels, runs:[{id,name,color,data,ignitionX,burnEndX,peak}], highlightId } */
+     params.viewMode: "overview" | "focus" | "single"
+     params.selectedIds: string[] (focus mode — which runs to show)
+     params.highlightId: string | "all" (single mode) */
   function comparisonOption(params) {
     var t = tokens(params.theme);
     var opt = baseOption(params);
-    var hasHighlight = params.highlightId && params.highlightId !== "all";
-    var axisRuns = visibleRuns(params, hasHighlight);
-    var extent = niceExtent(axisRuns.reduce(function (acc, run) { return acc.concat(run.data || []); }, []));
-    if (extent) {
-      opt.yAxis.min = extent.min;
-      opt.yAxis.max = extent.max;
+    var viewMode = params.viewMode || "single";
+    opt.tooltip.formatter = tooltipFormatter(params.xUnit, params.yUnit, params.yDigits);
+
+    /* ---- Overview: all runs, hover-reveal, no permanent labels ---- */
+    if (viewMode === "overview") {
+      var allData = params.runs.reduce(function (acc, r) { return acc.concat(r.data || []); }, []);
+      var ext = niceExtent(allData);
+      if (ext) { opt.yAxis.min = ext.min; opt.yAxis.max = ext.max; }
+      opt.legend = { show: false };
+      opt.series = params.runs.map(function (run) {
+        return {
+          name: run.name,
+          type: "line",
+          showSymbol: false,
+          smooth: 0.12,
+          sampling: "lttb",
+          lineStyle: { color: run.color, width: 1.4 },
+          itemStyle: { color: run.color },
+          emphasis: { focus: "series", blurScope: "global", lineStyle: { width: 3, opacity: 1 } },
+          blur: { lineStyle: { opacity: 0.18 } },
+          markLine: markLineData(run, params.labels, false, run.color, t),
+          markPoint: markPointData(run, params.labels, false, run.color, t),
+          data: run.data
+        };
+      });
+      return opt;
     }
 
-    opt.tooltip.formatter = tooltipFormatter(params.xUnit, params.yUnit, params.yDigits);
+    /* ---- Focus: selected runs only, per-count label strategy ---- */
+    if (viewMode === "focus") {
+      var sel = params.selectedIds || [];
+      var focused = params.runs.filter(function (r) { return sel.indexOf(r.id) !== -1; });
+      var n = focused.length;
+      var showML = n <= 2;
+      var showMP = n <= 4;
+      var focusData = focused.reduce(function (acc, r) { return acc.concat(r.data || []); }, []);
+      var ext2 = niceExtent(focusData);
+      if (ext2) { opt.yAxis.min = ext2.min; opt.yAxis.max = ext2.max; }
+      opt.legend = {
+        type: "scroll", top: 8, left: "center", icon: "roundRect",
+        itemWidth: 18, itemHeight: 4,
+        textStyle: { color: t.inkSoft, fontFamily: FONT_MONO, fontSize: 11 },
+        inactiveColor: t.inkMuted,
+        data: focused.map(function (r) { return r.name; })
+      };
+      opt.series = focused.map(function (run) {
+        return {
+          name: run.name, type: "line", showSymbol: false, smooth: 0.12, sampling: "lttb",
+          lineStyle: { color: run.color, width: 2.2 },
+          itemStyle: { color: run.color },
+          emphasis: { focus: "series", lineStyle: { width: 3 } },
+          areaStyle: n === 1 ? { color: areaGradient(run.color) } : undefined,
+          markLine: markLineData(run, params.labels, showML, run.color, t),
+          markPoint: markPointData(run, params.labels, showMP, run.color, t),
+          data: run.data
+        };
+      });
+      return opt;
+    }
+
+    /* ---- Single: one run highlighted, rest faded ---- */
+    var hasHighlight = params.highlightId && params.highlightId !== "all";
+    var axisRuns = visibleRuns(params, hasHighlight);
+    var ext3 = niceExtent(axisRuns.reduce(function (acc, r) { return acc.concat(r.data || []); }, []));
+    if (ext3) { opt.yAxis.min = ext3.min; opt.yAxis.max = ext3.max; }
     opt.legend = {
-      type: "scroll",
-      top: 8,
-      left: "center",
-      icon: "roundRect",
-      itemWidth: 18,
-      itemHeight: 4,
+      type: "scroll", top: 8, left: "center", icon: "roundRect",
+      itemWidth: 18, itemHeight: 4,
       textStyle: { color: t.inkSoft, fontFamily: FONT_MONO, fontSize: 11 },
       inactiveColor: t.inkMuted,
       data: params.runs.map(function (r) { return r.name; })
     };
-
     opt.series = params.runs.map(function (run) {
       var active = !hasHighlight || run.id === params.highlightId;
       var showLabel = hasHighlight && run.id === params.highlightId;
       return {
-        name: run.name,
-        type: "line",
-        showSymbol: false,
-        smooth: 0.12,
-        sampling: "lttb",
+        name: run.name, type: "line", showSymbol: false, smooth: 0.12, sampling: "lttb",
         z: active ? 5 : 2,
-        lineStyle: {
-          color: run.color,
-          width: active ? 2.6 : 1.4,
-          opacity: active ? 1 : 0.42
-        },
+        lineStyle: { color: run.color, width: active ? 2.6 : 1.4, opacity: active ? 1 : 0.42 },
         itemStyle: { color: run.color },
         emphasis: { focus: "series", lineStyle: { width: 3 } },
-        areaStyle: (active && (showLabel || !hasHighlight && params.runs.length === 1))
-          ? { color: areaGradient(run.color) }
-          : (showLabel ? { color: areaGradient(run.color) } : undefined),
+        areaStyle: (showLabel || (!hasHighlight && params.runs.length === 1))
+          ? { color: areaGradient(run.color) } : undefined,
         markLine: markLineData(run, params.labels, showLabel, run.color, t),
         markPoint: markPointData(run, params.labels, showLabel, run.color, t),
         data: run.data
