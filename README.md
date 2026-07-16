@@ -8,6 +8,10 @@ Website: [https://postech-psi.github.io/test-results/](https://postech-psi.githu
 
 ## 시험 데이터
 
+- 7월 16일 연소 시험
+  - Markdown: [https://github.com/postech-psi/test-results/blob/main/tests/2026-07-16/index.md](https://github.com/postech-psi/test-results/blob/main/tests/2026-07-16/index.md)
+  - 웹페이지: [https://postech-psi.github.io/test-results/tests/2026-07-16/index.html](https://postech-psi.github.io/test-results/tests/2026-07-16/index.html)
+
 - 5월 28일 연소 시험
   - Markdown: [https://github.com/postech-psi/test-results/blob/main/tests/2026-05-28/index.md](https://github.com/postech-psi/test-results/blob/main/tests/2026-05-28/index.md)
   - 웹페이지: [https://postech-psi.github.io/test-results/tests/2026-05-28/index.html](https://postech-psi.github.io/test-results/tests/2026-05-28/index.html)
