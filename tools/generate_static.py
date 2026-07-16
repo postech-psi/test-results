@@ -199,6 +199,16 @@ def build_detail(data, test):
         for fig in test["artifacts"]["figures"]
     ])
 
+    issue_items = en(test.get("issues", {}))
+    issues_card = ""
+    if issue_items:
+        issue_lines = "\n".join(f"          <p>{esc(item)}</p>" for item in issue_items)
+        issues_card = f"""
+        <article class="fallback-card">
+          <h3>Issues</h3>
+{issue_lines}
+        </article>"""
+
     body = f"""{head(en(meta['title']), en(meta['description']), '../../assets/site.css')}
 {brand_header('../..', en(data["site"]["name"]), '<a href="../../index.html">All results</a>')}
 
@@ -224,7 +234,7 @@ def build_detail(data, test):
         <article class="fallback-card">
           <h3>Reference figures</h3>
 {figures}
-        </article>
+        </article>{issues_card}
       </div>
       <noscript><div class="empty-state" style="margin-top:18px;">JavaScript is disabled. The summary and file links remain available.</div></noscript>
     </section>

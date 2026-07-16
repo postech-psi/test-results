@@ -55,7 +55,8 @@
         chartsTitle: "재구성 신호", chartsLead: "",
         methodsTitle: "시험 조건과 처리", methodsLead: "",
         artifactsLead: "",
-        filesTitle: "자료 파일", filesLead: ""
+        filesTitle: "자료 파일", filesLead: "",
+        issuesTitle: "확인사항"
       },
       labels: {
         ignition: "점화", burnEnd: "연소 종료", peak: "피크",
@@ -106,7 +107,8 @@
         chartsTitle: "Signals", chartsLead: "",
         methodsTitle: "Methods", methodsLead: "",
         artifactsLead: "",
-        filesTitle: "Result files", filesLead: ""
+        filesTitle: "Result files", filesLead: "",
+        issuesTitle: "Issues"
       },
       labels: {
         ignition: "Ignition", burnEnd: "Burn End", peak: "Peak",
@@ -1030,6 +1032,7 @@
             <div class="detail-stack">
               <article class="panel"><div class="subsection-title">${copy("common.methodology")}</div>${renderDetailTables(test.processing)}</article>
               <article class="panel"><div class="subsection-title">${copy("common.calibration")}</div>${renderDetailTables(test.calibration)}</article>
+              ${test.issues && localize(test.issues).length ? `<article class="panel"><div class="subsection-title">${copy("detail.issuesTitle")}</div><ul>${localize(test.issues).map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul></article>` : ""}
             </div>
             <div class="detail-stack">
               <article class="panel">

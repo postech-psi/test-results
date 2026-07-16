@@ -64,6 +64,16 @@
           "Peak pressure reached 38.018 bar at 4.406 s."
         ]
       },
+      "issues": {
+        "ko": [
+          "압력 채널: 최대 압력(38.018 bar, 4.406 s) 직후 raw 값이 1개 샘플(3.125 ms) 만에 47.7→7.6 bar로 급락. 연소 종료(6.45 s) 이후 baseline로 복귀하지 않고 8~14초 구간에서 26.9 bar까지 재상승(같은 구간 로드셀은 0 N 부근).",
+          "로드셀 채널: rise time 194 ms로 이전 시험(597–634 ms) 대비 짧음."
+        ],
+        "en": [
+          "Pressure channel: raw value drops from 47.7 to 7.6 bar in a single 3.125 ms sample right after the reported peak (38.018 bar at 4.406 s). It never returns to baseline after burnout (6.45 s) and re-rises to 26.9 bar between 8-14 s while the loadcell sits near 0 N.",
+          "Loadcell channel: 194 ms rise time, much faster than the previous two tests (597-634 ms)."
+        ]
+      },
       "metrics": {
         "ignitionDelayMs": {
           "value": 4118.8,
