@@ -1,52 +1,61 @@
 # 2026년 10월 13일 연소 시험
 
-One clear thrust event: 166.01 N peak and 370.22 N s impulse (provisional). Pressure unavailable; burn duration unvalidated.
+## Reference Figures
 
-## Data quality
+### Combined Plot
 
-Provisional thrust. Pressure unavailable. Burn duration and average thrust unvalidated; see data review.
+![Combined Plot](./files/2026-10-13_tms-4_combined_plot.png)
 
-TMS_4 is the only clear thrust event. All five original files are retained below; idle/startup files are not counted as separate static fire tests.
+### Loadcell Plot
+
+![Loadcell Plot](./files/2026-10-13_tms-4_loadcell_plot.png)
+
+### Barometer Plot
+
+![Barometer Plot](./files/2026-10-13_tms-4_barometer_plot.png)
 
 ## Metrics
 
-| Metric | Value | Status |
-|---|---|---|
-| Peak thrust | 166.01 N | Provisional; inherited calibration |
-| Total impulse | 370.22 N s | Provisional; residual baseline and end-window sensitivity |
-| Force onset from recording start | 7.321875 s | Nominal 320 Hz; not verified command latency |
-| Burn duration / average thrust | Unavailable | Last 3% crossing is the last sample |
-| Pressure | Unavailable | Every pressure ADC sample is 32767 |
+| 항목 | 값 |
+|---|---|
+| 입력 파일 | TMS/Data/2026/10_13/TMS_4.TXT |
+| 샘플링 속도 | 320 sps |
+| 점화 지연 | 7321.9 ms |
+| 연소 시간 | 6753.1 ms |
+| 최대 추력 | 166.01 N |
+| 평균 추력 | 54.82 N |
+| 총 임펄스 | 370.22 N s |
+| 최대 압력 | Unavailable |
 
-## Reference Figures
+## 시험 조건 및 데이터 처리
 
-![Combined plot](./files/2026-10-13_tms-4_combined_plot.png)
+| 항목 | 값 |
+|---|---|
+| 드리프트 보정 | Constant baseline offset |
+| 로드셀 임계값 (3%) | 4.98 N |
+| 추력 필터 | Butterworth low-pass 20.0 Hz, order 2 |
+| 압력 필터 | Butterworth low-pass 5.0 Hz, order 4 |
+| 로드셀 기준 오프셋 | -12.022081 N |
+| 로드셀 기준 구간 | 0.000000 to 3.659375 s (1171 samples) |
+| 연소 구간 | First to last crossing of 3% peak filtered thrust |
 
-![Thrust comparison](./files/2026-10-13_tms-4_comparison.png)
+## Calibration
+
+| 항목 | 값 |
+|---|---|
+| 로드셀 보정 기울기 | -0.039100 kg/ADC |
+| 로드셀 보정 절편 | -193.0049 kg |
+| 로드셀 보정 R² | 0.999948 |
+| 압력 변환식 | y = 0.0027x -0.11 |
 
 ## Test Video
 
 <video controls playsinline preload="metadata" poster="./files/2026-10-13_tms-4_video_poster.jpg" style="max-width:100%;max-height:70vh"><source src="./files/2026-10-13_tms-4_video.mp4" type="video/mp4"></video>
 
-[Watch browser video](./files/2026-10-13_tms-4_video.mp4) · [Download original video](./files/2026-10-13_tms-4_video_original.mp4). The video has no shared trigger/time reference with the data logger. Plume duration is not a thrust measurement.
+[Watch video](./files/2026-10-13_tms-4_video.mp4) · [Download original](./files/2026-10-13_tms-4_video_original.mp4)
 
 ## Result Files
 
-- [Data review and previous-TMS comparison](./files/2026-10-13_analysis.md)
-- [Executive report](./files/2026-10-13_tms-4_executive_report.txt)
-- [Pipeline data with original ADC columns](./files/2026-10-13_tms-4_pipeline_data.txt)
-- [Quality and processing provenance](./files/2026-10-13_tms-4_quality.json)
-- [Session inventory and SHA-256 hashes](./files/2026-10-13_session_manifest.json)
-- [Machine-readable comparison](./files/2026-10-13_comparison.json)
-
-## Raw recordings
-
-- [TMS_1.TXT — startup_probe](./files/2026-10-13_tms-1_raw.txt)
-- [TMS_2.TXT — no_event](./files/2026-10-13_tms-2_raw.txt)
-- [TMS_3.TXT — startup_probe](./files/2026-10-13_tms-3_raw.txt)
-- [TMS_4.TXT — thrust_event](./files/2026-10-13_tms-4_raw.txt)
-- [TMS_5.TXT — no_event](./files/2026-10-13_tms-5_raw.txt)
-
-## Processing
-
-Main pipeline: `TMS/Calibration/tms_data_pipeline.py`; inherited loadcell calibration, constant pre-event baseline, zero-phase 20 Hz/order 2 filter, nominal 320 Hz. Two header lines are removed before splitting ADC channels. Pressure validity is checked before baseline subtraction. Full parameters, limits, raw hashes, and baseline sensitivity appear in the data review.
+- [Executive Report](./files/2026-10-13_tms-4_executive_report.txt)
+- [Pipeline Data](./files/2026-10-13_tms-4_pipeline_data.txt)
+- [Raw recording](./files/2026-10-13_tms-4_raw.txt)

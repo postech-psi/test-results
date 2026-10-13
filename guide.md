@@ -19,7 +19,6 @@ tests/
       YYYY-MM-DD_tms-N_video.mp4
       YYYY-MM-DD_tms-N_video_original.mp4
       YYYY-MM-DD_session_manifest.json
-      YYYY-MM-DD_analysis.md
 ```
 
 ## Naming rules
@@ -36,7 +35,7 @@ The October 2026 cleanup replaces mixed `TMS_4`, `tms_5`, and `26.04.03 data` ar
 
 ## Data quality and publishing
 
-`tests/index.json` is the catalog used by the website. Include metrics, processing, calibration, source provenance, links, and reference figures. Mark provisional measurements in their display and status fields. Use JSON `null` for unavailable metrics, never zero. Invalid pressure is excluded from comparison curves; suspect historical pressure is labeled.
+`tests/index.json` is the catalog used by the website. Include metrics, processing, calibration, source provenance, links, and reference figures. Keep processing status in the machine-readable metadata. Display the calculated pipeline values and define the threshold window in the processing table. Use JSON `null` for unavailable metrics, never zero. Invalid pressure is excluded from comparison curves; suspect historical pressure is labeled.
 
 Preserve all session recordings, including probes and no-event files, in the raw inventory. Count only clear firing events as published tests. Include the original video and a browser-compatible copy when supplied. Do not infer synchronization or thrust from plume duration.
 

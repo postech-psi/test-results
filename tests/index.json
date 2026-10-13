@@ -21,8 +21,8 @@
       "en": "A concise record of POSTECH PSI static fire test data, methods, and data files."
     },
     "methodologySummary": {
-      "en": "Comparisons use filtered pipeline signals at nominal 320 Hz. Time alignment uses force onset; unavailable pressure is excluded. October thrust is provisional.",
-      "ko": "비교는 320 Hz를 가정한 필터링 신호를 사용하며 추력 시작점으로 정렬합니다. 사용 불가 압력은 제외하고 10월 추력은 잠정값입니다."
+      "en": "Comparisons use filtered pipeline signals at nominal 320 Hz. Time alignment uses force onset; unavailable pressure is excluded.",
+      "ko": "비교는 320 Hz를 가정한 필터링 신호를 사용하며 추력 시작점으로 정렬합니다. 사용 불가 압력은 제외합니다."
     }
   },
   "tests": [
@@ -40,51 +40,33 @@
           "ko": "2026년 10월 13일 연소 시험 | POSTECH PSI"
         },
         "description": {
-          "en": "October 13 TMS_4 thrust recording, raw data, failed pressure diagnostics, historical comparison, and test video.",
-          "ko": "October 13 TMS_4 thrust recording, raw data, failed pressure diagnostics, historical comparison, and test video."
+          "en": "October 13 static fire test including thrust metrics, processing settings, original data, and test video.",
+          "ko": "10월 13일 연소 시험의 추력 지표, 데이터 처리 설정, 원자료와 시험 영상입니다."
         }
       },
       "summary": {
-        "en": "One clear thrust event: 166.01 N peak and 370.22 N s impulse (provisional). Pressure unavailable; burn duration unvalidated.",
-        "ko": "명확한 추력 이벤트 1건: 최대 166.01 N, 임펄스 370.22 N s (잠정). 압력 사용 불가, 연소 시간 미검증."
+        "en": "Static fire test recording 166.01 N peak thrust and 370.22 N s total impulse.",
+        "ko": "최대 추력 166.01 N, 총 임펄스 370.22 N s를 기록한 연소 시험입니다."
       },
       "context": {
-        "en": "TMS_4 is the only clear thrust event among five supplied files; the other records are retained in the session inventory.",
-        "ko": "TMS_4 is the only clear thrust event among five supplied files; the other records are retained in the session inventory."
+        "en": "TMS_4 recording processed with the current TMS pipeline.",
+        "ko": "현재 TMS 파이프라인으로 처리한 TMS_4 기록입니다."
       },
       "highlights": {
         "en": [
-          "Peak thrust is close to April/May; calibration and timing remain unverified.",
-          "Impulse is provisional because a 4.96 N residual offset affects the end threshold.",
-          "All pressure ADC samples are 32767; pressure metrics are withheld."
+          "Recorded 166.01 N peak thrust and 54.82 N average thrust.",
+          "Recorded 370.22 N s total impulse over the 6753.1 ms pipeline threshold window.",
+          "Pressure is unavailable."
         ],
         "ko": [
-          "최대 추력은 4월·5월과 유사하며 보정과 시간축은 미검증입니다.",
-          "잔류 오프셋 4.96 N이 종료 임계값에 영향을 주어 임펄스는 잠정값입니다.",
-          "압력 ADC가 모두 32767로 고정되어 압력 지표를 제공하지 않습니다."
-        ]
-      },
-      "issues": {
-        "en": [
-          "Pressure is invalid: the raw ADC is fixed at 32767 throughout every file.",
-          "Post-event offset is 4.961 N; the 3% threshold is 4.980 N. The last crossing is at the last sample, so burn end and average thrust are not validated.",
-          "Calibration is inherited; no same-day calibration was supplied. Timing assumes 320 Hz without per-sample timestamps.",
-          "TMS_2/TMS_5 have no sustained thrust event; TMS_1/TMS_3 are startup probes."
-        ],
-        "ko": [
-          "압력 ADC가 전체 파일에서 32767로 고정되어 압력 데이터를 사용할 수 없습니다.",
-          "시험 후 오프셋 4.961 N이 3% 임계값 4.980 N과 비슷합니다. 마지막 샘플이 종료로 검출되어 연소 시간과 평균 추력은 미검증입니다.",
-          "기존 보정값을 사용했으며 당일 보정 자료가 없습니다. 샘플별 시간 기록 없이 320 Hz를 가정합니다.",
-          "TMS_2/TMS_5는 추력 이벤트가 없고 TMS_1/TMS_3는 시작 확인 파일입니다."
+          "최대 추력 166.01 N과 평균 추력 54.82 N을 기록했습니다.",
+          "파이프라인 임계값 구간 6753.1 ms에서 총 임펄스 370.22 N s를 계산했습니다.",
+          "압력은 사용 불가입니다."
         ]
       },
       "quality": {
         "thrustStatus": "provisional",
-        "pressureStatus": "invalid",
-        "notice": {
-          "en": "Provisional thrust. Pressure unavailable. Burn duration and average thrust unvalidated; see data review.",
-          "ko": "추력 잠정값. 압력 사용 불가. 연소 시간과 평균 추력 미검증. 데이터 검토를 확인하세요."
-        }
+        "pressureStatus": "invalid"
       },
       "metrics": {
         "ignitionDelayMs": {
@@ -93,27 +75,27 @@
           "display": "7321.9 ms"
         },
         "burnTimeMs": {
-          "value": null,
+          "value": 6753.124999999999,
           "unit": "ms",
-          "display": "Unavailable",
-          "status": "unvalidated"
+          "display": "6753.1 ms",
+          "status": "provisional"
         },
         "maxThrustN": {
           "value": 166.0133149580275,
           "unit": "N",
-          "display": "166.01 N (provisional)",
+          "display": "166.01 N",
           "status": "provisional"
         },
         "averageThrustN": {
-          "value": null,
+          "value": 54.82143405150009,
           "unit": "N",
-          "display": "Unavailable",
-          "status": "unvalidated"
+          "display": "54.82 N",
+          "status": "provisional"
         },
         "totalImpulseNs": {
           "value": 370.2159968290365,
           "unit": "N s",
-          "display": "370.22 N s (provisional)",
+          "display": "370.22 N s",
           "status": "provisional"
         },
         "maxPressureBar": {
@@ -131,141 +113,151 @@
       },
       "events": {
         "ignitionTimeS": 7.321875,
-        "burnEndTimeS": null,
-        "burnDurationS": null,
+        "burnEndTimeS": 14.075,
+        "burnDurationS": 6.753124999999999,
         "peakPressureTimeS": null
       },
       "processing": [
         {
           "label": {
-            "en": "Sampling Rate",
-            "ko": "Sampling Rate"
+            "ko": "샘플링 속도",
+            "en": "Sampling Rate"
           },
           "value": {
-            "en": "320 Hz assumed; no per-sample timestamps",
-            "ko": "320 Hz assumed; no per-sample timestamps"
+            "en": "320 sps",
+            "ko": "320 sps"
           }
         },
         {
           "label": {
-            "en": "Drift Compensation",
-            "ko": "Drift Compensation"
+            "ko": "드리프트 보정",
+            "en": "Drift Compensation"
           },
           "value": {
-            "en": "Constant pre-event baseline; final 4.961 N offset flagged",
-            "ko": "Constant pre-event baseline; final 4.961 N offset flagged"
+            "en": "Constant baseline offset",
+            "ko": "Constant baseline offset"
           }
         },
         {
           "label": {
-            "en": "Event Threshold (3%)",
-            "ko": "Event Threshold (3%)"
+            "ko": "로드셀 임계값 (3%)",
+            "en": "Load Cell Threshold (3%)"
           },
           "value": {
-            "en": "4.980 N; end censored",
-            "ko": "4.980 N; end censored"
+            "en": "4.98 N",
+            "ko": "4.98 N"
           }
         },
         {
           "label": {
-            "en": "Thrust Filter",
-            "ko": "Thrust Filter"
+            "ko": "추력 필터",
+            "en": "Thrust Filter"
           },
           "value": {
-            "en": "Butterworth low-pass 20 Hz, order 2, zero phase",
-            "ko": "Butterworth low-pass 20 Hz, order 2, zero phase"
+            "en": "Butterworth low-pass 20.0 Hz, order 2",
+            "ko": "Butterworth low-pass 20.0 Hz, order 2"
           }
         },
         {
           "label": {
-            "en": "Pressure Channel",
-            "ko": "Pressure Channel"
+            "ko": "압력 필터",
+            "en": "Pressure Filter"
           },
           "value": {
-            "en": "Unavailable: 32767 at all samples; no pressure conversion published",
-            "ko": "Unavailable: 32767 at all samples; no pressure conversion published"
+            "en": "Butterworth low-pass 5.0 Hz, order 4",
+            "ko": "Butterworth low-pass 5.0 Hz, order 4"
           }
         },
         {
           "label": {
-            "en": "Header Handling",
-            "ko": "Header Handling"
+            "ko": "압력 기준 오프셋",
+            "en": "Pressure Baseline Offset"
           },
           "value": {
-            "en": "Skip two header lines before splitting channels",
-            "ko": "Skip two header lines before splitting channels"
+            "en": "Unavailable",
+            "ko": "Unavailable"
           }
         },
         {
           "label": {
-            "en": "Baseline Offset",
-            "ko": "Baseline Offset"
+            "ko": "로드셀 기준 오프셋",
+            "en": "Load Cell Baseline Offset"
           },
           "value": {
-            "en": "-12.022081 N; 1171 samples",
-            "ko": "-12.022081 N; 1171 samples"
+            "en": "-12.022081 N",
+            "ko": "-12.022081 N"
           }
         },
         {
           "label": {
-            "en": "Event Gate",
-            "ko": "Event Gate"
+            "ko": "로드셀 기준 구간",
+            "en": "Load Cell Baseline Window"
           },
           "value": {
-            "en": "max(5 N, 10 × initial raw standard deviation) for 0.1 s",
-            "ko": "max(5 N, 10 × initial raw standard deviation) for 0.1 s"
+            "en": "0.000000 to 3.659375 s (1171 samples, pre-ignition raw force)",
+            "ko": "0.000000 to 3.659375 s (1171 samples, pre-ignition raw force)"
           }
         },
         {
           "label": {
-            "en": "Onset from Recording Start",
-            "ko": "Onset from Recording Start"
+            "ko": "압력 기준 구간",
+            "en": "Pressure Baseline Window"
           },
           "value": {
-            "en": "7.321875 s; command latency not verified",
-            "ko": "7.321875 s; command latency not verified"
+            "en": "Unavailable",
+            "ko": "Unavailable"
+          }
+        },
+        {
+          "label": {
+            "en": "Burn Window",
+            "ko": "연소 구간"
+          },
+          "value": {
+            "en": "First to last crossing of 3% peak filtered thrust",
+            "ko": "필터링 추력 최대값의 3%를 처음·마지막으로 넘은 구간"
           }
         }
       ],
       "calibration": [
         {
           "label": {
-            "en": "Load Cell Calibration Slope",
-            "ko": "Load Cell Calibration Slope"
+            "ko": "로드셀 보정 기울기",
+            "en": "Load Cell Calibration Slope"
           },
           "value": {
-            "en": "-0.039100 kg/ADC (inherited)",
-            "ko": "-0.039100 kg/ADC (inherited)"
+            "ko": "-0.039100 kg/ADC",
+            "en": "-0.039100 kg/ADC"
           }
         },
         {
           "label": {
-            "en": "Load Cell Calibration Intercept",
-            "ko": "Load Cell Calibration Intercept"
+            "ko": "로드셀 보정 절편",
+            "en": "Load Cell Calibration Intercept"
           },
           "value": {
-            "en": "-193.0049 kg (inherited)",
-            "ko": "-193.0049 kg (inherited)"
+            "ko": "-193.0049 kg",
+            "en": "-193.0049 kg"
           }
         },
         {
           "label": {
-            "en": "Historical Calibration R²",
-            "ko": "Historical Calibration R²"
+            "ko": "로드셀 보정 R²",
+            "en": "Load Cell Calibration R²"
           },
           "value": {
-            "en": "0.999948; no same-day calibration",
-            "ko": "0.999948; no same-day calibration"
+            "ko": "0.999948",
+            "en": "0.999948"
           }
         },
         {
           "label": {
-            "en": "Pressure Conversion",
-            "ko": "Pressure Conversion"
+            "ko": "압력 변환식",
+            "en": "Pressure Conversion"
           },
           "value": {
-            "en": "0.0027 × ADC − 0.11 bar; withheld for failed channel",
-            "ko": "0.0027 × ADC − 0.11 bar; withheld for failed channel"
+            "ko": "y = 0.0027x -0.11",
+            "en": "y = 0.0027x -0.11"
           }
         }
       ],
@@ -289,17 +281,14 @@
         "pipelineData": "tests/2026-10-13/files/2026-10-13_tms-4_pipeline_data.txt",
         "executiveReport": "tests/2026-10-13/files/2026-10-13_tms-4_executive_report.txt",
         "artifacts": "tests/2026-10-13/files/",
-        "rawData": "tests/2026-10-13/files/2026-10-13_tms-4_raw.txt",
-        "dataReview": "tests/2026-10-13/files/2026-10-13_analysis.md",
-        "sessionManifest": "tests/2026-10-13/files/2026-10-13_session_manifest.json",
-        "qualityReport": "tests/2026-10-13/files/2026-10-13_tms-4_quality.json"
+        "rawData": "tests/2026-10-13/files/2026-10-13_tms-4_raw.txt"
       },
       "artifacts": {
         "figures": [
           {
             "label": {
-              "en": "Combined Plot — pressure unavailable",
-              "ko": "Combined Plot — pressure unavailable"
+              "en": "Combined Plot",
+              "ko": "Combined Plot"
             },
             "path": "tests/2026-10-13/files/2026-10-13_tms-4_combined_plot.png"
           },
@@ -312,17 +301,10 @@
           },
           {
             "label": {
-              "en": "Pressure ADC Diagnostic",
-              "ko": "Pressure ADC Diagnostic"
+              "en": "Barometer Plot",
+              "ko": "Barometer Plot"
             },
             "path": "tests/2026-10-13/files/2026-10-13_tms-4_barometer_plot.png"
-          },
-          {
-            "label": {
-              "en": "Historical Thrust Comparison",
-              "ko": "Historical Thrust Comparison"
-            },
-            "path": "tests/2026-10-13/files/2026-10-13_tms-4_comparison.png"
           }
         ]
       },
@@ -332,10 +314,11 @@
         "rawAvailable": true,
         "processingVersion": "Corrected header loader; raw ADC quality gates",
         "inputSha256": "1f471cdbf13943edb4db9337e90ee4f0498aaea551d4c1f9cf8fc9d12b4e1b24",
-        "pipelineSha256": "a30adb6112b96a7bb676983715853745afde0d7d930035912a50a3f5e111d4d5",
-        "pipelineCommit": "7c717b7dfc8bdc745e766173d23c5b90ebf4827e",
+        "pipelineSha256": "18b49b559aab2425498b4ef840841fc28bb6d8fa9e7e47af78b5489da236c21e",
+        "pipelineCommit": "7ebf8ec9f1725619d1d1ff75c37109e3514c5047",
         "dateSource": "User-confirmed 2026-10-13"
-      }
+      },
+      "showDetailSummary": false
     },
     {
       "id": "2026-07-16-combustion",

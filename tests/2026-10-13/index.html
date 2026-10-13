@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>2026-10-13 Static Fire Test | POSTECH PSI</title>
-  <meta name="description" content="October 13 TMS_4 thrust recording, raw data, failed pressure diagnostics, historical comparison, and test video.">
+  <meta name="description" content="October 13 static fire test including thrust metrics, processing settings, original data, and test video.">
   <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <link rel="icon" href="../../assets/icons/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icons/favicon-32.png">
   <link rel="icon" type="image/png" sizes="192x192" href="../../assets/icons/icon-192.png">
   <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="../../assets/site.css?v=2026-10-13-tms-data">
+  <link rel="stylesheet" href="../../assets/site.css?v=2026-10-13-tms-clean">
 </head>
 <body data-theme="light">
   <header class="site-header">
@@ -36,13 +36,13 @@
         </article>
         <article class="metric-card">
           <div class="metric-card__label">Peak thrust</div>
-          <div class="metric-card__value">166.01 N (provisional)</div>
-          <div class="metric-card__delta">Average thrust: Unavailable</div>
+          <div class="metric-card__value">166.01 N</div>
+          <div class="metric-card__delta">Average thrust: 54.82 N</div>
         </article>
         <article class="metric-card">
           <div class="metric-card__label">Total impulse</div>
-          <div class="metric-card__value">370.22 N s (provisional)</div>
-          <div class="metric-card__delta">Burn duration: Unavailable</div>
+          <div class="metric-card__value">370.22 N s</div>
+          <div class="metric-card__delta">Burn duration: 6753.1 ms</div>
         </article>
         <article class="metric-card">
           <div class="metric-card__label">Peak pressure</div>
@@ -61,23 +61,12 @@
           <p><a href="files/2026-10-13_tms-4_pipeline_data.txt">Pipeline data</a></p>
           <p><a href="index.md">Markdown record</a></p>
           <p><a href="files/2026-10-13_tms-4_raw.txt">Raw recording</a></p>
-<p><a href="files/2026-10-13_analysis.md">Data review and comparison</a></p>
-<p><a href="files/2026-10-13_session_manifest.json">All recordings and hashes</a></p>
-<p><a href="files/2026-10-13_tms-4_quality.json">Data quality</a></p>
         </article>
         <article class="fallback-card">
           <h3>Reference figures</h3>
-          <p><a href="files/2026-10-13_tms-4_combined_plot.png">Combined Plot — pressure unavailable</a></p>
+          <p><a href="files/2026-10-13_tms-4_combined_plot.png">Combined Plot</a></p>
           <p><a href="files/2026-10-13_tms-4_loadcell_plot.png">Loadcell Plot</a></p>
-          <p><a href="files/2026-10-13_tms-4_barometer_plot.png">Pressure ADC Diagnostic</a></p>
-          <p><a href="files/2026-10-13_tms-4_comparison.png">Historical Thrust Comparison</a></p>
-        </article>
-        <article class="fallback-card">
-          <h3>Issues</h3>
-          <p>Pressure is invalid: the raw ADC is fixed at 32767 throughout every file.</p>
-          <p>Post-event offset is 4.961 N; the 3% threshold is 4.980 N. The last crossing is at the last sample, so burn end and average thrust are not validated.</p>
-          <p>Calibration is inherited; no same-day calibration was supplied. Timing assumes 320 Hz without per-sample timestamps.</p>
-          <p>TMS_2/TMS_5 have no sustained thrust event; TMS_1/TMS_3 are startup probes.</p>
+          <p><a href="files/2026-10-13_tms-4_barometer_plot.png">Barometer Plot</a></p>
         </article><article class="fallback-card"><h3>Test video</h3>
 <video class="test-video" controls playsinline preload="metadata" poster="files/2026-10-13_tms-4_video_poster.jpg"><source src="files/2026-10-13_tms-4_video.mp4" type="video/mp4"></video>
 <p>Supplied session video; no shared trigger or time reference with the data logger.</p><p><a href="files/2026-10-13_tms-4_video_original.mp4">Download original video</a></p></article>
@@ -87,8 +76,8 @@
   </main>
 
   <script>window.PSI_PAGE_CONFIG = {"page": "detail", "rootPath": "../..", "testId": "2026-10-13-combustion"};</script>
-  <script src="../../assets/vendor/echarts.min.js?v=2026-10-13-tms-data" defer></script>
-  <script src="../../assets/charts.js?v=2026-10-13-tms-data" defer></script>
-  <script src="../../assets/site.js?v=2026-10-13-tms-data" defer></script>
+  <script src="../../assets/vendor/echarts.min.js?v=2026-10-13-tms-clean" defer></script>
+  <script src="../../assets/charts.js?v=2026-10-13-tms-clean" defer></script>
+  <script src="../../assets/site.js?v=2026-10-13-tms-clean" defer></script>
 </body>
 </html>

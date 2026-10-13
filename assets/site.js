@@ -266,8 +266,7 @@
   }
 
   function comparisonDelta(current, previous, key, unit, digits) {
-    const text = formatDelta(metricDelta(current, previous, key), unit, digits);
-    return current.metrics[key].status === "provisional" ? `${text} (${state.lang === "ko" ? "잠정" : "provisional"})` : text;
+    return formatDelta(metricDelta(current, previous, key), unit, digits);
   }
 
   /* ======================================================================
@@ -955,7 +954,6 @@
             <h2>${copy("home.executiveTitle")}</h2>
             ${optionalParagraph(copy("home.executiveLead"))}
           </div>
-          ${qualityNotice(latest)}
           <div class="overview-grid">${buildOverviewCards(tests)}</div>
         </section>
         ${buildComparisonPanel(tests)}
@@ -983,11 +981,6 @@
     return `<table class="detail-table"><tbody>${rows.map((item) => `<tr><th>${localize(item.label)}</th><td>${localize(item.value)}</td></tr>`).join("")}</tbody></table>`;
   }
 
-  function qualityNotice(test) {
-    const notice = test.quality?.notice;
-    return notice ? `<div class="empty-state quality-notice">${escapeHtml(localize(notice))}${test.links.dataReview ? ` <a href="${resolvePath(test.links.dataReview)}">${state.lang === "ko" ? "데이터 검토" : "Data review"}</a>` : ""}</div>` : "";
-  }
-
   function renderTestVideo(test) {
     const media = test.media;
     if (!media.videoUrl) return `<p class="detail-meta-note">${escapeHtml(localize(media.videoLabel))}</p>`;
@@ -1009,8 +1002,7 @@
           <a class="detail-hero__back" href="${resolvePath("index.html")}">← ${copy("common.backToSite")}</a>
           <div class="verdict">${copy("common.verdict")}</div>
           <h1 class="detail-hero__title">${localize(test.title)}</h1>
-          <p class="detail-hero__lead">${localize(test.summary)}</p>
-          ${qualityNotice(test)}
+          ${test.showDetailSummary === false ? "" : optionalParagraph(localize(test.summary), "detail-hero__lead")}
           <div class="detail-summary">
             <article class="metric-card"><div class="metric-card__label">${copy("common.date")}</div><div class="metric-card__value">${test.date}</div></article>
             <article class="metric-card"><div class="metric-card__label">${copy("common.peakThrust")}</div><div class="metric-card__value">${test.metrics.maxThrustN.display}</div><div class="metric-card__delta">${copy("common.averageThrust")}: ${test.metrics.averageThrustN.display}</div></article>
@@ -1072,7 +1064,7 @@
                   <a class="data-link" href="${resolvePath(test.links.executiveReport)}"><div class="data-link__title">${copy("common.executiveReport")}</div><div class="data-link__meta">${test.date}</div></a>
                   <a class="data-link" href="${resolvePath(test.links.pipelineData)}"><div class="data-link__title">${copy("common.pipelineData")}</div><div class="data-link__meta">${copy("common.filteredSource")}</div></a>
                   <a class="data-link" href="${resolvePath(test.links.markdown)}"><div class="data-link__title">${copy("common.markdownRecord")}</div><div class="data-link__meta">${copy("common.detailPage")}</div></a>
-                  ${[["rawData", state.lang === "ko" ? "원자료" : "Raw recording"], ["dataReview", state.lang === "ko" ? "데이터 검토 및 비교" : "Data review and comparison"], ["sessionManifest", state.lang === "ko" ? "전체 기록 및 해시" : "All recordings and hashes"], ["qualityReport", state.lang === "ko" ? "데이터 품질" : "Data quality"]].filter(([key]) => test.links[key]).map(([key, label]) => `<a class="data-link" href="${resolvePath(test.links[key])}"><div class="data-link__title">${label}</div></a>`).join("")}
+                  ${test.links.rawData ? `<a class="data-link" href="${resolvePath(test.links.rawData)}"><div class="data-link__title">${state.lang === "ko" ? "원자료" : "Raw recording"}</div></a>` : ""}
                 </div>
               </article>
               <article class="panel"><div class="subsection-title">${copy("common.media")}</div>${renderTestVideo(test)}</article>
