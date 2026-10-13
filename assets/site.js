@@ -243,7 +243,8 @@
   }
 
   function getPeakForField(rows, field) {
-    return rows.reduce((peak, row) => ((row[field] != null && row[field] > (peak[field] == null ? -Infinity : peak[field])) ? row : peak), rows[0]);
+    return rows.filter((row) => Number.isFinite(row[field]))
+      .reduce((peak, row) => (!peak || row[field] > peak[field] ? row : peak), null);
   }
 
   async function ensureSeries(test) {
@@ -260,7 +261,13 @@
 
   function metricDelta(current, previous, key) {
     if (!previous) return null;
+    if (![current.metrics[key].value, previous.metrics[key].value].every(Number.isFinite)) return null;
     return current.metrics[key].value - previous.metrics[key].value;
+  }
+
+  function comparisonDelta(current, previous, key, unit, digits) {
+    const text = formatDelta(metricDelta(current, previous, key), unit, digits);
+    return current.metrics[key].status === "provisional" ? `${text} (${state.lang === "ko" ? "잠정" : "provisional"})` : text;
   }
 
   /* ======================================================================
@@ -290,7 +297,7 @@
     const vm = state.comparisonViewMode;
     const selIds = state.selectedTestIds;
     const n = tests.length;
-    const runs = tests.map((test, index) => {
+    const runs = tests.filter((test) => tab !== "pressure" || test.quality?.pressureStatus !== "invalid").map((test, index) => {
       const derived = dataCache.get(test.id);
       const peakRow = tab === "pressure" ? derived.peakPressure : derived.peakThrust;
       const ig = test.events.ignitionTimeS;
@@ -305,12 +312,12 @@
       }
       return {
         id: test.id,
-        name: test.date,
+        name: test.date + (tab === "pressure" && test.quality?.pressureStatus === "suspect" ? " (suspect)" : ""),
         color,
         data: runData(test, field, mode),
         ignitionX: mode === "aligned" ? 0 : ig,
-        burnEndX: mode === "aligned" ? test.events.burnEndTimeS - ig : test.events.burnEndTimeS,
-        peak: { x: mode === "aligned" ? peakRow.time_s - ig : peakRow.time_s, y: peakRow[field] }
+        burnEndX: test.events.burnEndTimeS == null ? null : mode === "aligned" ? test.events.burnEndTimeS - ig : test.events.burnEndTimeS,
+        peak: peakRow ? { x: mode === "aligned" ? peakRow.time_s - ig : peakRow.time_s, y: peakRow[field] } : null
       };
     });
     return {
@@ -335,12 +342,12 @@
     const mk = (field) => derived.rows.map((r) => [r.time_s, r[field]]);
     let series, yLabel, yUnit, yDigits, peak;
     if (tab === "pressure") {
-      series = [
+      series = test.quality?.pressureStatus === "invalid" ? [] : [
         { name: labels.rawPressure, color: pal[1], dashed: true, data: mk("raw_gauge_pressure") },
         { name: labels.filteredPressure, color: pal[0], primary: true, data: mk("filtered_gauge_pressure") }
       ];
       yLabel = labels.pressureUnit; yUnit = "bar"; yDigits = 2;
-      peak = { x: derived.peakPressure.time_s, y: derived.peakPressure.filtered_gauge_pressure };
+      peak = derived.peakPressure ? { x: derived.peakPressure.time_s, y: derived.peakPressure.filtered_gauge_pressure } : null;
     } else {
       series = [
         { name: labels.rawForce, color: pal[1], dashed: true, data: mk("raw_force_N") },
@@ -645,7 +652,7 @@
       const metric = latest.metrics[card.key];
       const delta = metricDelta(latest, previous, card.key);
       const trendClass = delta == null ? "" : delta >= 0 ? "positive" : "negative";
-      const deltaText = delta == null ? "" : `${delta >= 0 ? "▲" : "▼"} ${formatDelta(delta, card.unit, card.digits)} vs ${previous.date}`;
+      const deltaText = delta == null ? "" : `${delta >= 0 ? "▲" : "▼"} ${comparisonDelta(latest, previous, card.key, card.unit, card.digits)} vs ${previous.date}`;
       return `
         <article class="metric-card">
           <div class="metric-card__label">${card.label}</div>
@@ -768,6 +775,7 @@
                 <div class="chart-canvas" id="cmp-canvas-${tab}"></div>
               </div>
               ${srTable(tests, tab)}
+              ${tab === "pressure" && tests.some((test) => test.quality?.pressureStatus === "invalid") ? `<p class="chart-source">${state.lang === "ko" ? "사용 불가 압력은 비교에서 제외됩니다. 7월 압력은 이상 신호로 표시됩니다." : "Unavailable pressure is excluded from comparison. July pressure is marked suspect."}</p>` : ""}
               <div class="chart-source">${copy("common.chartMethodNote")}</div>
             </div>`;
           }).join("")}
@@ -794,9 +802,9 @@
           <article class="mini-panel">
             <h3>${previous ? (state.lang === "ko" ? "직전 시험 대비" : "Compared with Previous Run") : copy("common.metrics")}</h3>
             <ul>
-              <li>${copy("common.peakThrust")}: ${previous ? formatDelta(metricDelta(latest, previous, "maxThrustN"), "N", 2) : copy("common.noData")}</li>
-              <li>${copy("common.totalImpulse")}: ${previous ? formatDelta(metricDelta(latest, previous, "totalImpulseNs"), "N s", 2) : copy("common.noData")}</li>
-              <li>${copy("common.burnDuration")}: ${previous ? formatDelta(metricDelta(latest, previous, "burnTimeMs"), "ms", 1) : copy("common.noData")}</li>
+              <li>${copy("common.peakThrust")}: ${previous ? comparisonDelta(latest, previous, "maxThrustN", "N", 2) : copy("common.noData")}</li>
+              <li>${copy("common.totalImpulse")}: ${previous ? comparisonDelta(latest, previous, "totalImpulseNs", "N s", 2) : copy("common.noData")}</li>
+              <li>${copy("common.burnDuration")}: ${previous ? comparisonDelta(latest, previous, "burnTimeMs", "ms", 1) : copy("common.noData")}</li>
               <li>${copy("common.sourceArtifactsNote")}</li>
             </ul>
           </article>
@@ -805,10 +813,14 @@
   }
 
   function sortedTests(tests) {
+    const compareMetric = (a, b, key) => {
+      const av = a.metrics[key].value, bv = b.metrics[key].value;
+      return av == null ? (bv == null ? 0 : 1) : bv == null ? -1 : bv - av;
+    };
     return [...tests].sort((a, b) => {
-      if (state.archiveSort === "thrust") return b.metrics.maxThrustN.value - a.metrics.maxThrustN.value;
-      if (state.archiveSort === "impulse") return b.metrics.totalImpulseNs.value - a.metrics.totalImpulseNs.value;
-      if (state.archiveSort === "pressure") return b.metrics.maxPressureBar.value - a.metrics.maxPressureBar.value;
+      if (state.archiveSort === "thrust") return compareMetric(a, b, "maxThrustN");
+      if (state.archiveSort === "impulse") return compareMetric(a, b, "totalImpulseNs");
+      if (state.archiveSort === "pressure") return compareMetric(a, b, "maxPressureBar");
       return b.date.localeCompare(a.date);
     });
   }
@@ -943,6 +955,7 @@
             <h2>${copy("home.executiveTitle")}</h2>
             ${optionalParagraph(copy("home.executiveLead"))}
           </div>
+          ${qualityNotice(latest)}
           <div class="overview-grid">${buildOverviewCards(tests)}</div>
         </section>
         ${buildComparisonPanel(tests)}
@@ -970,6 +983,21 @@
     return `<table class="detail-table"><tbody>${rows.map((item) => `<tr><th>${localize(item.label)}</th><td>${localize(item.value)}</td></tr>`).join("")}</tbody></table>`;
   }
 
+  function qualityNotice(test) {
+    const notice = test.quality?.notice;
+    return notice ? `<div class="empty-state quality-notice">${escapeHtml(localize(notice))}${test.links.dataReview ? ` <a href="${resolvePath(test.links.dataReview)}">${state.lang === "ko" ? "데이터 검토" : "Data review"}</a>` : ""}</div>` : "";
+  }
+
+  function renderTestVideo(test) {
+    const media = test.media;
+    if (!media.videoUrl) return `<p class="detail-meta-note">${escapeHtml(localize(media.videoLabel))}</p>`;
+    const url = resolvePath(media.videoUrl);
+    if (!media.videoType) return `<p><a href="${url}">${escapeHtml(localize(media.videoLabel))}</a></p>`;
+    return `<video class="test-video" controls playsinline preload="metadata" poster="${resolvePath(media.poster)}" aria-label="${escapeHtml(localize(media.videoLabel))}"><source src="${url}" type="${media.videoType}"><a href="${url}">${escapeHtml(localize(media.videoLabel))}</a></video>
+      <p class="detail-meta-note">${escapeHtml(localize(media.caption))}</p>
+      <p><a href="${url}">${state.lang === "ko" ? "영상 열기" : "Open video"}</a> · <a href="${resolvePath(media.originalVideo)}">${state.lang === "ko" ? "원본 다운로드" : "Download original"}</a></p>`;
+  }
+
   function renderDetail(test) {
     if (!test) { renderError(); return; }
     setDocumentMeta(test.meta);
@@ -982,6 +1010,7 @@
           <div class="verdict">${copy("common.verdict")}</div>
           <h1 class="detail-hero__title">${localize(test.title)}</h1>
           <p class="detail-hero__lead">${localize(test.summary)}</p>
+          ${qualityNotice(test)}
           <div class="detail-summary">
             <article class="metric-card"><div class="metric-card__label">${copy("common.date")}</div><div class="metric-card__value">${test.date}</div></article>
             <article class="metric-card"><div class="metric-card__label">${copy("common.peakThrust")}</div><div class="metric-card__value">${test.metrics.maxThrustN.display}</div><div class="metric-card__delta">${copy("common.averageThrust")}: ${test.metrics.averageThrustN.display}</div></article>
@@ -1014,7 +1043,8 @@
                   <div class="chart-header__title">${copy(`common.${tab}`)}</div>
                   <div class="chart-header__note">${copy("common.chartHint")}</div>
                 </div>
-                <div class="chart-shell">
+                ${tab === "pressure" && test.quality?.pressureStatus === "invalid" ? `<p class="empty-state">${state.lang === "ko" ? "압력 사용 불가: ADC가 32767로 고정되어 있습니다. 아래 ADC 진단 그림을 확인하세요." : "Pressure unavailable: ADC is fixed at 32767. See the ADC diagnostic figure below."}</p>` : ""}
+                <div class="chart-shell" ${tab === "pressure" && test.quality?.pressureStatus === "invalid" ? "hidden" : ""}>
                   <div class="hint-chip">${copy("common.chartHint")}</div>
                   <div class="chart-canvas" id="dt-canvas-${tab}"></div>
                 </div>
@@ -1042,9 +1072,10 @@
                   <a class="data-link" href="${resolvePath(test.links.executiveReport)}"><div class="data-link__title">${copy("common.executiveReport")}</div><div class="data-link__meta">${test.date}</div></a>
                   <a class="data-link" href="${resolvePath(test.links.pipelineData)}"><div class="data-link__title">${copy("common.pipelineData")}</div><div class="data-link__meta">${copy("common.filteredSource")}</div></a>
                   <a class="data-link" href="${resolvePath(test.links.markdown)}"><div class="data-link__title">${copy("common.markdownRecord")}</div><div class="data-link__meta">${copy("common.detailPage")}</div></a>
+                  ${[["rawData", state.lang === "ko" ? "원자료" : "Raw recording"], ["dataReview", state.lang === "ko" ? "데이터 검토 및 비교" : "Data review and comparison"], ["sessionManifest", state.lang === "ko" ? "전체 기록 및 해시" : "All recordings and hashes"], ["qualityReport", state.lang === "ko" ? "데이터 품질" : "Data quality"]].filter(([key]) => test.links[key]).map(([key, label]) => `<a class="data-link" href="${resolvePath(test.links[key])}"><div class="data-link__title">${label}</div></a>`).join("")}
                 </div>
               </article>
-              <article class="panel"><div class="subsection-title">${copy("common.media")}</div><p class="detail-meta-note">${test.media.videoUrl ? `<a href="${test.media.videoUrl}">${localize(test.media.videoLabel)}</a>` : localize(test.media.videoLabel)}</p></article>
+              <article class="panel"><div class="subsection-title">${copy("common.media")}</div>${renderTestVideo(test)}</article>
               <article class="panel"><div class="subsection-title">${copy("common.sourceInput")}</div><p class="detail-meta-note">${escapeHtml(test.source.inputFile)}</p></article>
             </div>
           </div>

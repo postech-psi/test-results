@@ -4,21 +4,21 @@
 
 ### Combined Plot
 
-![Combined Plot](./files/26.04.03%20data_combined_plot.png)
+![Combined Plot](./files/2026-04-03_tms_combined_plot.png)
 
 ### Loadcell Plot
 
-![Loadcell Plot](./files/26.04.03%20data_loadcell_plot.png)
+![Loadcell Plot](./files/2026-04-03_tms_loadcell_plot.png)
 
 ### Barometer Plot
 
-![Barometer Plot](./files/26.04.03%20data_barometer_plot.png)
+![Barometer Plot](./files/2026-04-03_tms_barometer_plot.png)
 
 ## Metrics
 
 | 항목 | 값 |
 |---|---|
-| 입력 파일 | TMS\Data\2026\4_2\26.04.03 data.TXT |
+| 입력 파일 | TMS/Data/2026/4_2/26.04.03 data.TXT |
 | 샘플링 속도 | 320 sps |
 | 점화 지연 | 6993.8 ms |
 | 연소 시간 | 3287.5 ms |
@@ -62,5 +62,13 @@
 
 ## Result Files
 
-- [Executive Report](./files/26.04.03%20data_executive_report.txt)
-- [Pipeline Data](./files/26.04.03%20data_pipeline_data.txt)
+- [Executive Report](./files/2026-04-03_tms_executive_report.txt)
+- [Pipeline Data](./files/2026-04-03_tms_pipeline_data.txt)
+
+## Processing provenance
+
+Historical published numeric outputs are retained. The legacy loader omitted the first sensor pair after the two-line header (3.125 ms at nominal 320 Hz). New October data uses the corrected loader; no historical raw data was reconstructed.
+
+## Raw recording
+
+[Original ADC log](./files/2026-04-03_tms_raw.txt). The legacy pipeline reproduces the published results.

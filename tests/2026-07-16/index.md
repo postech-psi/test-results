@@ -1,24 +1,24 @@
-# 7월 16일 연소 시험
+# 2026년 7월 16일 연소 시험
 
 ## Reference Figures
 
 ### Combined Plot
 
-![Combined Plot](./files/tms_5_combined_plot.png)
+![Combined Plot](./files/2026-07-16_tms-5_combined_plot.png)
 
 ### Loadcell Plot
 
-![Loadcell Plot](./files/tms_5_loadcell_plot.png)
+![Loadcell Plot](./files/2026-07-16_tms-5_loadcell_plot.png)
 
 ### Barometer Plot
 
-![Barometer Plot](./files/tms_5_barometer_plot.png)
+![Barometer Plot](./files/2026-07-16_tms-5_barometer_plot.png)
 
 ## Metrics
 
 | 항목 | 값 |
 |---|---|
-| 입력 파일 | TMS\Data\2026\7_16\TMS_5.TXT |
+| 입력 파일 | TMS/Data/2026/7_16/2026.07.16 data.TXT |
 | 샘플링 속도 | 320 sps |
 | 점화 지연 | 4118.8 ms |
 | 연소 시간 | 2331.2 ms |
@@ -53,7 +53,7 @@
 
 - 압력 채널: 최대 압력(38.018 bar, 4.406 s) 직후 raw 값이 1개 샘플(3.125 ms) 만에 47.7→7.6 bar로 급락. 연소 종료(6.45 s) 이후 baseline로 복귀하지 않고 8~14초 구간에서 26.9 bar까지 재상승(같은 구간 로드셀은 0 N 부근).
 - 로드셀 채널: rise time 194 ms로 이전 시험(597–634 ms) 대비 짧음.
-- 상세: [Raw 데이터 기록](./files/raw_data_notes.md)
+- 상세: [Raw 데이터 기록](./files/2026-07-16_data_notes.md)
 
 ## Test Video
 
@@ -61,5 +61,13 @@
 
 ## Result Files
 
-- [Executive Report](./files/tms_5_executive_report.txt)
-- [Pipeline Data](./files/tms_5_pipeline_data.txt)
+- [Executive Report](./files/2026-07-16_tms-5_executive_report.txt)
+- [Pipeline Data](./files/2026-07-16_tms-5_pipeline_data.txt)
+
+## Processing provenance
+
+Historical published numeric outputs are retained. The legacy loader omitted the first sensor pair after the two-line header (3.125 ms at nominal 320 Hz). New October data uses the corrected loader; no historical raw data was reconstructed.
+
+## Raw recording
+
+[Original ADC log](./files/2026-07-16_tms-5_raw.txt), recovered from TMS main commit `abb02a0`. Its legacy filtered thrust and pressure series reproduce the published outputs.

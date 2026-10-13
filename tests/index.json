@@ -21,23 +21,334 @@
       "en": "A concise record of POSTECH PSI static fire test data, methods, and data files."
     },
     "methodologySummary": {
-      "ko": "모든 비교 차트는 파이프라인 데이터의 filtered force 및 filtered gauge pressure를 사용하며, 정렬 보기에서는 ignition delay를 기준으로 시간을 이동합니다.",
-      "en": "All comparison charts use filtered force and filtered gauge pressure from the pipeline data, and aligned mode shifts time by ignition delay."
+      "en": "Comparisons use filtered pipeline signals at nominal 320 Hz. Time alignment uses force onset; unavailable pressure is excluded. October thrust is provisional.",
+      "ko": "비교는 320 Hz를 가정한 필터링 신호를 사용하며 추력 시작점으로 정렬합니다. 사용 불가 압력은 제외하고 10월 추력은 잠정값입니다."
     }
   },
   "tests": [
+    {
+      "id": "2026-10-13-combustion",
+      "date": "2026-10-13",
+      "category": "combustion",
+      "title": {
+        "en": "2026-10-13 Static Fire Test",
+        "ko": "2026년 10월 13일 연소 시험"
+      },
+      "meta": {
+        "title": {
+          "en": "2026-10-13 Static Fire Test | POSTECH PSI",
+          "ko": "2026년 10월 13일 연소 시험 | POSTECH PSI"
+        },
+        "description": {
+          "en": "October 13 TMS_4 thrust recording, raw data, failed pressure diagnostics, historical comparison, and test video.",
+          "ko": "October 13 TMS_4 thrust recording, raw data, failed pressure diagnostics, historical comparison, and test video."
+        }
+      },
+      "summary": {
+        "en": "One clear thrust event: 166.01 N peak and 370.22 N s impulse (provisional). Pressure unavailable; burn duration unvalidated.",
+        "ko": "명확한 추력 이벤트 1건: 최대 166.01 N, 임펄스 370.22 N s (잠정). 압력 사용 불가, 연소 시간 미검증."
+      },
+      "context": {
+        "en": "TMS_4 is the only clear thrust event among five supplied files; the other records are retained in the session inventory.",
+        "ko": "TMS_4 is the only clear thrust event among five supplied files; the other records are retained in the session inventory."
+      },
+      "highlights": {
+        "en": [
+          "Peak thrust is close to April/May; calibration and timing remain unverified.",
+          "Impulse is provisional because a 4.96 N residual offset affects the end threshold.",
+          "All pressure ADC samples are 32767; pressure metrics are withheld."
+        ],
+        "ko": [
+          "최대 추력은 4월·5월과 유사하며 보정과 시간축은 미검증입니다.",
+          "잔류 오프셋 4.96 N이 종료 임계값에 영향을 주어 임펄스는 잠정값입니다.",
+          "압력 ADC가 모두 32767로 고정되어 압력 지표를 제공하지 않습니다."
+        ]
+      },
+      "issues": {
+        "en": [
+          "Pressure is invalid: the raw ADC is fixed at 32767 throughout every file.",
+          "Post-event offset is 4.961 N; the 3% threshold is 4.980 N. The last crossing is at the last sample, so burn end and average thrust are not validated.",
+          "Calibration is inherited; no same-day calibration was supplied. Timing assumes 320 Hz without per-sample timestamps.",
+          "TMS_2/TMS_5 have no sustained thrust event; TMS_1/TMS_3 are startup probes."
+        ],
+        "ko": [
+          "압력 ADC가 전체 파일에서 32767로 고정되어 압력 데이터를 사용할 수 없습니다.",
+          "시험 후 오프셋 4.961 N이 3% 임계값 4.980 N과 비슷합니다. 마지막 샘플이 종료로 검출되어 연소 시간과 평균 추력은 미검증입니다.",
+          "기존 보정값을 사용했으며 당일 보정 자료가 없습니다. 샘플별 시간 기록 없이 320 Hz를 가정합니다.",
+          "TMS_2/TMS_5는 추력 이벤트가 없고 TMS_1/TMS_3는 시작 확인 파일입니다."
+        ]
+      },
+      "quality": {
+        "thrustStatus": "provisional",
+        "pressureStatus": "invalid",
+        "notice": {
+          "en": "Provisional thrust. Pressure unavailable. Burn duration and average thrust unvalidated; see data review.",
+          "ko": "추력 잠정값. 압력 사용 불가. 연소 시간과 평균 추력 미검증. 데이터 검토를 확인하세요."
+        }
+      },
+      "metrics": {
+        "ignitionDelayMs": {
+          "value": 7321.875,
+          "unit": "ms",
+          "display": "7321.9 ms"
+        },
+        "burnTimeMs": {
+          "value": null,
+          "unit": "ms",
+          "display": "Unavailable",
+          "status": "unvalidated"
+        },
+        "maxThrustN": {
+          "value": 166.0133149580275,
+          "unit": "N",
+          "display": "166.01 N (provisional)",
+          "status": "provisional"
+        },
+        "averageThrustN": {
+          "value": null,
+          "unit": "N",
+          "display": "Unavailable",
+          "status": "unvalidated"
+        },
+        "totalImpulseNs": {
+          "value": 370.2159968290365,
+          "unit": "N s",
+          "display": "370.22 N s (provisional)",
+          "status": "provisional"
+        },
+        "maxPressureBar": {
+          "value": null,
+          "unit": "bar",
+          "display": "Unavailable",
+          "status": "invalid"
+        },
+        "maxPressureTimeS": {
+          "value": null,
+          "unit": "s",
+          "display": "Unavailable",
+          "status": "invalid"
+        }
+      },
+      "events": {
+        "ignitionTimeS": 7.321875,
+        "burnEndTimeS": null,
+        "burnDurationS": null,
+        "peakPressureTimeS": null
+      },
+      "processing": [
+        {
+          "label": {
+            "en": "Sampling Rate",
+            "ko": "Sampling Rate"
+          },
+          "value": {
+            "en": "320 Hz assumed; no per-sample timestamps",
+            "ko": "320 Hz assumed; no per-sample timestamps"
+          }
+        },
+        {
+          "label": {
+            "en": "Drift Compensation",
+            "ko": "Drift Compensation"
+          },
+          "value": {
+            "en": "Constant pre-event baseline; final 4.961 N offset flagged",
+            "ko": "Constant pre-event baseline; final 4.961 N offset flagged"
+          }
+        },
+        {
+          "label": {
+            "en": "Event Threshold (3%)",
+            "ko": "Event Threshold (3%)"
+          },
+          "value": {
+            "en": "4.980 N; end censored",
+            "ko": "4.980 N; end censored"
+          }
+        },
+        {
+          "label": {
+            "en": "Thrust Filter",
+            "ko": "Thrust Filter"
+          },
+          "value": {
+            "en": "Butterworth low-pass 20 Hz, order 2, zero phase",
+            "ko": "Butterworth low-pass 20 Hz, order 2, zero phase"
+          }
+        },
+        {
+          "label": {
+            "en": "Pressure Channel",
+            "ko": "Pressure Channel"
+          },
+          "value": {
+            "en": "Unavailable: 32767 at all samples; no pressure conversion published",
+            "ko": "Unavailable: 32767 at all samples; no pressure conversion published"
+          }
+        },
+        {
+          "label": {
+            "en": "Header Handling",
+            "ko": "Header Handling"
+          },
+          "value": {
+            "en": "Skip two header lines before splitting channels",
+            "ko": "Skip two header lines before splitting channels"
+          }
+        },
+        {
+          "label": {
+            "en": "Baseline Offset",
+            "ko": "Baseline Offset"
+          },
+          "value": {
+            "en": "-12.022081 N; 1171 samples",
+            "ko": "-12.022081 N; 1171 samples"
+          }
+        },
+        {
+          "label": {
+            "en": "Event Gate",
+            "ko": "Event Gate"
+          },
+          "value": {
+            "en": "max(5 N, 10 × initial raw standard deviation) for 0.1 s",
+            "ko": "max(5 N, 10 × initial raw standard deviation) for 0.1 s"
+          }
+        },
+        {
+          "label": {
+            "en": "Onset from Recording Start",
+            "ko": "Onset from Recording Start"
+          },
+          "value": {
+            "en": "7.321875 s; command latency not verified",
+            "ko": "7.321875 s; command latency not verified"
+          }
+        }
+      ],
+      "calibration": [
+        {
+          "label": {
+            "en": "Load Cell Calibration Slope",
+            "ko": "Load Cell Calibration Slope"
+          },
+          "value": {
+            "en": "-0.039100 kg/ADC (inherited)",
+            "ko": "-0.039100 kg/ADC (inherited)"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Calibration Intercept",
+            "ko": "Load Cell Calibration Intercept"
+          },
+          "value": {
+            "en": "-193.0049 kg (inherited)",
+            "ko": "-193.0049 kg (inherited)"
+          }
+        },
+        {
+          "label": {
+            "en": "Historical Calibration R²",
+            "ko": "Historical Calibration R²"
+          },
+          "value": {
+            "en": "0.999948; no same-day calibration",
+            "ko": "0.999948; no same-day calibration"
+          }
+        },
+        {
+          "label": {
+            "en": "Pressure Conversion",
+            "ko": "Pressure Conversion"
+          },
+          "value": {
+            "en": "0.0027 × ADC − 0.11 bar; withheld for failed channel",
+            "ko": "0.0027 × ADC − 0.11 bar; withheld for failed channel"
+          }
+        }
+      ],
+      "media": {
+        "videoUrl": "tests/2026-10-13/files/2026-10-13_tms-4_video.mp4",
+        "videoLabel": {
+          "en": "October 13 test video",
+          "ko": "10월 13일 시험 영상"
+        },
+        "videoType": "video/mp4",
+        "poster": "tests/2026-10-13/files/2026-10-13_tms-4_video_poster.jpg",
+        "originalVideo": "tests/2026-10-13/files/2026-10-13_tms-4_video_original.mp4",
+        "caption": {
+          "en": "Supplied session video; no shared trigger or time reference with the data logger.",
+          "ko": "제공된 시험 영상이며 계측 데이터와 공통 트리거·시간 기준이 없습니다."
+        }
+      },
+      "links": {
+        "page": "tests/2026-10-13/index.html",
+        "markdown": "tests/2026-10-13/index.md",
+        "pipelineData": "tests/2026-10-13/files/2026-10-13_tms-4_pipeline_data.txt",
+        "executiveReport": "tests/2026-10-13/files/2026-10-13_tms-4_executive_report.txt",
+        "artifacts": "tests/2026-10-13/files/",
+        "rawData": "tests/2026-10-13/files/2026-10-13_tms-4_raw.txt",
+        "dataReview": "tests/2026-10-13/files/2026-10-13_analysis.md",
+        "sessionManifest": "tests/2026-10-13/files/2026-10-13_session_manifest.json",
+        "qualityReport": "tests/2026-10-13/files/2026-10-13_tms-4_quality.json"
+      },
+      "artifacts": {
+        "figures": [
+          {
+            "label": {
+              "en": "Combined Plot — pressure unavailable",
+              "ko": "Combined Plot — pressure unavailable"
+            },
+            "path": "tests/2026-10-13/files/2026-10-13_tms-4_combined_plot.png"
+          },
+          {
+            "label": {
+              "en": "Loadcell Plot",
+              "ko": "Loadcell Plot"
+            },
+            "path": "tests/2026-10-13/files/2026-10-13_tms-4_loadcell_plot.png"
+          },
+          {
+            "label": {
+              "en": "Pressure ADC Diagnostic",
+              "ko": "Pressure ADC Diagnostic"
+            },
+            "path": "tests/2026-10-13/files/2026-10-13_tms-4_barometer_plot.png"
+          },
+          {
+            "label": {
+              "en": "Historical Thrust Comparison",
+              "ko": "Historical Thrust Comparison"
+            },
+            "path": "tests/2026-10-13/files/2026-10-13_tms-4_comparison.png"
+          }
+        ]
+      },
+      "source": {
+        "inputFile": "TMS/Data/2026/10_13/TMS_4.TXT",
+        "recordingNumber": 4,
+        "rawAvailable": true,
+        "processingVersion": "Corrected header loader; raw ADC quality gates",
+        "inputSha256": "1f471cdbf13943edb4db9337e90ee4f0498aaea551d4c1f9cf8fc9d12b4e1b24",
+        "pipelineSha256": "a30adb6112b96a7bb676983715853745afde0d7d930035912a50a3f5e111d4d5",
+        "pipelineCommit": "7c717b7dfc8bdc745e766173d23c5b90ebf4827e",
+        "dateSource": "User-confirmed 2026-10-13"
+      }
+    },
     {
       "id": "2026-07-16-combustion",
       "date": "2026-07-16",
       "category": "combustion",
       "title": {
-        "ko": "7월 16일 연소 시험",
-        "en": "July 16 Static Fire Test"
+        "ko": "2026년 7월 16일 연소 시험",
+        "en": "2026-07-16 Static Fire Test"
       },
       "meta": {
         "title": {
-          "ko": "7월 16일 연소 시험 | POSTECH PSI",
-          "en": "July 16 Static Fire Test | POSTECH PSI"
+          "ko": "2026년 7월 16일 연소 시험 | POSTECH PSI",
+          "en": "2026-07-16 Static Fire Test | POSTECH PSI"
         },
         "description": {
           "ko": "7월 16일 연소 시험의 재구성 차트, 보정 값, 시험 조건, 결과 파일을 포함한 상세 페이지입니다.",
@@ -49,8 +360,8 @@
         "en": "Static fire test recording 323.79 N peak thrust and 484.66 N s total impulse."
       },
       "context": {
-        "ko": "TMS_5 데이터셋 기반으로 이전 시험 대비 최대 추력과 총 임펄스가 크게 증가한 시험입니다.",
-        "en": "Latest TMS_5 run showing a large increase in peak thrust and total impulse over the previous test."
+        "en": "TMS_5 recording with higher thrust than April/May and documented pressure-channel anomalies.",
+        "ko": "4월·5월보다 추력이 높으며 압력 채널 이상이 기록된 TMS_5 시험입니다."
       },
       "highlights": {
         "ko": [
@@ -91,7 +402,7 @@
           "display": "323.79 N"
         },
         "averageThrustN": {
-          "value": 207.90,
+          "value": 207.9,
           "unit": "N",
           "display": "207.90 N"
         },
@@ -103,7 +414,7 @@
         "maxPressureBar": {
           "value": 38.018,
           "unit": "bar",
-          "display": "38.018 bar"
+          "display": "38.018 bar (suspect)"
         },
         "maxPressureTimeS": {
           "value": 4.406,
@@ -261,9 +572,10 @@
       "links": {
         "page": "tests/2026-07-16/index.html",
         "markdown": "tests/2026-07-16/index.md",
-        "pipelineData": "tests/2026-07-16/files/tms_5_pipeline_data.txt",
-        "executiveReport": "tests/2026-07-16/files/tms_5_executive_report.txt",
-        "artifacts": "tests/2026-07-16/files/"
+        "pipelineData": "tests/2026-07-16/files/2026-07-16_tms-5_pipeline_data.txt",
+        "executiveReport": "tests/2026-07-16/files/2026-07-16_tms-5_executive_report.txt",
+        "artifacts": "tests/2026-07-16/files/",
+        "rawData": "tests/2026-07-16/files/2026-07-16_tms-5_raw.txt"
       },
       "artifacts": {
         "figures": [
@@ -272,26 +584,36 @@
               "ko": "종합 신호 플롯",
               "en": "Combined Plot"
             },
-            "path": "tests/2026-07-16/files/tms_5_combined_plot.png"
+            "path": "tests/2026-07-16/files/2026-07-16_tms-5_combined_plot.png"
           },
           {
             "label": {
               "ko": "로드셀 플롯",
               "en": "Loadcell Plot"
             },
-            "path": "tests/2026-07-16/files/tms_5_loadcell_plot.png"
+            "path": "tests/2026-07-16/files/2026-07-16_tms-5_loadcell_plot.png"
           },
           {
             "label": {
               "ko": "압력 플롯",
               "en": "Barometer Plot"
             },
-            "path": "tests/2026-07-16/files/tms_5_barometer_plot.png"
+            "path": "tests/2026-07-16/files/2026-07-16_tms-5_barometer_plot.png"
           }
         ]
       },
       "source": {
-        "inputFile": "TMS\\Data\\2026\\7_16\\TMS_5.TXT"
+        "inputFile": "TMS/Data/2026/7_16/2026.07.16 data.TXT",
+        "processingVersion": "legacy: header skipped after channel splitting; first sensor pair omitted",
+        "rawAvailable": true,
+        "recordingNumber": 5,
+        "rawSha256": "372f213dd97eeec118741d175e2b00f3d7985136ee2bf5a6668a7e0eeaaec0f0",
+        "legacyInputFile": "TMS/Data/2026/7_16/TMS_5.TXT",
+        "recoveredFromCommit": "abb02a09bca4e7835425dc67b2c28234ef887992"
+      },
+      "quality": {
+        "pressureStatus": "suspect",
+        "thrustStatus": "historical"
       }
     },
     {
@@ -299,13 +621,13 @@
       "date": "2026-05-28",
       "category": "combustion",
       "title": {
-        "ko": "5월 28일 연소 시험",
-        "en": "May 28 Static Fire Test"
+        "ko": "2026년 5월 28일 연소 시험",
+        "en": "2026-05-28 Static Fire Test"
       },
       "meta": {
         "title": {
-          "ko": "5월 28일 연소 시험 | POSTECH PSI",
-          "en": "May 28 Static Fire Test | POSTECH PSI"
+          "ko": "2026년 5월 28일 연소 시험 | POSTECH PSI",
+          "en": "2026-05-28 Static Fire Test | POSTECH PSI"
         },
         "description": {
           "ko": "5월 28일 연소 시험의 재구성 차트, 보정 값, 시험 조건, 결과 파일을 포함한 상세 페이지입니다.",
@@ -317,8 +639,8 @@
         "en": "Static fire test recording 174.19 N peak thrust and 366.33 N s total impulse."
       },
       "context": {
-        "ko": "TMS_9 데이터셋 기반으로 압력 상승과 추력 형성이 안정적으로 확인된 최신 시험입니다.",
-        "en": "Latest TMS_9 run showing stable pressure rise and thrust production."
+        "en": "TMS_9 recording with a pressure rise and thrust event; historical pipeline output retained.",
+        "ko": "압력 상승과 추력 이벤트가 있는 TMS_9 기록이며 기존 처리 결과를 유지했습니다."
       },
       "highlights": {
         "ko": [
@@ -519,9 +841,10 @@
       "links": {
         "page": "tests/2026-05-28/index.html",
         "markdown": "tests/2026-05-28/index.md",
-        "pipelineData": "tests/2026-05-28/files/TMS_9_pipeline_data.txt",
-        "executiveReport": "tests/2026-05-28/files/TMS_9_executive_report.txt",
-        "artifacts": "tests/2026-05-28/files/"
+        "pipelineData": "tests/2026-05-28/files/2026-05-28_tms-9_pipeline_data.txt",
+        "executiveReport": "tests/2026-05-28/files/2026-05-28_tms-9_executive_report.txt",
+        "artifacts": "tests/2026-05-28/files/",
+        "rawData": "tests/2026-05-28/files/2026-05-28_tms-9_raw.txt"
       },
       "artifacts": {
         "figures": [
@@ -530,26 +853,32 @@
               "ko": "종합 신호 플롯",
               "en": "Combined Plot"
             },
-            "path": "tests/2026-05-28/files/TMS_9_combined_plot.png"
+            "path": "tests/2026-05-28/files/2026-05-28_tms-9_combined_plot.png"
           },
           {
             "label": {
               "ko": "로드셀 플롯",
               "en": "Loadcell Plot"
             },
-            "path": "tests/2026-05-28/files/TMS_9_loadcell_plot.png"
+            "path": "tests/2026-05-28/files/2026-05-28_tms-9_loadcell_plot.png"
           },
           {
             "label": {
               "ko": "압력 플롯",
               "en": "Barometer Plot"
             },
-            "path": "tests/2026-05-28/files/TMS_9_barometer_plot.png"
+            "path": "tests/2026-05-28/files/2026-05-28_tms-9_barometer_plot.png"
           }
         ]
       },
       "source": {
-        "inputFile": "TMS\\Data\\2026\\5_28\\TMS_9.TXT"
+        "inputFile": "TMS/Data/2026/5_28/2026.05.28 data.TXT",
+        "processingVersion": "legacy: header skipped after channel splitting; first sensor pair omitted",
+        "rawAvailable": true,
+        "recordingNumber": 9,
+        "rawSha256": "2f18ad7e39a024a33c0f80ccfd5873cf69e008a27fdfad0b4247386f930bf077",
+        "legacyInputFile": "TMS/Data/2026/5_28/TMS_9.TXT",
+        "recoveredFromCommit": "abb02a09bca4e7835425dc67b2c28234ef887992"
       }
     },
     {
@@ -557,13 +886,13 @@
       "date": "2026-04-08",
       "category": "combustion",
       "title": {
-        "ko": "4월 8일 연소 시험",
-        "en": "April 8 Static Fire Test"
+        "ko": "2026년 4월 8일 연소 시험",
+        "en": "2026-04-08 Static Fire Test"
       },
       "meta": {
         "title": {
-          "ko": "4월 8일 연소 시험 | POSTECH PSI",
-          "en": "April 8 Static Fire Test | POSTECH PSI"
+          "ko": "2026년 4월 8일 연소 시험 | POSTECH PSI",
+          "en": "2026-04-08 Static Fire Test | POSTECH PSI"
         },
         "description": {
           "ko": "4월 8일 연소 시험의 재구성 차트, 보정 값, 시험 조건, 결과 파일을 포함한 상세 페이지입니다.",
@@ -777,9 +1106,10 @@
       "links": {
         "page": "tests/2026-04-08/index.html",
         "markdown": "tests/2026-04-08/index.md",
-        "pipelineData": "tests/2026-04-08/files/TMS_4_pipeline_data.txt",
-        "executiveReport": "tests/2026-04-08/files/TMS_4_executive_report.txt",
-        "artifacts": "tests/2026-04-08/files/"
+        "pipelineData": "tests/2026-04-08/files/2026-04-08_tms-4_pipeline_data.txt",
+        "executiveReport": "tests/2026-04-08/files/2026-04-08_tms-4_executive_report.txt",
+        "artifacts": "tests/2026-04-08/files/",
+        "rawData": "tests/2026-04-08/files/2026-04-08_tms-4_raw.txt"
       },
       "artifacts": {
         "figures": [
@@ -788,26 +1118,32 @@
               "ko": "종합 신호 플롯",
               "en": "Combined Plot"
             },
-            "path": "tests/2026-04-08/files/TMS_4_combined_plot.png"
+            "path": "tests/2026-04-08/files/2026-04-08_tms-4_combined_plot.png"
           },
           {
             "label": {
               "ko": "로드셀 플롯",
               "en": "Loadcell Plot"
             },
-            "path": "tests/2026-04-08/files/TMS_4_loadcell_plot.png"
+            "path": "tests/2026-04-08/files/2026-04-08_tms-4_loadcell_plot.png"
           },
           {
             "label": {
               "ko": "압력 플롯",
               "en": "Barometer Plot"
             },
-            "path": "tests/2026-04-08/files/TMS_4_barometer_plot.png"
+            "path": "tests/2026-04-08/files/2026-04-08_tms-4_barometer_plot.png"
           }
         ]
       },
       "source": {
-        "inputFile": "TMS\\Data\\2026\\4_8\\TMS_4.TXT"
+        "inputFile": "TMS/Data/2026/4_8/2026.04.08 data.TXT",
+        "processingVersion": "legacy: header skipped after channel splitting; first sensor pair omitted",
+        "rawAvailable": true,
+        "recordingNumber": 4,
+        "rawSha256": "69aa92d9ef112ba89b9e5865a603124b4e7afdc20fc58154daa768f38714f1d3",
+        "legacyInputFile": "TMS/Data/2026/4_8/TMS_4.TXT",
+        "recoveredFromCommit": "abb02a09bca4e7835425dc67b2c28234ef887992"
       }
     },
     {
@@ -816,12 +1152,12 @@
       "category": "combustion",
       "title": {
         "ko": "2026년 4월 3일 연소 시험",
-        "en": "April 3, 2026 Static Fire Test"
+        "en": "2026-04-03 Static Fire Test"
       },
       "meta": {
         "title": {
           "ko": "2026년 4월 3일 연소 시험 | POSTECH PSI",
-          "en": "April 3, 2026 Static Fire Test | POSTECH PSI"
+          "en": "2026-04-03 Static Fire Test | POSTECH PSI"
         },
         "description": {
           "ko": "2026년 4월 3일 연소 시험의 재구성 차트, 보정 값, 결과 파일을 포함한 상세 페이지입니다.",
@@ -1035,9 +1371,10 @@
       "links": {
         "page": "tests/2026-04-03/index.html",
         "markdown": "tests/2026-04-03/index.md",
-        "pipelineData": "tests/2026-04-03/files/26.04.03 data_pipeline_data.txt",
-        "executiveReport": "tests/2026-04-03/files/26.04.03 data_executive_report.txt",
-        "artifacts": "tests/2026-04-03/files/"
+        "pipelineData": "tests/2026-04-03/files/2026-04-03_tms_pipeline_data.txt",
+        "executiveReport": "tests/2026-04-03/files/2026-04-03_tms_executive_report.txt",
+        "artifacts": "tests/2026-04-03/files/",
+        "rawData": "tests/2026-04-03/files/2026-04-03_tms_raw.txt"
       },
       "artifacts": {
         "figures": [
@@ -1046,26 +1383,30 @@
               "ko": "종합 신호 플롯",
               "en": "Combined Plot"
             },
-            "path": "tests/2026-04-03/files/26.04.03 data_combined_plot.png"
+            "path": "tests/2026-04-03/files/2026-04-03_tms_combined_plot.png"
           },
           {
             "label": {
               "ko": "로드셀 플롯",
               "en": "Loadcell Plot"
             },
-            "path": "tests/2026-04-03/files/26.04.03 data_loadcell_plot.png"
+            "path": "tests/2026-04-03/files/2026-04-03_tms_loadcell_plot.png"
           },
           {
             "label": {
               "ko": "압력 플롯",
               "en": "Barometer Plot"
             },
-            "path": "tests/2026-04-03/files/26.04.03 data_barometer_plot.png"
+            "path": "tests/2026-04-03/files/2026-04-03_tms_barometer_plot.png"
           }
         ]
       },
       "source": {
-        "inputFile": "TMS\\Data\\2026\\4_2\\26.04.03 data.TXT"
+        "inputFile": "TMS/Data/2026/4_2/26.04.03 data.TXT",
+        "processingVersion": "legacy: header skipped after channel splitting; first sensor pair omitted",
+        "rawAvailable": true,
+        "recordingNumber": null,
+        "rawSha256": "fc8485720836de3e1fbae48b3525222b07e4ad2924a1026dcbb81b63b7678e6b"
       }
     }
   ]

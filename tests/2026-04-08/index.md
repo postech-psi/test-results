@@ -1,24 +1,24 @@
-# 4월 8일 연소 시험
+# 2026년 4월 8일 연소 시험
 
 ## Reference Figures
 
 ### Combined Plot
 
-![Combined Plot](./files/TMS_4_combined_plot.png)
+![Combined Plot](./files/2026-04-08_tms-4_combined_plot.png)
 
 ### Loadcell Plot
 
-![Loadcell Plot](./files/TMS_4_loadcell_plot.png)
+![Loadcell Plot](./files/2026-04-08_tms-4_loadcell_plot.png)
 
 ### Barometer Plot
 
-![Barometer Plot](./files/TMS_4_barometer_plot.png)
+![Barometer Plot](./files/2026-04-08_tms-4_barometer_plot.png)
 
 ## Metrics
 
 | 항목 | 값 |
 |---|---|
-| 입력 파일 | TMS\Data\2026\4_8\TMS_4.TXT |
+| 입력 파일 | TMS/Data/2026/4_8/2026.04.08 data.TXT |
 | 샘플링 속도 | 320 sps |
 | 점화 지연 | 7775.0 ms |
 | 연소 시간 | 2687.5 ms |
@@ -59,5 +59,13 @@
 
 ## Result Files
 
-- [Executive Report](./files/TMS_4_executive_report.txt)
-- [Pipeline Data](./files/TMS_4_pipeline_data.txt)
+- [Executive Report](./files/2026-04-08_tms-4_executive_report.txt)
+- [Pipeline Data](./files/2026-04-08_tms-4_pipeline_data.txt)
+
+## Processing provenance
+
+Historical published numeric outputs are retained. The legacy loader omitted the first sensor pair after the two-line header (3.125 ms at nominal 320 Hz). New October data uses the corrected loader; no historical raw data was reconstructed.
+
+## Raw recording
+
+[Original ADC log](./files/2026-04-08_tms-4_raw.txt), recovered from TMS main commit `abb02a0`. Its legacy filtered thrust and pressure series reproduce the published outputs.
