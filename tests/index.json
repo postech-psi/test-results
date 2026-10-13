@@ -21,8 +21,8 @@
       "en": "A concise record of POSTECH PSI static fire test data, methods, and data files."
     },
     "methodologySummary": {
-      "en": "Comparisons use filtered pipeline signals at nominal 320 Hz. Time alignment uses force onset; unavailable pressure is excluded.",
-      "ko": "비교는 320 Hz를 가정한 필터링 신호를 사용하며 추력 시작점으로 정렬합니다. 사용 불가 압력은 제외합니다."
+      "en": "Comparisons use filtered pipeline signals at nominal 320 Hz. October uses a separate analysis curve with a linearly extrapolated decay tail. Time alignment uses force onset; unavailable pressure is excluded.",
+      "ko": "비교는 320 Hz 필터링 신호를 사용하며 10월은 감쇠 구간을 선형 외삽한 별도 분석 곡선을 사용합니다. 추력 시작점으로 정렬하고 사용 불가 압력은 제외합니다."
     }
   },
   "tests": [
@@ -45,8 +45,8 @@
         }
       },
       "summary": {
-        "en": "Static fire test recording 166.01 N peak thrust and 370.22 N s total impulse.",
-        "ko": "최대 추력 166.01 N, 총 임펄스 370.22 N s를 기록한 연소 시험입니다."
+        "en": "Static fire test recording 166.01 N peak thrust and 336.53 N s total impulse.",
+        "ko": "최대 추력 166.01 N, 총 임펄스 336.53 N s를 기록한 연소 시험입니다."
       },
       "context": {
         "en": "TMS_4 recording processed with the current TMS pipeline.",
@@ -54,18 +54,18 @@
       },
       "highlights": {
         "en": [
-          "Recorded 166.01 N peak thrust and 54.82 N average thrust.",
-          "Recorded 370.22 N s total impulse over the 6753.1 ms pipeline threshold window.",
+          "Recorded 166.01 N peak thrust and 122.36 N average thrust.",
+          "Calculated 336.53 N s impulse over 2750.3 ms using the extrapolated decay tail.",
           "Pressure is unavailable."
         ],
         "ko": [
-          "최대 추력 166.01 N과 평균 추력 54.82 N을 기록했습니다.",
-          "파이프라인 임계값 구간 6753.1 ms에서 총 임펄스 370.22 N s를 계산했습니다.",
+          "최대 추력 166.01 N과 평균 추력 122.36 N을 기록했습니다.",
+          "감쇠 외삽으로 연소 시간 2750.3 ms와 임펄스 336.53 N s를 계산했습니다.",
           "압력은 사용 불가입니다."
         ]
       },
       "quality": {
-        "thrustStatus": "provisional",
+        "thrustStatus": "estimated_burnout",
         "pressureStatus": "invalid"
       },
       "metrics": {
@@ -75,28 +75,28 @@
           "display": "7321.9 ms"
         },
         "burnTimeMs": {
-          "value": 6753.124999999999,
+          "value": 2750.3427784130067,
           "unit": "ms",
-          "display": "6753.1 ms",
-          "status": "provisional"
+          "display": "2750.3 ms",
+          "status": "estimated"
         },
         "maxThrustN": {
           "value": 166.0133149580275,
           "unit": "N",
           "display": "166.01 N",
-          "status": "provisional"
+          "status": "computed"
         },
         "averageThrustN": {
-          "value": 54.82143405150009,
+          "value": 122.35838471476819,
           "unit": "N",
-          "display": "54.82 N",
-          "status": "provisional"
+          "display": "122.36 N",
+          "status": "estimated"
         },
         "totalImpulseNs": {
-          "value": 370.2159968290365,
+          "value": 336.52749977854313,
           "unit": "N s",
-          "display": "370.22 N s",
-          "status": "provisional"
+          "display": "336.53 N s",
+          "status": "estimated"
         },
         "maxPressureBar": {
           "value": null,
@@ -113,9 +113,10 @@
       },
       "events": {
         "ignitionTimeS": 7.321875,
-        "burnEndTimeS": 14.075,
-        "burnDurationS": 6.753124999999999,
-        "peakPressureTimeS": null
+        "burnEndTimeS": 10.072217778413007,
+        "burnDurationS": 2.750342778413007,
+        "peakPressureTimeS": null,
+        "extrapolatedZeroTimeS": 10.094675314496866
       },
       "processing": [
         {
@@ -214,8 +215,38 @@
             "ko": "연소 구간"
           },
           "value": {
-            "en": "First to last crossing of 3% peak filtered thrust",
-            "ko": "필터링 추력 최대값의 3%를 처음·마지막으로 넘은 구간"
+            "en": "Onset to the 3% crossing of the extrapolated decay tail",
+            "ko": "추력 시작부터 외삽 감쇠 곡선의 3% 교차점까지"
+          }
+        },
+        {
+          "label": {
+            "en": "Burn End Method",
+            "ko": "Burn End Method"
+          },
+          "value": {
+            "en": "Linear extrapolation of the 9.65–9.85 s decay segment",
+            "ko": "9.65–9.85 s 감쇠 구간 선형 외삽"
+          }
+        },
+        {
+          "label": {
+            "en": "Decay Fit",
+            "ko": "Decay Fit"
+          },
+          "value": {
+            "en": "Slope -221.77 N/s; R² 0.991607",
+            "ko": "기울기 -221.77 N/s; R² 0.991607"
+          }
+        },
+        {
+          "label": {
+            "en": "Estimated Zero Crossing",
+            "ko": "Estimated Zero Crossing"
+          },
+          "value": {
+            "en": "10.094675 s",
+            "ko": "10.094675 s"
           }
         }
       ],
@@ -314,9 +345,14 @@
         "rawAvailable": true,
         "processingVersion": "Corrected header loader; raw ADC quality gates",
         "inputSha256": "1f471cdbf13943edb4db9337e90ee4f0498aaea551d4c1f9cf8fc9d12b4e1b24",
-        "pipelineSha256": "18b49b559aab2425498b4ef840841fc28bb6d8fa9e7e47af78b5489da236c21e",
-        "pipelineCommit": "7ebf8ec9f1725619d1d1ff75c37109e3514c5047",
-        "dateSource": "User-confirmed 2026-10-13"
+        "pipelineSha256": "2431541dce4cef1e89d1d20c3302314c8a4a841cc261fa233d1ef75221f63209",
+        "pipelineCommit": "3cb9efb9c3d2530ef30778036a3ccae50695ffc6",
+        "dateSource": "User-confirmed 2026-10-13",
+        "forceSeriesField": "analysis_force_N",
+        "burnoutFitWindowS": [
+          9.65,
+          9.85
+        ]
       },
       "showDetailSummary": false
     },

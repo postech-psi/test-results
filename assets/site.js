@@ -250,9 +250,10 @@
   async function ensureSeries(test) {
     if (dataCache.has(test.id)) return dataCache.get(test.id);
     const rows = parseTSV(await fetchText(resolvePath(test.links.pipelineData)));
+    const forceField = rows.some((row) => Number.isFinite(row.analysis_force_N)) ? "analysis_force_N" : "filtered_force_N";
     const derived = {
-      rows,
-      peakThrust: getPeakForField(rows, "filtered_force_N"),
+      rows, forceField,
+      peakThrust: getPeakForField(rows, forceField),
       peakPressure: getPeakForField(rows, "filtered_gauge_pressure")
     };
     dataCache.set(test.id, derived);
@@ -290,7 +291,6 @@
   }
 
   function comparisonParams(tests, tab, mode) {
-    const field = tab === "pressure" ? "filtered_gauge_pressure" : "filtered_force_N";
     const labels = copy("labels");
     const pal = PSICharts.palette(state.theme);
     const vm = state.comparisonViewMode;
@@ -298,6 +298,7 @@
     const n = tests.length;
     const runs = tests.filter((test) => tab !== "pressure" || test.quality?.pressureStatus !== "invalid").map((test, index) => {
       const derived = dataCache.get(test.id);
+      const field = tab === "pressure" ? "filtered_gauge_pressure" : derived.forceField;
       const peakRow = tab === "pressure" ? derived.peakPressure : derived.peakThrust;
       const ig = test.events.ignitionTimeS;
       let color;
@@ -351,10 +352,14 @@
       series = [
         { name: labels.rawForce, color: pal[1], dashed: true, data: mk("raw_force_N") },
         { name: labels.correctedForce, color: pal[2], dashed: true, data: mk("corrected_force_N") },
-        { name: labels.filteredForce, color: pal[0], primary: true, data: mk("filtered_force_N") }
+        { name: labels.filteredForce, color: pal[0], primary: derived.forceField === "filtered_force_N", data: mk("filtered_force_N") }
       ];
+      if (derived.forceField === "analysis_force_N") {
+        series[2].color = pal[2];
+        series.push({ name: state.lang === "ko" ? "감쇠 외삽 추력" : "Thrust with extrapolated tail", color: pal[0], primary: true, dashed: true, data: mk("analysis_force_N") });
+      }
       yLabel = labels.thrustUnit; yUnit = "N"; yDigits = 1;
-      peak = { x: derived.peakThrust.time_s, y: derived.peakThrust.filtered_force_N };
+      peak = { x: derived.peakThrust.time_s, y: derived.peakThrust[derived.forceField] };
     }
     return {
       theme: state.theme, xLabel: labels.timeSeconds, yLabel, xUnit: "s", yUnit, yDigits,
@@ -971,7 +976,7 @@
     const latest = catalog.tests[0];
     const derived = dataCache.get(latest.id);
     if (derived) {
-      const spark = downsample(derived.rows, 160).map((r) => [r.time_s, r.filtered_force_N]);
+      const spark = downsample(derived.rows, 160).map((r) => [r.time_s, r[derived.forceField]]);
       ensureChart("hero-spark", () => PSICharts.sparkOption({ theme: state.theme, data: spark }));
     }
     updateComparison();

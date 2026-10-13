@@ -21,10 +21,10 @@
 | 입력 파일 | TMS/Data/2026/10_13/TMS_4.TXT |
 | 샘플링 속도 | 320 sps |
 | 점화 지연 | 7321.9 ms |
-| 연소 시간 | 6753.1 ms |
+| 연소 시간 | 2750.3 ms |
 | 최대 추력 | 166.01 N |
-| 평균 추력 | 54.82 N |
-| 총 임펄스 | 370.22 N s |
+| 평균 추력 | 122.36 N |
+| 총 임펄스 | 336.53 N s |
 | 최대 압력 | Unavailable |
 
 ## 시험 조건 및 데이터 처리
@@ -37,7 +37,12 @@
 | 압력 필터 | Butterworth low-pass 5.0 Hz, order 4 |
 | 로드셀 기준 오프셋 | -12.022081 N |
 | 로드셀 기준 구간 | 0.000000 to 3.659375 s (1171 samples) |
-| 연소 구간 | First to last crossing of 3% peak filtered thrust |
+| 연소 구간 | Onset to the 3% crossing of the extrapolated decay tail |
+| 감쇠 외삽 | 9.65–9.85 s, -221.77 N/s, R² 0.991607 |
+| 추정 연소 종료 (3%) | 10.072218 s |
+| 외삽 영점 교차 | 10.094675 s |
+
+The original measured force is retained in `filtered_force_N`; the extrapolated tail is stored separately in `analysis_force_N`.
 
 ## Calibration
 
