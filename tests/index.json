@@ -21,8 +21,8 @@
       "en": "A concise record of POSTECH PSI static fire test data, methods, and data files."
     },
     "methodologySummary": {
-      "en": "Comparisons use filtered pipeline signals at nominal 320 Hz. October uses a separate analysis curve with a linearly extrapolated decay tail. Time alignment uses force onset; unavailable pressure is excluded.",
-      "ko": "비교는 320 Hz 필터링 신호를 사용하며 10월은 감쇠 구간을 선형 외삽한 별도 분석 곡선을 사용합니다. 추력 시작점으로 정렬하고 사용 불가 압력은 제외합니다."
+      "en": "Comparisons use filtered pipeline signals at nominal 320 Hz. Burn windows use 3% of peak force through 2026-10-13 and a fixed 5 N threshold for the 2026-07-23, 2026-07-24 and 2026-11-23 processing. October uses an analysis curve with a linearly extrapolated decay tail; November uses one with a fitted unsampled interval. Time alignment uses force onset; unavailable pressure is excluded.",
+      "ko": "비교는 320 Hz 필터링 신호를 사용합니다. 연소 구간은 2026-10-13까지 최대 추력의 3%, 2026-07-23·07-24·11-23 처리에는 고정 5 N 임계값을 사용합니다. 10월은 감쇠 구간을 선형 외삽한, 11월은 미기록 구간을 추정한 별도 분석 곡선을 사용합니다. 추력 시작점으로 정렬하고 사용 불가 압력은 제외합니다."
     }
   },
   "tests": [
@@ -715,6 +715,604 @@
           9.65,
           9.85
         ]
+      },
+      "showDetailSummary": false
+    },
+    {
+      "id": "2026-07-24-combustion",
+      "date": "2026-07-24",
+      "category": "combustion",
+      "title": {
+        "en": "2026-07-24 Static Fire Test",
+        "ko": "2026년 7월 24일 연소 시험"
+      },
+      "meta": {
+        "title": {
+          "en": "2026-07-24 Static Fire Test | POSTECH PSI",
+          "ko": "2026년 7월 24일 연소 시험 | POSTECH PSI"
+        },
+        "description": {
+          "en": "July 24 static fire test including thrust metrics, processing settings, and original data.",
+          "ko": "7월 24일 연소 시험의 추력 지표, 데이터 처리 설정과 원자료입니다."
+        }
+      },
+      "summary": {
+        "en": "Static fire test recording 58.45 N peak thrust and 155.65 N s total impulse.",
+        "ko": "최대 추력 58.45 N, 총 임펄스 155.65 N s를 기록한 연소 시험입니다."
+      },
+      "context": {
+        "en": "TMS_5 recording processed with the current pipeline and inherited calibration.",
+        "ko": "TMS_5 기록을 현재 파이프라인과 기존 보정값으로 처리했습니다."
+      },
+      "highlights": {
+        "en": [
+          "Recorded 58.45 N peak thrust and 46.94 N average thrust.",
+          "Recorded 155.65 N s total impulse over a 3315.6 ms burn duration.",
+          "Pressure is suspect: peak 38.177 bar at 7.494 s does not follow thrust."
+        ],
+        "ko": [
+          "최대 추력 58.45 N과 평균 추력 46.94 N을 기록했습니다.",
+          "총 임펄스 155.65 N s와 연소 시간 3315.6 ms을 기록했습니다.",
+          "압력은 의심 데이터입니다: 7.494 s의 최대 38.177 bar가 추력과 맞지 않습니다."
+        ]
+      },
+      "issues": {
+        "en": [
+          "Low thrust: 58 N peak against 144-324 N for the other 2026 firings, over a 3.3 s burn. The loadcell is not saturated; the recording does not show whether a different motor or the load path caused this.",
+          "Pressure channel: peaks at 38.2 bar at 7.49 s and falls to about 19 bar by 8.75 s while thrust holds at 57-58 N, the same pattern as 2026-07-23. Marked suspect."
+        ],
+        "ko": [
+          "낮은 추력: 최대 58 N으로 다른 2026년 시험(144-324 N)보다 크게 낮고 연소는 3.3 s입니다. 로드셀 포화는 아니며, 다른 모터인지 하중 경로 문제인지는 기록으로 확인되지 않습니다.",
+          "압력 채널: 7.49 s에 38.2 bar로 최대 후 추력이 57-58 N으로 유지되는 동안 8.75 s까지 약 19 bar로 하강하며, 2026-07-23과 같은 양상입니다. 의심 데이터로 표시합니다."
+        ]
+      },
+      "quality": {
+        "thrustStatus": "event_detected",
+        "pressureStatus": "suspect",
+        "burnEndCensored": false
+      },
+      "metrics": {
+        "ignitionDelayMs": {
+          "value": 6146.875,
+          "unit": "ms",
+          "display": "6146.9 ms"
+        },
+        "burnTimeMs": {
+          "value": 3315.625000000001,
+          "unit": "ms",
+          "display": "3315.6 ms",
+          "status": "computed"
+        },
+        "maxThrustN": {
+          "value": 58.448163443378206,
+          "unit": "N",
+          "display": "58.45 N",
+          "status": "computed"
+        },
+        "averageThrustN": {
+          "value": 46.943100408138086,
+          "unit": "N",
+          "display": "46.94 N",
+          "status": "computed"
+        },
+        "totalImpulseNs": {
+          "value": 155.64571729073288,
+          "unit": "N s",
+          "display": "155.65 N s",
+          "status": "computed"
+        },
+        "maxPressureBar": {
+          "value": 38.17672530616523,
+          "unit": "bar",
+          "display": "38.177 bar (suspect)",
+          "status": "suspect"
+        },
+        "maxPressureTimeS": {
+          "value": 7.49375,
+          "unit": "s",
+          "display": "7.494 s",
+          "status": "suspect"
+        }
+      },
+      "events": {
+        "ignitionTimeS": 6.146875,
+        "burnEndTimeS": 9.4625,
+        "burnDurationS": 3.3156250000000007,
+        "peakPressureTimeS": 7.49375
+      },
+      "processing": [
+        {
+          "label": {
+            "en": "Sampling Rate",
+            "ko": "샘플링 속도"
+          },
+          "value": {
+            "en": "320 sps",
+            "ko": "320 sps"
+          }
+        },
+        {
+          "label": {
+            "en": "Drift Compensation",
+            "ko": "드리프트 보정"
+          },
+          "value": {
+            "en": "Constant baseline offset",
+            "ko": "Constant baseline offset"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Threshold",
+            "ko": "로드셀 임계값"
+          },
+          "value": {
+            "en": "5.00 N (fixed absolute)",
+            "ko": "5.00 N (고정 절대값)"
+          }
+        },
+        {
+          "label": {
+            "en": "Thrust Filter",
+            "ko": "추력 필터"
+          },
+          "value": {
+            "en": "Butterworth low-pass 20.0 Hz, order 2",
+            "ko": "Butterworth low-pass 20.0 Hz, order 2"
+          }
+        },
+        {
+          "label": {
+            "en": "Pressure Filter",
+            "ko": "압력 필터"
+          },
+          "value": {
+            "en": "Butterworth low-pass 5.0 Hz, order 4",
+            "ko": "Butterworth low-pass 5.0 Hz, order 4"
+          }
+        },
+        {
+          "label": {
+            "en": "Pressure Baseline Offset",
+            "ko": "압력 기준 오프셋"
+          },
+          "value": {
+            "en": "0.040564 bar",
+            "ko": "0.040564 bar"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Baseline Offset",
+            "ko": "로드셀 기준 오프셋"
+          },
+          "value": {
+            "en": "-21.442631 N",
+            "ko": "-21.442631 N"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Baseline Window",
+            "ko": "로드셀 기준 구간"
+          },
+          "value": {
+            "en": "0.000000 to 3.184375 s (1019 samples) (pre-ignition raw force)",
+            "ko": "0.000000 to 3.184375 s (1019 samples) (점화 전 raw force)"
+          }
+        },
+        {
+          "label": {
+            "en": "Pressure Baseline Window",
+            "ko": "압력 기준 구간"
+          },
+          "value": {
+            "en": "first 0.500 s (up to 160 samples, filtered pressure)",
+            "ko": "first 0.500 s (up to 160 samples, filtered pressure)"
+          }
+        },
+        {
+          "label": {
+            "en": "Burn Window",
+            "ko": "연소 구간"
+          },
+          "value": {
+            "en": "First to last 5 N crossing of filtered force",
+            "ko": "필터링 추력의 첫 5 N 교차부터 마지막 5 N 교차까지"
+          }
+        }
+      ],
+      "calibration": [
+        {
+          "label": {
+            "en": "Load Cell Calibration Slope",
+            "ko": "로드셀 보정 기울기"
+          },
+          "value": {
+            "en": "-0.039100 kg/ADC",
+            "ko": "-0.039100 kg/ADC"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Calibration Intercept",
+            "ko": "로드셀 보정 절편"
+          },
+          "value": {
+            "en": "-193.0049 kg",
+            "ko": "-193.0049 kg"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Calibration R²",
+            "ko": "로드셀 보정 R²"
+          },
+          "value": {
+            "en": "0.999948",
+            "ko": "0.999948"
+          }
+        },
+        {
+          "label": {
+            "en": "Pressure Conversion",
+            "ko": "압력 변환식"
+          },
+          "value": {
+            "en": "y = 0.0027x -0.11",
+            "ko": "y = 0.0027x -0.11"
+          }
+        }
+      ],
+      "media": {
+        "videoUrl": null,
+        "videoLabel": {
+          "ko": "공개된 영상 없음",
+          "en": "No public video available"
+        }
+      },
+      "links": {
+        "page": "tests/2026-07-24/index.html",
+        "markdown": "tests/2026-07-24/index.md",
+        "pipelineData": "tests/2026-07-24/files/2026-07-24_tms-5_pipeline_data.txt",
+        "executiveReport": "tests/2026-07-24/files/2026-07-24_tms-5_executive_report.txt",
+        "artifacts": "tests/2026-07-24/files/",
+        "rawData": "tests/2026-07-24/files/2026-07-24_tms-5_raw.txt",
+        "quality": "tests/2026-07-24/files/2026-07-24_tms-5_quality.json"
+      },
+      "artifacts": {
+        "figures": [
+          {
+            "label": {
+              "en": "Combined Plot",
+              "ko": "Combined Plot"
+            },
+            "path": "tests/2026-07-24/files/2026-07-24_tms-5_combined_plot.png"
+          },
+          {
+            "label": {
+              "en": "Loadcell Plot",
+              "ko": "Loadcell Plot"
+            },
+            "path": "tests/2026-07-24/files/2026-07-24_tms-5_loadcell_plot.png"
+          },
+          {
+            "label": {
+              "en": "Barometer Plot",
+              "ko": "Barometer Plot"
+            },
+            "path": "tests/2026-07-24/files/2026-07-24_tms-5_barometer_plot.png"
+          }
+        ]
+      },
+      "source": {
+        "inputFile": "TMS/Data/2026/7_24/TMS_5.TXT",
+        "recordingNumber": 5,
+        "rawAvailable": true,
+        "processingVersion": "Fixed 5 N threshold; corrected header loader; raw ADC quality gates",
+        "inputSha256": "489768aa9822dd1b8975ce49be39c10e1bc4916cabd0b0f0b774dbe6eaf846dd",
+        "pipelineSha256": "abcc8ee25013fcdd722271efac2ef6caffd60f6388b8d8bb22db6068bd4b16c9",
+        "pipelineCommit": "0604925b9b6c30f5d4a5ac0b6d7a41720dd7f58e",
+        "dateSource": "TMS data folder date"
+      },
+      "showDetailSummary": false
+    },
+    {
+      "id": "2026-07-23-combustion",
+      "date": "2026-07-23",
+      "category": "combustion",
+      "title": {
+        "en": "2026-07-23 Static Fire Test",
+        "ko": "2026년 7월 23일 연소 시험"
+      },
+      "meta": {
+        "title": {
+          "en": "2026-07-23 Static Fire Test | POSTECH PSI",
+          "ko": "2026년 7월 23일 연소 시험 | POSTECH PSI"
+        },
+        "description": {
+          "en": "July 23 static fire test including thrust metrics, processing settings, and original data.",
+          "ko": "7월 23일 연소 시험의 추력 지표, 데이터 처리 설정과 원자료입니다."
+        }
+      },
+      "summary": {
+        "en": "Static fire test recording 143.98 N peak thrust and 319.91 N s total impulse.",
+        "ko": "최대 추력 143.98 N, 총 임펄스 319.91 N s를 기록한 연소 시험입니다."
+      },
+      "context": {
+        "en": "SD recording TMS_7 (file 7_23 data.TXT) processed with the current pipeline and inherited calibration.",
+        "ko": "SD 기록 TMS_7(파일 7_23 data.TXT)을 현재 파이프라인과 기존 보정값으로 처리했습니다."
+      },
+      "highlights": {
+        "en": [
+          "Recorded 143.98 N peak thrust and 117.40 N average thrust.",
+          "Recorded 319.91 N s total impulse over a 2725.0 ms burn duration.",
+          "Pressure is suspect: peak 17.061 bar at 4.416 s does not follow thrust."
+        ],
+        "ko": [
+          "최대 추력 143.98 N과 평균 추력 117.40 N을 기록했습니다.",
+          "총 임펄스 319.91 N s와 연소 시간 2725.0 ms을 기록했습니다.",
+          "압력은 의심 데이터입니다: 4.416 s의 최대 17.061 bar가 추력과 맞지 않습니다."
+        ]
+      },
+      "issues": {
+        "en": [
+          "Pressure channel: starts with a 9.38 bar offset, peaks at 17.06 bar at 4.42 s while thrust is still rising, falls to about 10 bar while thrust holds at 140-144 N, and settles about 5 bar below its starting level after burnout. Marked suspect; thrust is not affected.",
+          "Same-day calibration recordings (calidata) fit at R² 0.88 and are not used; the inherited calibration applies."
+        ],
+        "ko": [
+          "압력 채널: 시작 시 9.38 bar 오프셋, 추력이 상승 중인 4.42 s에 17.06 bar로 최대, 추력이 140-144 N으로 유지되는 동안 약 10 bar까지 하강, 연소 후 시작 수준보다 약 5 bar 낮게 안정. 의심 데이터로 표시하며 추력 값에는 영향이 없습니다.",
+          "당일 보정 기록(calidata)은 R² 0.88로 사용하지 않았으며 기존 보정값을 적용했습니다."
+        ]
+      },
+      "quality": {
+        "thrustStatus": "event_detected",
+        "pressureStatus": "suspect",
+        "burnEndCensored": false
+      },
+      "metrics": {
+        "ignitionDelayMs": {
+          "value": 3803.125,
+          "unit": "ms",
+          "display": "3803.1 ms"
+        },
+        "burnTimeMs": {
+          "value": 2725.0,
+          "unit": "ms",
+          "display": "2725.0 ms",
+          "status": "computed"
+        },
+        "maxThrustN": {
+          "value": 143.98356784560983,
+          "unit": "N",
+          "display": "143.98 N",
+          "status": "computed"
+        },
+        "averageThrustN": {
+          "value": 117.39809774011947,
+          "unit": "N",
+          "display": "117.40 N",
+          "status": "computed"
+        },
+        "totalImpulseNs": {
+          "value": 319.90981634182555,
+          "unit": "N s",
+          "display": "319.91 N s",
+          "status": "computed"
+        },
+        "maxPressureBar": {
+          "value": 17.06057901156241,
+          "unit": "bar",
+          "display": "17.061 bar (suspect)",
+          "status": "suspect"
+        },
+        "maxPressureTimeS": {
+          "value": 4.415625,
+          "unit": "s",
+          "display": "4.416 s",
+          "status": "suspect"
+        }
+      },
+      "events": {
+        "ignitionTimeS": 3.803125,
+        "burnEndTimeS": 6.528125,
+        "burnDurationS": 2.725,
+        "peakPressureTimeS": 4.415625
+      },
+      "processing": [
+        {
+          "label": {
+            "en": "Sampling Rate",
+            "ko": "샘플링 속도"
+          },
+          "value": {
+            "en": "320 sps",
+            "ko": "320 sps"
+          }
+        },
+        {
+          "label": {
+            "en": "Drift Compensation",
+            "ko": "드리프트 보정"
+          },
+          "value": {
+            "en": "Constant baseline offset",
+            "ko": "Constant baseline offset"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Threshold",
+            "ko": "로드셀 임계값"
+          },
+          "value": {
+            "en": "5.00 N (fixed absolute)",
+            "ko": "5.00 N (고정 절대값)"
+          }
+        },
+        {
+          "label": {
+            "en": "Thrust Filter",
+            "ko": "추력 필터"
+          },
+          "value": {
+            "en": "Butterworth low-pass 20.0 Hz, order 2",
+            "ko": "Butterworth low-pass 20.0 Hz, order 2"
+          }
+        },
+        {
+          "label": {
+            "en": "Pressure Filter",
+            "ko": "압력 필터"
+          },
+          "value": {
+            "en": "Butterworth low-pass 5.0 Hz, order 4",
+            "ko": "Butterworth low-pass 5.0 Hz, order 4"
+          }
+        },
+        {
+          "label": {
+            "en": "Pressure Baseline Offset",
+            "ko": "압력 기준 오프셋"
+          },
+          "value": {
+            "en": "9.380857 bar",
+            "ko": "9.380857 bar"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Baseline Offset",
+            "ko": "로드셀 기준 오프셋"
+          },
+          "value": {
+            "en": "-21.083218 N",
+            "ko": "-21.083218 N"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Baseline Window",
+            "ko": "로드셀 기준 구간"
+          },
+          "value": {
+            "en": "0.000000 to 1.900000 s (608 samples) (pre-ignition raw force)",
+            "ko": "0.000000 to 1.900000 s (608 samples) (점화 전 raw force)"
+          }
+        },
+        {
+          "label": {
+            "en": "Pressure Baseline Window",
+            "ko": "압력 기준 구간"
+          },
+          "value": {
+            "en": "first 0.500 s (up to 160 samples, filtered pressure)",
+            "ko": "first 0.500 s (up to 160 samples, filtered pressure)"
+          }
+        },
+        {
+          "label": {
+            "en": "Burn Window",
+            "ko": "연소 구간"
+          },
+          "value": {
+            "en": "First to last 5 N crossing of filtered force",
+            "ko": "필터링 추력의 첫 5 N 교차부터 마지막 5 N 교차까지"
+          }
+        }
+      ],
+      "calibration": [
+        {
+          "label": {
+            "en": "Load Cell Calibration Slope",
+            "ko": "로드셀 보정 기울기"
+          },
+          "value": {
+            "en": "-0.039100 kg/ADC",
+            "ko": "-0.039100 kg/ADC"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Calibration Intercept",
+            "ko": "로드셀 보정 절편"
+          },
+          "value": {
+            "en": "-193.0049 kg",
+            "ko": "-193.0049 kg"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Calibration R²",
+            "ko": "로드셀 보정 R²"
+          },
+          "value": {
+            "en": "0.999948",
+            "ko": "0.999948"
+          }
+        },
+        {
+          "label": {
+            "en": "Pressure Conversion",
+            "ko": "압력 변환식"
+          },
+          "value": {
+            "en": "y = 0.0027x -0.11",
+            "ko": "y = 0.0027x -0.11"
+          }
+        }
+      ],
+      "media": {
+        "videoUrl": null,
+        "videoLabel": {
+          "ko": "공개된 영상 없음",
+          "en": "No public video available"
+        }
+      },
+      "links": {
+        "page": "tests/2026-07-23/index.html",
+        "markdown": "tests/2026-07-23/index.md",
+        "pipelineData": "tests/2026-07-23/files/2026-07-23_tms-7_pipeline_data.txt",
+        "executiveReport": "tests/2026-07-23/files/2026-07-23_tms-7_executive_report.txt",
+        "artifacts": "tests/2026-07-23/files/",
+        "rawData": "tests/2026-07-23/files/2026-07-23_tms-7_raw.txt",
+        "quality": "tests/2026-07-23/files/2026-07-23_tms-7_quality.json"
+      },
+      "artifacts": {
+        "figures": [
+          {
+            "label": {
+              "en": "Combined Plot",
+              "ko": "Combined Plot"
+            },
+            "path": "tests/2026-07-23/files/2026-07-23_tms-7_combined_plot.png"
+          },
+          {
+            "label": {
+              "en": "Loadcell Plot",
+              "ko": "Loadcell Plot"
+            },
+            "path": "tests/2026-07-23/files/2026-07-23_tms-7_loadcell_plot.png"
+          },
+          {
+            "label": {
+              "en": "Barometer Plot",
+              "ko": "Barometer Plot"
+            },
+            "path": "tests/2026-07-23/files/2026-07-23_tms-7_barometer_plot.png"
+          }
+        ]
+      },
+      "source": {
+        "inputFile": "TMS/Data/2026/7_23/7_23 data.TXT",
+        "recordingNumber": 7,
+        "rawAvailable": true,
+        "processingVersion": "Fixed 5 N threshold; corrected header loader; raw ADC quality gates",
+        "inputSha256": "fdd4bb0d7785d4c3ab3c04bf4fd48102f0f57344141423122cc9c5b8abad650b",
+        "pipelineSha256": "abcc8ee25013fcdd722271efac2ef6caffd60f6388b8d8bb22db6068bd4b16c9",
+        "pipelineCommit": "0604925b9b6c30f5d4a5ac0b6d7a41720dd7f58e",
+        "dateSource": "TMS data folder date"
       },
       "showDetailSummary": false
     },

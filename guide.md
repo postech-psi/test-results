@@ -26,6 +26,7 @@ tests/
 - Dates and folder names use ISO `YYYY-MM-DD`. Titles use `YYYY-MM-DD Static Fire Test` in English and `YYYY년 M월 D일 연소 시험` in Korean.
 - Canonical artifact names are lowercase ASCII, without spaces. Use `<date>_tms-<SD-recording-number>_<artifact>.<extension>`.
 - An SD recording number is local to the recording session; `TMS_5` from two dates is not the same test. Never infer a firing count or calendar date from that number.
+- A firing split across consecutive recordings keeps each file's per-recording outputs and adds whole-firing outputs named `<date>_tms-<first>-<second>_<artifact>` (for example `2026-11-23_tms-2-3_pipeline_data.txt`). Its `filtered_force_N` stays measured-only; `analysis_force_N` carries the fitted unsampled interval.
 - If a historical recording number is unknown, use `<date>_tms_<artifact>`; April 3 has no known SD index. Do not invent one.
 - Source filenames and hashes remain in provenance, and raw files retain their original bytes even when their published filenames change.
 - Stable entry IDs remain `<date>-combustion`; page addresses remain `tests/<date>/index.html`. Catalog paths use forward slashes.

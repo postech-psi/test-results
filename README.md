@@ -8,6 +8,8 @@ Website: [POSTECH PSI Test Results](https://postech-psi.github.io/test-results/)
 
 - **2026년 11월 23일 연소 시험** — [Markdown](./tests/2026-11-23/index.md) · [Web page](https://postech-psi.github.io/test-results/tests/2026-11-23/index.html)
 - **2026년 10월 13일 연소 시험** — [Markdown](./tests/2026-10-13/index.md) · [Web page](https://postech-psi.github.io/test-results/tests/2026-10-13/index.html)
+- **2026년 7월 24일 연소 시험** — [Markdown](./tests/2026-07-24/index.md) · [Web page](https://postech-psi.github.io/test-results/tests/2026-07-24/index.html)
+- **2026년 7월 23일 연소 시험** — [Markdown](./tests/2026-07-23/index.md) · [Web page](https://postech-psi.github.io/test-results/tests/2026-07-23/index.html)
 - **2026년 7월 16일 연소 시험** — [Markdown](./tests/2026-07-16/index.md) · [Web page](https://postech-psi.github.io/test-results/tests/2026-07-16/index.html)
 - **2026년 5월 28일 연소 시험** — [Markdown](./tests/2026-05-28/index.md) · [Web page](https://postech-psi.github.io/test-results/tests/2026-05-28/index.html)
 - **2026년 4월 8일 연소 시험** — [Markdown](./tests/2026-04-08/index.md) · [Web page](https://postech-psi.github.io/test-results/tests/2026-04-08/index.html)
