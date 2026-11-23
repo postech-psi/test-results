@@ -356,7 +356,11 @@
       ];
       if (derived.forceField === "analysis_force_N") {
         series[2].color = pal[2];
-        series.push({ name: state.lang === "ko" ? "감쇠 외삽 추력" : "Thrust with extrapolated tail", color: pal[0], primary: true, dashed: true, data: mk("analysis_force_N") });
+        const gapFit = test.quality?.thrustStatus === "estimated_gap";
+        const analysisName = gapFit
+          ? (state.lang === "ko" ? "미기록 구간 추정 추력" : "Thrust with fitted gap")
+          : (state.lang === "ko" ? "감쇠 외삽 추력" : "Thrust with extrapolated tail");
+        series.push({ name: analysisName, color: pal[0], primary: true, dashed: true, data: mk("analysis_force_N") });
       }
       yLabel = labels.thrustUnit; yUnit = "N"; yDigits = 1;
       peak = { x: derived.peakThrust.time_s, y: derived.peakThrust[derived.forceField] };
@@ -779,7 +783,7 @@
                 <div class="chart-canvas" id="cmp-canvas-${tab}"></div>
               </div>
               ${srTable(tests, tab)}
-              ${tab === "pressure" && tests.some((test) => test.quality?.pressureStatus === "invalid") ? `<p class="chart-source">${state.lang === "ko" ? "사용 불가 압력은 비교에서 제외됩니다. 7월 압력은 이상 신호로 표시됩니다." : "Unavailable pressure is excluded from comparison. July pressure is marked suspect."}</p>` : ""}
+              ${tab === "pressure" && tests.some((test) => test.quality?.pressureStatus === "invalid") ? `<p class="chart-source">${state.lang === "ko" ? "사용 불가 압력은 비교에서 제외되며, 이상 신호 압력은 (suspect)로 표시됩니다." : "Unavailable pressure is excluded from comparison. Suspect pressure is marked (suspect)."}</p>` : ""}
               <div class="chart-source">${copy("common.chartMethodNote")}</div>
             </div>`;
           }).join("")}

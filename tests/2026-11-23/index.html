@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2026-11-23 Static Fire Test | POSTECH PSI</title>
+  <meta name="description" content="November 23 static fire test recorded across two logger files, with the unsampled interval fitted from earlier firings.">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="../../assets/icons/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="../../assets/icons/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../../assets/icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../../assets/icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../assets/site.css?v=2026-11-23-gap-fit">
+</head>
+<body data-theme="light">
+  <header class="site-header">
+    <div class="site-header__inner">
+      <div class="brand">
+        <a class="brand__home-link" href="../../index.html" aria-label="Home"><span class="logo-surface brand__logo-surface"><img class="brand__banner" src="../../assets/logos/psi-logo-banner.jpeg" alt="PSI Postech Aerospace Initiative"></span></a>
+        <div class="brand__text"><div class="brand__eyebrow">Postech Aerospace Initiative</div><div class="brand__title">POSTECH PSI Static Fire Test Results</div></div>
+      </div>
+      <div class="site-header__controls"><a href="../../index.html">All results</a></div>
+    </div>
+  </header>
+
+  <main class="site-shell static-shell">
+    <section class="detail-hero">
+      <a class="detail-hero__back" href="../../index.html">&larr; Back to results</a>
+      <div class="verdict">Static fire test</div>
+      <h1 class="detail-hero__title">2026-11-23 Static Fire Test</h1>
+      <div class="detail-summary">
+        <article class="metric-card">
+          <div class="metric-card__label">Date</div>
+          <div class="metric-card__value">2026-11-23</div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-card__label">Peak thrust</div>
+          <div class="metric-card__value">149.17 N</div>
+          <div class="metric-card__delta">Average thrust: 104.54 N (estimated)</div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-card__label">Total impulse</div>
+          <div class="metric-card__value">360.73 N s</div>
+          <div class="metric-card__delta">Estimated; burn duration: 3450.8 ms</div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-card__label">Peak pressure</div>
+          <div class="metric-card__value">10.169 bar (suspect)</div>
+          <div class="metric-card__delta">Peak time: 13.353 s</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading"><h2>Result files</h2></div>
+      <div class="fallback-grid">
+        <article class="fallback-card">
+          <h3>Result files</h3>
+          <p><a href="files/2026-11-23_tms-2-3_executive_report.txt">Executive report</a></p>
+          <p><a href="files/2026-11-23_tms-2-3_pipeline_data.txt">Pipeline data</a></p>
+          <p><a href="files/2026-11-23_tms-2-3_joint.json">Fit and metrics</a></p>
+          <p><a href="index.md">Markdown record</a></p>
+          <p><a href="files/2026-11-23_tms-2_raw.txt">Raw recording TMS_2</a></p>
+          <p><a href="files/2026-11-23_tms-3_raw.txt">Raw recording TMS_3</a></p>
+        </article>
+        <article class="fallback-card">
+          <h3>Reference figures</h3>
+          <p><a href="files/2026-11-23_tms-2-3_combined_plot.png">Combined Plot</a></p>
+          <p><a href="files/2026-11-23_tms-2-3_loadcell_plot.png">Loadcell Plot</a></p>
+          <p><a href="files/2026-11-23_tms-2-3_barometer_plot.png">Barometer Plot</a></p>
+        </article>
+        <article class="fallback-card">
+          <h3>Issues</h3>
+          <p>Recording boundary: the burn continued past the end of TMS_2. 0.782 s (14.738-15.520 s) between TMS_2 and TMS_3 was not recorded; that interval is fitted from earlier firings' thrust curves (109.8 N s, range 105.5-112.2). Measured impulse alone is 250.92 N s.</p>
+          <p>Pressure channel: offset step from ~300 to ~4,500 ADC counts at 6.4 s with no thrust, spikes at 11.3 s and 12.0 s, and ~19 bar after burnout. After despiking and drift removal it holds a flat ~10 bar block at 13.1-13.7 s while thrust is still rising, then drops to 2-4 bar during the 149 N plateau (r = 0.34 with thrust). Treated as suspect; not used for performance.</p>
+          <p>Timing: no per-sample timestamps. A real sample rate below 320 Hz would shorten the unsampled interval and the fitted share of the impulse.</p>
+        </article>
+      </div>
+      <noscript><div class="empty-state" style="margin-top:18px;">JavaScript is disabled. The summary and file links remain available.</div></noscript>
+    </section>
+  </main>
+
+  <script>window.PSI_PAGE_CONFIG = {"page": "detail", "rootPath": "../..", "testId": "2026-11-23-combustion"};</script>
+  <script src="../../assets/vendor/echarts.min.js?v=2026-11-23-gap-fit" defer></script>
+  <script src="../../assets/charts.js?v=2026-11-23-gap-fit" defer></script>
+  <script src="../../assets/site.js?v=2026-11-23-gap-fit" defer></script>
+</body>
+</html>

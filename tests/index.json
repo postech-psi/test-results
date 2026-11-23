@@ -27,6 +27,368 @@
   },
   "tests": [
     {
+      "id": "2026-11-23-combustion",
+      "date": "2026-11-23",
+      "category": "combustion",
+      "title": {
+        "en": "2026-11-23 Static Fire Test",
+        "ko": "2026년 11월 23일 연소 시험"
+      },
+      "meta": {
+        "title": {
+          "en": "2026-11-23 Static Fire Test | POSTECH PSI",
+          "ko": "2026년 11월 23일 연소 시험 | POSTECH PSI"
+        },
+        "description": {
+          "en": "November 23 static fire test recorded across two logger files, with the unsampled interval fitted from earlier firings.",
+          "ko": "두 기록 파일에 걸쳐 측정된 11월 23일 연소 시험이며, 기록되지 않은 구간은 이전 시험 추력 곡선으로 추정했습니다."
+        }
+      },
+      "summary": {
+        "en": "Static fire test recording 149.17 N peak thrust and an estimated 360.73 N s total impulse.",
+        "ko": "최대 추력 149.17 N, 추정 총 임펄스 360.73 N s를 기록한 연소 시험입니다."
+      },
+      "context": {
+        "en": "A long ignition delay pushed the burn across the logger's 15 s file boundary; TMS_2 and TMS_3 are analyzed as one firing.",
+        "ko": "점화 지연이 길어 연소가 로거의 15초 파일 경계를 넘었으며, TMS_2와 TMS_3를 하나의 연소로 분석했습니다."
+      },
+      "highlights": {
+        "en": [
+          "Recorded 149.17 N peak thrust; estimated 104.54 N average thrust over 3450.8 ms.",
+          "Estimated 360.73 N s total impulse (356.4-363.1): 250.92 N s measured plus 109.81 N s fitted for the 0.782 s unsampled interval.",
+          "Chamber pressure is suspect: the drift-corrected signal peaks at 10.169 bar but does not track thrust."
+        ],
+        "ko": [
+          "최대 추력 149.17 N, 연소 시간 3450.8 ms 동안 추정 평균 추력 104.54 N입니다.",
+          "추정 총 임펄스 360.73 N s(356.4-363.1): 측정 250.92 N s와 미기록 0.782 s 구간 추정 109.81 N s의 합입니다.",
+          "연소실 압력은 의심 데이터입니다: 드리프트 보정 후 최대 10.169 bar이지만 추력과 일치하지 않습니다."
+        ]
+      },
+      "issues": {
+        "en": [
+          "Recording boundary: the burn continued past the end of TMS_2. 0.782 s (14.738-15.520 s) between TMS_2 and TMS_3 was not recorded; that interval is fitted from earlier firings' thrust curves (109.8 N s, range 105.5-112.2). Measured impulse alone is 250.92 N s.",
+          "Pressure channel: offset step from ~300 to ~4,500 ADC counts at 6.4 s with no thrust, spikes at 11.3 s and 12.0 s, and ~19 bar after burnout. After despiking and drift removal it holds a flat ~10 bar block at 13.1-13.7 s while thrust is still rising, then drops to 2-4 bar during the 149 N plateau (r = 0.34 with thrust). Treated as suspect; not used for performance.",
+          "Timing: no per-sample timestamps. A real sample rate below 320 Hz would shorten the unsampled interval and the fitted share of the impulse."
+        ],
+        "ko": [
+          "기록 경계: 연소가 TMS_2 종료 후에도 이어졌습니다. TMS_2와 TMS_3 사이 0.782 s(14.738-15.520 s)는 기록되지 않았으며, 이 구간은 이전 시험 추력 곡선으로 맞춤 추정했습니다(109.8 N s, 범위 105.5-112.2). 측정 임펄스만으로는 250.92 N s입니다.",
+          "압력 채널: 추력이 없는 6.4 s에 ADC가 약 300에서 4,500으로 계단 상승, 11.3 s·12.0 s에 스파이크, 연소 종료 후 약 19 bar 유지. 스파이크·드리프트 제거 후에도 추력이 상승하는 13.1-13.7 s에 약 10 bar로 평탄하다가 149 N 최대 추력 구간에서 2-4 bar로 떨어집니다(추력과 상관 r = 0.34). 의심 데이터로 표시하고 성능 계산에는 쓰지 않습니다.",
+          "시간축: 샘플별 타임스탬프가 없습니다. 실제 샘플링 속도가 320 Hz보다 낮으면 미기록 구간과 추정 임펄스 비중이 줄어듭니다."
+        ]
+      },
+      "quality": {
+        "thrustStatus": "estimated_gap",
+        "pressureStatus": "suspect",
+        "burnEndCensored": false
+      },
+      "metrics": {
+        "ignitionDelayMs": {
+          "value": 12771.875,
+          "unit": "ms",
+          "display": "12771.9 ms"
+        },
+        "burnTimeMs": {
+          "value": 3450.786000000003,
+          "unit": "ms",
+          "display": "3450.8 ms",
+          "status": "computed"
+        },
+        "maxThrustN": {
+          "value": 149.16857536799006,
+          "unit": "N",
+          "display": "149.17 N",
+          "status": "computed"
+        },
+        "averageThrustN": {
+          "value": 104.53674225705178,
+          "unit": "N",
+          "display": "104.54 N",
+          "status": "estimated"
+        },
+        "totalImpulseNs": {
+          "value": 360.73392666624295,
+          "unit": "N s",
+          "display": "360.73 N s",
+          "status": "estimated"
+        },
+        "maxPressureBar": {
+          "value": 10.169037451400369,
+          "unit": "bar",
+          "display": "10.169 bar (suspect)",
+          "status": "suspect"
+        },
+        "maxPressureTimeS": {
+          "value": 13.353125,
+          "unit": "s",
+          "display": "13.353 s",
+          "status": "suspect"
+        }
+      },
+      "events": {
+        "ignitionTimeS": 12.771875,
+        "burnEndTimeS": 16.222661000000002,
+        "burnDurationS": 3.4507860000000026,
+        "peakPressureTimeS": 13.353125,
+        "unsampledIntervalS": [
+          14.7375,
+          15.519536
+        ]
+      },
+      "processing": [
+        {
+          "label": {
+            "en": "Sampling Rate",
+            "ko": "샘플링 속도"
+          },
+          "value": {
+            "en": "320 sps",
+            "ko": "320 sps"
+          }
+        },
+        {
+          "label": {
+            "en": "Recordings",
+            "ko": "기록 파일"
+          },
+          "value": {
+            "en": "TMS_2 + TMS_3; second file placed at +15.519536 s from the sampling-start headers",
+            "ko": "TMS_2 + TMS_3; 샘플링 시작 헤더 차이로 두 번째 파일을 +15.519536 s에 배치"
+          }
+        },
+        {
+          "label": {
+            "en": "Unsampled Interval",
+            "ko": "미기록 구간"
+          },
+          "value": {
+            "en": "14.737500 to 15.519536 s (0.782036 s)",
+            "ko": "14.737500 to 15.519536 s (0.782036 s)"
+          }
+        },
+        {
+          "label": {
+            "en": "Drift Compensation",
+            "ko": "드리프트 보정"
+          },
+          "value": {
+            "en": "Constant baseline offset from TMS_2, applied to both files",
+            "ko": "TMS_2 기준 상수 오프셋을 두 파일에 적용"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Threshold",
+            "ko": "로드셀 임계값"
+          },
+          "value": {
+            "en": "5.00 N (fixed absolute)",
+            "ko": "5.00 N (고정 절대값)"
+          }
+        },
+        {
+          "label": {
+            "en": "Thrust Filter",
+            "ko": "추력 필터"
+          },
+          "value": {
+            "en": "Butterworth low-pass 20.0 Hz, order 2; each file separately",
+            "ko": "Butterworth low-pass 20.0 Hz, order 2; 파일별 개별 적용"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Baseline Offset",
+            "ko": "로드셀 기준 오프셋"
+          },
+          "value": {
+            "en": "-60.100961 N",
+            "ko": "-60.100961 N"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Baseline Window",
+            "ko": "로드셀 기준 구간"
+          },
+          "value": {
+            "en": "0.000000 to 6.387500 s (TMS_2 pre-ignition raw force)",
+            "ko": "0.000000 to 6.387500 s (TMS_2 점화 전 raw force)"
+          }
+        },
+        {
+          "label": {
+            "en": "Burn Window",
+            "ko": "연소 구간"
+          },
+          "value": {
+            "en": "First 5 N crossing in TMS_2 to last 5 N crossing in TMS_3 (header-aligned)",
+            "ko": "TMS_2의 첫 5 N 교차부터 TMS_3의 마지막 5 N 교차까지 (헤더 정렬)"
+          }
+        },
+        {
+          "label": {
+            "en": "Gap Fit",
+            "ko": "미기록 구간 추정"
+          },
+          "value": {
+            "en": "Median of earlier thrust curves fitted to the force beside the gap (amplitude, shift, stretch) and pinned to both edges; accepted: 2026-04-03, 2026-04-08, 2026-05-28, 2026-10-13 (TMS_4)",
+            "ko": "공백 양쪽 추력에 이전 시험 추력 곡선을 맞춤(크기·이동·시간 배율)하고 양 끝에 고정한 중앙값; 채택: 2026-04-03, 2026-04-08, 2026-05-28, 2026-10-13 (TMS_4)"
+          }
+        },
+        {
+          "label": {
+            "en": "Gap Impulse",
+            "ko": "미기록 구간 임펄스"
+          },
+          "value": {
+            "en": "109.81 N s (range 105.51-112.18; knee fit 109.58; straight bridge 102.89)",
+            "ko": "109.81 N s (범위 105.51-112.18; knee fit 109.58; 직선 연결 102.89)"
+          }
+        },
+        {
+          "label": {
+            "en": "Pressure Filter",
+            "ko": "압력 필터"
+          },
+          "value": {
+            "en": "0.1 s running median (despike), then drift baseline removal",
+            "ko": "0.1 s 이동 중앙값(스파이크 제거) 후 드리프트 기준선 제거"
+          }
+        },
+        {
+          "label": {
+            "en": "Pressure Drift Baseline",
+            "ko": "압력 드리프트 기준선"
+          },
+          "value": {
+            "en": "PCHIP through 0.5 s medians of thrust-free periods (before 12.67 s, after 16.52 s); zero gauge pressure assumed there",
+            "ko": "추력 없는 구간(12.67 s 이전, 16.52 s 이후)의 0.5 s 중앙값을 잇는 PCHIP; 해당 구간 게이지 압력 0 가정"
+          }
+        },
+        {
+          "label": {
+            "en": "Pressure Check",
+            "ko": "압력 검증"
+          },
+          "value": {
+            "en": "r = 0.34 with thrust during burn (minimum 0.50); residual 0.53 bar RMS",
+            "ko": "연소 중 추력과 상관 r = 0.34 (기준 0.50); 잔차 0.53 bar RMS"
+          }
+        }
+      ],
+      "calibration": [
+        {
+          "label": {
+            "en": "Load Cell Calibration Slope",
+            "ko": "로드셀 보정 기울기"
+          },
+          "value": {
+            "en": "-0.039100 kg/ADC",
+            "ko": "-0.039100 kg/ADC"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Calibration Intercept",
+            "ko": "로드셀 보정 절편"
+          },
+          "value": {
+            "en": "-193.0049 kg",
+            "ko": "-193.0049 kg"
+          }
+        },
+        {
+          "label": {
+            "en": "Load Cell Calibration R²",
+            "ko": "로드셀 보정 R²"
+          },
+          "value": {
+            "en": "0.999948",
+            "ko": "0.999948"
+          }
+        },
+        {
+          "label": {
+            "en": "Pressure Conversion",
+            "ko": "압력 변환식"
+          },
+          "value": {
+            "en": "y = 0.0027x -0.11",
+            "ko": "y = 0.0027x -0.11"
+          }
+        }
+      ],
+      "media": {
+        "videoUrl": null,
+        "videoLabel": {
+          "ko": "공개된 영상 없음",
+          "en": "No public video available"
+        }
+      },
+      "links": {
+        "page": "tests/2026-11-23/index.html",
+        "markdown": "tests/2026-11-23/index.md",
+        "pipelineData": "tests/2026-11-23/files/2026-11-23_tms-2-3_pipeline_data.txt",
+        "executiveReport": "tests/2026-11-23/files/2026-11-23_tms-2-3_executive_report.txt",
+        "artifacts": "tests/2026-11-23/files/",
+        "rawData": "tests/2026-11-23/files/2026-11-23_tms-2_raw.txt",
+        "rawDataAdditional": [
+          "tests/2026-11-23/files/2026-11-23_tms-3_raw.txt"
+        ],
+        "fitData": "tests/2026-11-23/files/2026-11-23_tms-2-3_joint.json",
+        "manifest": "tests/2026-11-23/files/2026-11-23_session_manifest.json"
+      },
+      "artifacts": {
+        "figures": [
+          {
+            "label": {
+              "en": "Combined Plot",
+              "ko": "Combined Plot"
+            },
+            "path": "tests/2026-11-23/files/2026-11-23_tms-2-3_combined_plot.png"
+          },
+          {
+            "label": {
+              "en": "Loadcell Plot",
+              "ko": "Loadcell Plot"
+            },
+            "path": "tests/2026-11-23/files/2026-11-23_tms-2-3_loadcell_plot.png"
+          },
+          {
+            "label": {
+              "en": "Barometer Plot",
+              "ko": "Barometer Plot"
+            },
+            "path": "tests/2026-11-23/files/2026-11-23_tms-2-3_barometer_plot.png"
+          }
+        ]
+      },
+      "source": {
+        "inputFile": "TMS/Data/2026/11_23/TMS_2.TXT + TMS/Data/2026/11_23/TMS_3.TXT",
+        "inputFiles": [
+          "TMS/Data/2026/11_23/TMS_2.TXT",
+          "TMS/Data/2026/11_23/TMS_3.TXT"
+        ],
+        "recordingNumbers": [
+          2,
+          3
+        ],
+        "rawAvailable": true,
+        "processingVersion": "Fixed 5 N threshold; split-recording joint analysis with fitted unsampled interval",
+        "inputSha256": {
+          "TMS_2.TXT": "f09bb3697c9af0f7c748f43ee07ddb550009a55252e1710b9ef3638bb48afcae",
+          "TMS_3.TXT": "273e4b6c0866b2bf82153875bc0364ef8e42dd2b87614ca3af2282b7cda57226"
+        },
+        "pipelineSha256": "abcc8ee25013fcdd722271efac2ef6caffd60f6388b8d8bb22db6068bd4b16c9",
+        "pipelineCommit": "0604925b9b6c30f5d4a5ac0b6d7a41720dd7f58e",
+        "jointAnalysisSha256": "55582adcb861b56c5e9c56bd2a98cb691c987e25b5691ed24d8d613fb83385db",
+        "jointAnalysisCommit": "8c7e10a287aa5f23b1ba8867706ac4580b1edf43",
+        "dateSource": "User-confirmed 2026-11-23",
+        "forceSeriesField": "analysis_force_N"
+      },
+      "showDetailSummary": false
+    },
+    {
       "id": "2026-10-13-combustion",
       "date": "2026-10-13",
       "category": "combustion",
