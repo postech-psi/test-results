@@ -45,8 +45,8 @@
         }
       },
       "summary": {
-        "en": "Static fire test recording 149.17 N peak thrust and an estimated 360.73 N s total impulse.",
-        "ko": "최대 추력 149.17 N, 추정 총 임펄스 360.73 N s를 기록한 연소 시험입니다."
+        "en": "Static fire test recording 149.17 N peak thrust and an estimated 361.18 N s total impulse.",
+        "ko": "최대 추력 149.17 N, 추정 총 임펄스 361.18 N s를 기록한 연소 시험입니다."
       },
       "context": {
         "en": "A long ignition delay pushed the burn across the logger's 15 s file boundary; TMS_2 and TMS_3 are analyzed as one firing.",
@@ -54,24 +54,24 @@
       },
       "highlights": {
         "en": [
-          "Recorded 149.17 N peak thrust; estimated 104.54 N average thrust over 3450.8 ms.",
-          "Estimated 360.73 N s total impulse (356.4-363.1): 250.92 N s measured plus 109.81 N s fitted for the 0.782 s unsampled interval.",
+          "Recorded 149.17 N peak thrust; estimated 104.66 N average thrust over 3450.8 ms.",
+          "Estimated 361.18 N s total impulse (356.9-363.5): 250.92 N s measured plus 110.26 N s fitted for the 0.782 s unsampled interval.",
           "Chamber pressure is suspect: the drift-corrected signal peaks at 10.169 bar but does not track thrust."
         ],
         "ko": [
-          "최대 추력 149.17 N, 연소 시간 3450.8 ms 동안 추정 평균 추력 104.54 N입니다.",
-          "추정 총 임펄스 360.73 N s(356.4-363.1): 측정 250.92 N s와 미기록 0.782 s 구간 추정 109.81 N s의 합입니다.",
+          "최대 추력 149.17 N, 연소 시간 3450.8 ms 동안 추정 평균 추력 104.66 N입니다.",
+          "추정 총 임펄스 361.18 N s(356.9-363.5): 측정 250.92 N s와 미기록 0.782 s 구간 추정 110.26 N s의 합입니다.",
           "연소실 압력은 의심 데이터입니다: 드리프트 보정 후 최대 10.169 bar이지만 추력과 일치하지 않습니다."
         ]
       },
       "issues": {
         "en": [
-          "Recording boundary: the burn continued past the end of TMS_2. 0.782 s (14.738-15.520 s) between TMS_2 and TMS_3 was not recorded; that interval is fitted from earlier firings' thrust curves (109.8 N s, range 105.5-112.2). Measured impulse alone is 250.92 N s.",
+          "Recording boundary: the burn continued past the end of TMS_2. 0.782 s (14.738-15.520 s) between TMS_2 and TMS_3 was not recorded; that interval is fitted from earlier firings' thrust curves (110.3 N s, range 106.0-112.6). Measured impulse alone is 250.92 N s.",
           "Pressure channel: offset step from ~300 to ~4,500 ADC counts at 6.4 s with no thrust, spikes at 11.3 s and 12.0 s, and ~19 bar after burnout. After despiking and drift removal it holds a flat ~10 bar block at 13.1-13.7 s while thrust is still rising, then drops to 2-4 bar during the 149 N plateau (r = 0.34 with thrust). Treated as suspect; not used for performance.",
           "Timing: no per-sample timestamps. A real sample rate below 320 Hz would shorten the unsampled interval and the fitted share of the impulse."
         ],
         "ko": [
-          "기록 경계: 연소가 TMS_2 종료 후에도 이어졌습니다. TMS_2와 TMS_3 사이 0.782 s(14.738-15.520 s)는 기록되지 않았으며, 이 구간은 이전 시험 추력 곡선으로 맞춤 추정했습니다(109.8 N s, 범위 105.5-112.2). 측정 임펄스만으로는 250.92 N s입니다.",
+          "기록 경계: 연소가 TMS_2 종료 후에도 이어졌습니다. TMS_2와 TMS_3 사이 0.782 s(14.738-15.520 s)는 기록되지 않았으며, 이 구간은 이전 시험 추력 곡선으로 맞춤 추정했습니다(110.3 N s, 범위 106.0-112.6). 측정 임펄스만으로는 250.92 N s입니다.",
           "압력 채널: 추력이 없는 6.4 s에 ADC가 약 300에서 4,500으로 계단 상승, 11.3 s·12.0 s에 스파이크, 연소 종료 후 약 19 bar 유지. 스파이크·드리프트 제거 후에도 추력이 상승하는 13.1-13.7 s에 약 10 bar로 평탄하다가 149 N 최대 추력 구간에서 2-4 bar로 떨어집니다(추력과 상관 r = 0.34). 의심 데이터로 표시하고 성능 계산에는 쓰지 않습니다.",
           "시간축: 샘플별 타임스탬프가 없습니다. 실제 샘플링 속도가 320 Hz보다 낮으면 미기록 구간과 추정 임펄스 비중이 줄어듭니다."
         ]
@@ -100,15 +100,15 @@
           "status": "computed"
         },
         "averageThrustN": {
-          "value": 104.53674225705178,
+          "value": 104.66476819207372,
           "unit": "N",
-          "display": "104.54 N",
+          "display": "104.66 N",
           "status": "estimated"
         },
         "totalImpulseNs": {
-          "value": 360.73392666624295,
+          "value": 361.17571677045356,
           "unit": "N s",
-          "display": "360.73 N s",
+          "display": "361.18 N s",
           "status": "estimated"
         },
         "maxPressureBar": {
@@ -241,8 +241,8 @@
             "ko": "미기록 구간 임펄스"
           },
           "value": {
-            "en": "109.81 N s (range 105.51-112.18; knee fit 109.58; straight bridge 102.89)",
-            "ko": "109.81 N s (범위 105.51-112.18; knee fit 109.58; 직선 연결 102.89)"
+            "en": "110.26 N s (range 105.96-112.63; knee fit 110.07; straight bridge 103.34)",
+            "ko": "110.26 N s (범위 105.96-112.63; knee fit 110.07; 직선 연결 103.34)"
           }
         },
         {
@@ -381,8 +381,8 @@
         },
         "pipelineSha256": "abcc8ee25013fcdd722271efac2ef6caffd60f6388b8d8bb22db6068bd4b16c9",
         "pipelineCommit": "0604925b9b6c30f5d4a5ac0b6d7a41720dd7f58e",
-        "jointAnalysisSha256": "55582adcb861b56c5e9c56bd2a98cb691c987e25b5691ed24d8d613fb83385db",
-        "jointAnalysisCommit": "8c7e10a287aa5f23b1ba8867706ac4580b1edf43",
+        "jointAnalysisSha256": "0ae2c0bd623048dd166242c836f073067348d09757369e73c87bc9125e910270",
+        "jointAnalysisCommit": "efd13eb8936ce4a92a6a55ce62b36f2a10bf45a8",
         "dateSource": "User-confirmed 2026-11-23",
         "forceSeriesField": "analysis_force_N"
       },
