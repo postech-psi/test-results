@@ -44,12 +44,12 @@
         eyebrow: "Postech Aerospace Initiative", title: "연소 시험 결과 공개 기록",
         titleAccent: "공개 기록",
         lead: "",
-        executiveTitle: "최신 결과", executiveLead: "",
+        executiveTitle: "최신 비교 가능 시험", executiveLead: "",
         comparisonTitle: "시험 간 비교", comparisonLead: "",
         findingsTitle: "공개 해석", findingsLead: "",
         methodsTitle: "측정과 처리", archiveTitle: "시험 아카이브",
         archiveSubtitle: "", accessTitle: "자료 접근",
-        sparkTitle: "최신 추력 곡선"
+        sparkTitle: "최신 비교 가능 추력 곡선"
       },
       detail: {
         chartsTitle: "재구성 신호", chartsLead: "",
@@ -97,11 +97,11 @@
       home: {
         eyebrow: "Postech Aerospace Initiative", title: "Static Fire Test Results", titleAccent: "Results",
         lead: "",
-        executiveTitle: "Latest test", executiveLead: "",
+        executiveTitle: "Latest comparable test", executiveLead: "",
         comparisonTitle: "Run comparison", comparisonLead: "",
         findingsTitle: "Findings", findingsLead: "",
         methodsTitle: "Methods", archiveTitle: "Archive", archiveSubtitle: "",
-        accessTitle: "Data files", sparkTitle: "Latest thrust curve"
+        accessTitle: "Data files", sparkTitle: "Latest comparable thrust curve"
       },
       detail: {
         chartsTitle: "Signals", chartsLead: "",
@@ -132,6 +132,7 @@
   const MAX_FOCUS_RUNS = 7;
 
   let catalog = null;
+  let comparisonTests = [];
   const dataCache = new Map();
   const dataArrCache = new Map();
   const chartRegistry = new Map();
@@ -602,14 +603,14 @@
     if (tab === "metrics") {
       clearEventAxisOverlay("cmp-canvas-thrust");
       clearEventAxisOverlay("cmp-canvas-pressure");
-      const charts = metricChartsParams(catalog.tests);
+      const charts = metricChartsParams(comparisonTests);
       METRIC_DEFS.forEach((m, i) => {
         ensureChart(`cmp-canvas-metric-${m.id}`, () => PSICharts.metricBarOption(charts[i]));
       });
     } else {
       let currentParams = null;
       const entry = ensureChart(`cmp-canvas-${tab}`, (legendSelected) => {
-        const params = comparisonParams(catalog.tests, tab, state.comparisonMode);
+        const params = comparisonParams(comparisonTests, tab, state.comparisonMode);
         params.legendSelected = legendSelected;
         currentParams = params;
         return PSICharts.comparisonOption(params);
@@ -920,7 +921,7 @@
   }
 
   function renderHome() {
-    const tests = catalog.tests;
+    const tests = comparisonTests;
     const latest = tests[0];
     setDocumentMeta(catalog.site.pageMeta.home);
     document.body.innerHTML = `
@@ -949,7 +950,7 @@
               <div class="hero__summary">
                 <div class="hero-stat"><div class="hero-stat__label">${copy("common.peakThrust")}</div><div class="hero-stat__value">${latest.metrics.maxThrustN.display}</div></div>
                 <div class="hero-stat"><div class="hero-stat__label">${copy("common.totalImpulse")}</div><div class="hero-stat__value">${latest.metrics.totalImpulseNs.display}</div></div>
-                <div class="hero-stat"><div class="hero-stat__label">${copy("common.publishedRuns")}</div><div class="hero-stat__value">${tests.length}</div></div>
+                <div class="hero-stat"><div class="hero-stat__label">${copy("common.publishedRuns")}</div><div class="hero-stat__value">${catalog.tests.length}</div></div>
               </div>
             </aside>
           </div>
@@ -963,7 +964,7 @@
         </section>
         ${buildComparisonPanel(tests)}
         ${buildFindings(tests)}
-        ${buildArchive(tests)}
+        ${buildArchive(catalog.tests)}
         ${buildMethods(tests)}
       </main>
       <footer class="footer"></footer>`;
@@ -973,7 +974,7 @@
   }
 
   function initHomeCharts() {
-    const latest = catalog.tests[0];
+    const latest = comparisonTests[0];
     const derived = dataCache.get(latest.id);
     if (derived) {
       const spark = downsample(derived.rows, 160).map((r) => [r.time_s, r[derived.forceField]]);
@@ -1241,7 +1242,7 @@
         updateComparison();
       });
     }
-    bindRunPickerControls(catalog.tests);
+    bindRunPickerControls(comparisonTests);
     const sortInput = document.getElementById("archive-sort");
     if (sortInput) {
       sortInput.addEventListener("change", (event) => {
@@ -1288,7 +1289,7 @@
       if (test) await ensureSeries(test);
       return;
     }
-    await Promise.all(catalog.tests.map((test) => ensureSeries(test)));
+    await Promise.all(comparisonTests.map((test) => ensureSeries(test)));
   }
 
   async function init() {
@@ -1301,9 +1302,10 @@
     }));
     try {
       catalog = await fetchJson(resolvePath("tests/index.json"));
+      comparisonTests = catalog.tests.filter((test) => test.quality?.burnEndCensored !== true);
       await preloadData();
-      state.selectedTestIds = catalog.tests.slice(0, MAX_FOCUS_RUNS).map((t) => t.id);
-      if (catalog.tests.length > 0) state.selectedTestId = catalog.tests[0].id;
+      state.selectedTestIds = comparisonTests.slice(0, MAX_FOCUS_RUNS).map((t) => t.id);
+      if (comparisonTests.length > 0) state.selectedTestId = comparisonTests[0].id;
       rerender();
     } catch (error) {
       console.error(error);
